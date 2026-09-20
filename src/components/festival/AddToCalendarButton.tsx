@@ -57,7 +57,7 @@ export default function AddToCalendarButton({ festival }: { festival: Festival }
     <button
       type="button"
       onClick={download}
-      className="mt-[11px] flex items-center gap-[7px] border px-[11px] py-[7px] font-[800] text-[10px] uppercase leading-none tracking-[.1em] hover:bg-accent hover:text-[var(--color-bg)]"
+      className="mt-[11px] flex items-center gap-[7px] border px-[11px] py-[7px] font-[800] text-[10px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
       style={{ borderColor: "var(--color-accent)", background: "transparent", color: "var(--color-accent-700)" }}
     >
       + Add to calendar

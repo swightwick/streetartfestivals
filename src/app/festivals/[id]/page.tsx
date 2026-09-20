@@ -10,6 +10,7 @@ import {
   siteUrl,
 } from "@/lib/festivals";
 import { buildEventJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
+import { getEventGalleryImages, getEventLogo } from "@/lib/gallery";
 import EventMapLoader from "@/components/festival/EventMapLoader";
 import AddToCalendarButton from "@/components/festival/AddToCalendarButton";
 import InstagramFeed from "@/components/festival/InstagramFeed";
@@ -57,6 +58,8 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
   if (!f) notFound();
 
   const nearby = nearbyFestivals(f);
+  const galleryImages = getEventGalleryImages(f.id);
+  const logo = getEventLogo(f.id);
   const eventJsonLd = buildEventJsonLd(f);
   const breadcrumbJsonLd = buildBreadcrumbJsonLd(f);
   const siteShort = f.site.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
@@ -68,16 +71,10 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
       style={{ background: "var(--color-bg)" }}
     >
       <header
-        className="z-[5] flex flex-none items-center gap-3.5 px-4 py-[11px] shadow-[0_1px_0_rgba(0,0,0,.14),0_5px_14px_-4px_rgba(0,0,0,.34)] md:px-[26px]"
+        className="z-[5] flex h-[54px] flex-none items-center gap-3.5 px-[18px] py-[11px] shadow-[0_1px_0_rgba(0,0,0,.14),0_5px_14px_-4px_rgba(0,0,0,.34)]"
       >
-        <Link
-          href="/"
-          className="flex items-center gap-2 border px-3 py-1.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline hover:bg-accent hover:text-white border-accent"
-        >
-          &#8249; Map &amp; calendar
-        </Link>
-        <span className="hidden whitespace-nowrap font-[800] text-[18px] leading-[0.9] tracking-[-0.035em] sm:inline">
-          streetart<span className="text-accent">festivals</span>uk
+        <span className="whitespace-nowrap font-[800] text-[24px] leading-[0.9] tracking-[-0.035em] text-accent">
+          streetart<span className="text-white">festivals</span>uk
         </span>
         <a
           href={f.site}
@@ -97,11 +94,18 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
           <ViewTransition name="atlas-map" share="morph" default="none">
             <EventMapLoader festival={f} />
           </ViewTransition>
+          <Link
+            href="/"
+            className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
+            style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
+          >
+            &#8249; Back to map
+          </Link>
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${f.lat},${f.lng}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-2.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] hover:bg-accent hover:text-[var(--color-bg)]"
+            className="absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-2.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
             style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "var(--color-accent-700)" }}
           >
             Google Maps &#8599;
@@ -109,7 +113,16 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         </div>
 
         <div className="sa-scroll min-w-0 flex-1 lg:overflow-y-auto">
-          <div className="px-4 pb-[60px] pt-6 md:px-[26px] md:pt-[30px]" style={{ maxWidth: 1280 }}>
+          <div className="relative px-4 pb-[60px] pt-6 md:px-[26px] md:pt-[30px] md:pb-8" style={{ maxWidth: 1280 }}>
+            {logo && (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={logo}
+                alt={`${f.name} logo`}
+                className="absolute right-4 top-6 h-16 w-16 object-contain md:right-[26px] md:top-[30px] sm:h-28 sm:w-28"
+              />
+            )}
+
             <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
               <span
                 className="px-[9px] py-[5px] font-[600] text-[10px] uppercase leading-none tracking-[.14em]"
@@ -146,11 +159,11 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               }}
             >
               <div className="py-4 pb-[18px] pr-[18px]">
-                <div className="mb-2 font-[600] text-[9px] uppercase leading-none tracking-[.16em] text-white font-bold">
+                <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   2026 dates
                 </div>
                 <div
-                  className="font-[800] text-[15px] leading-[1.35]"
+                  className="font-normal text-[13px] leading-[1.5]"
                   style={isPast(f) ? { textDecoration: "line-through", textDecorationThickness: 2 } : undefined}
                 >
                   {f.dates}
@@ -158,7 +171,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 <AddToCalendarButton festival={f} />
               </div>
               <div className="py-4 pb-[18px] pl-[18px] pr-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
-                <div className="mb-2 font-[600] text-[9px] uppercase leading-none tracking-[.16em] text-white font-bold">
+                <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Location
                 </div>
                 <div className="text-[13px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_85%,transparent)]">
@@ -167,7 +180,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 <div className="mt-2 font-[800] text-[13px] leading-none tracking-[.06em]">{f.postcode}</div>
               </div>
               <div className="py-4 pb-[18px] pl-[18px] pr-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
-                <div className="mb-2 font-[600] text-[9px] uppercase leading-none tracking-[.16em] text-white font-bold">
+                <div className="mb-[5px] font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Website
                 </div>
                 <a
@@ -181,12 +194,12 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 </a>
               </div>
               <div className="py-4 pb-[18px] pl-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
-                <div className="mb-2 font-[600] text-[9px] uppercase leading-none tracking-[.16em] text-white font-bold">
+                <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Follow
                 </div>
                 <div className="flex flex-col gap-[5px]">
                   {f.socials.map((s) => (
-                    <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer" className="font-[600] text-[12px] leading-[1.35]">
+                    <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer" className="font-[600] text-[13px] leading-[1.5]">
                       {s.label}
                     </a>
                   ))}
@@ -230,7 +243,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               <div
                 className="border-t pt-[22px] lg:border-t-0 lg:py-[26px] lg:pl-[30px] lg:pt-[26px] [border-color:var(--color-divider)]"
               >
-                <InstagramFeed festival={f} />
+                <InstagramFeed festival={f} galleryImages={galleryImages} />
               </div>
             </div>
 
@@ -258,7 +271,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                     <Link
                       key={r.id}
                       href={`/festivals/${r.id}`}
-                      className="flex flex-col items-start gap-[5px] px-3.5 py-[11px] text-text no-underline hover:bg-black"
+                      className="flex flex-col items-start gap-[5px] px-3.5 py-[11px] text-text no-underline transition-all duration-150 hover:bg-black"
                       style={{
                         background: "var(--color-surface)",
                         border: "1px solid var(--color-divider)",
@@ -285,7 +298,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
 
             <Link
               href="/"
-              className="mt-6 flex items-center justify-center gap-2 border px-4 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline hover:bg-accent hover:text-[var(--color-bg)] lg:hidden"
+              className="mt-6 flex items-center justify-center gap-2 border px-4 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:text-white"
               style={{ borderColor: "var(--color-divider)" }}
             >
               &#8249; Back to map

@@ -58,7 +58,7 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
               key={s}
               type="button"
               onClick={() => onStatus(s)}
-              className="inline-flex h-8 items-center whitespace-nowrap border px-[9px] font-[600] text-[9.5px] uppercase tracking-[.08em] hover:border-accent-500"
+              className="inline-flex h-8 items-center whitespace-nowrap border px-[9px] font-[600] text-[9.5px] uppercase tracking-[.08em] transition-all duration-150 hover:border-accent-500"
               style={chipStyle(status === s)}
             >
               {s}
@@ -79,7 +79,7 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
           ))}
         </select>
         <input
-          className="input h-8 min-h-8 max-w-[260px] min-w-0 flex-[1_1_130px] font-[600] text-[9.5px] uppercase tracking-[.06em]"
+          className="input h-8 min-h-8 max-w-[260px] min-w-0 flex-[1_1_130px] px-2 font-[600] text-[9.5px] uppercase tracking-[.06em]"
           type="text"
           placeholder="Search festival, city, postcode"
           value={q}
@@ -175,7 +175,7 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
           type="button"
           onClick={onOpenList}
           aria-label="Open festival list"
-          className="grid h-8 w-8 flex-none place-items-center border hover:border-accent-500"
+          className="grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
           style={{ borderColor: "var(--color-divider)" }}
         >
           <span className="flex flex-col gap-[3px]">

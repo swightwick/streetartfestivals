@@ -34,7 +34,7 @@ export default function StayCard({ stay, bordered }: { stay: Stay; bordered: boo
           type="button"
           aria-label="Previous photo"
           onClick={step(-1)}
-          className="absolute left-0 top-0 bottom-0 grid w-[26px] place-items-center border-0 bg-transparent font-[800] text-[15px] leading-none text-[var(--color-text)] hover:bg-[rgba(19,18,17,.55)]"
+          className="absolute left-0 top-0 bottom-0 grid w-[26px] place-items-center border-0 bg-transparent font-[800] text-[15px] leading-none text-[var(--color-text)] transition-all duration-150 hover:bg-[rgba(19,18,17,.55)]"
         >
           &#8249;
         </button>
@@ -42,7 +42,7 @@ export default function StayCard({ stay, bordered }: { stay: Stay; bordered: boo
           type="button"
           aria-label="Next photo"
           onClick={step(1)}
-          className="absolute right-0 top-0 bottom-0 grid w-[26px] place-items-center border-0 bg-transparent font-[800] text-[15px] leading-none text-[var(--color-text)] hover:bg-[rgba(19,18,17,.55)]"
+          className="absolute right-0 top-0 bottom-0 grid w-[26px] place-items-center border-0 bg-transparent font-[800] text-[15px] leading-none text-[var(--color-text)] transition-all duration-150 hover:bg-[rgba(19,18,17,.55)]"
         >
           &#8250;
         </button>

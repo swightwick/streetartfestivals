@@ -121,7 +121,7 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
             type="button"
             onClick={prevMonth}
             aria-label="Previous month"
-            className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none hover:bg-accent hover:text-[var(--color-bg)]"
+            className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
             style={{ borderColor: "var(--color-divider)", background: "transparent", color: "var(--color-text)" }}
           >
             &#8249;
@@ -130,7 +130,7 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
             type="button"
             onClick={nextMonth}
             aria-label="Next month"
-            className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none hover:bg-accent hover:text-[var(--color-bg)]"
+            className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
             style={{ borderColor: "var(--color-divider)", background: "transparent", color: "var(--color-text)" }}
           >
             &#8250;
@@ -187,7 +187,7 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
                 type="button"
                 onClick={c.evs.length ? () => onOpen(c.evs[0].id) : undefined}
                 disabled={!c.evs.length}
-                className={`flex flex-col gap-0.5 px-1 pb-1 pt-[3px] text-left hover:enabled:bg-black disabled:cursor-default ${fillHeight ? "" : "aspect-square"}`}
+                className={`flex flex-col gap-0.5 px-1 pb-1 pt-[3px] text-left transition-all duration-150 hover:enabled:bg-black disabled:cursor-default ${fillHeight ? "" : "aspect-square"}`}
                 style={{
                   borderRight: "1px solid var(--color-divider)",
                   borderBottom: "1px solid var(--color-divider)",
@@ -248,7 +248,7 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
                   key={n.id}
                   type="button"
                   onClick={() => onOpen(n.id)}
-                  className="flex items-center gap-2 border-0 bg-transparent p-0 text-left text-text hover:text-accent-400"
+                  className="flex items-center gap-2 border-0 bg-transparent p-0 text-left text-text transition-all duration-150 hover:text-accent-400"
                 >
                   <span className="block h-[9px] w-[9px] flex-none border-2" style={{ borderColor: "var(--color-accent)" }} />
                   <span className="text-[13px] leading-[1.35] text-[color-mix(in_srgb,var(--color-text)_70%,transparent)]">
@@ -274,7 +274,7 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
                 setCal("month");
                 setMonth(m.mi);
               }}
-              className="cursor-pointer border-0 px-[9px] pb-[9px] pt-2 text-left hover:bg-black"
+              className="cursor-pointer border-0 px-[9px] pb-[9px] pt-2 text-left transition-all duration-150 hover:bg-black"
               style={{ background: "var(--color-surface)", color: "var(--color-text)" }}
             >
               <div

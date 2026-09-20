@@ -117,7 +117,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               <button
                 type="button"
                 onClick={() => setCalendarOpen(true)}
-                className="flex-none border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] hover:brightness-110"
+                className="flex-none border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
                 style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
               >
                 View festival calendar &#8250;
@@ -153,7 +153,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 <button
                   type="button"
                   onClick={() => setMobileView((v) => (v === "list" ? "calendar" : "list"))}
-                  className="flex h-8 items-center gap-1.5 border px-2.5 font-[800] text-[10px] uppercase leading-none tracking-[.09em] hover:border-accent-500"
+                  className="flex h-8 items-center gap-1.5 border px-2.5 font-[800] text-[10px] uppercase leading-none tracking-[.09em] transition-all duration-150 hover:border-accent-500"
                   style={{ borderColor: "var(--color-divider)", color: "var(--color-text)" }}
                 >
                   {mobileView === "list" ? "Calendar" : "‹ Programme"}
@@ -162,7 +162,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                   type="button"
                   onClick={() => setListOpen(false)}
                   aria-label="Close"
-                  className="ml-auto grid h-8 w-8 flex-none place-items-center border hover:border-accent-500"
+                  className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
                   style={{ borderColor: "var(--color-divider)" }}
                 >
                   &#10005;
@@ -200,7 +200,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                   type="button"
                   onClick={() => setCalendarOpen(false)}
                   aria-label="Close"
-                  className="ml-auto grid h-8 w-8 flex-none place-items-center border hover:border-accent-500"
+                  className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
                   style={{ borderColor: "var(--color-divider)" }}
                 >
                   &#10005;
