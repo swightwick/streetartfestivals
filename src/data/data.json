@@ -1,0 +1,1948 @@
+{
+  "site": {
+    "name": "streetartfestivalsuk",
+    "tagline": "Every street art and graffiti festival in the UK and Ireland, plotted and dated.",
+    "url": "https://www.streetartfestivals.uk",
+    "accent": "#948979",
+    "today": "2026-09-16"
+  },
+  "regions": [
+    "South West",
+    "Midlands",
+    "East",
+    "London",
+    "Wales",
+    "Scotland",
+    "N. Ireland"
+  ],
+  "festivals": [
+    {
+      "id": "upfest",
+      "name": "Upfest",
+      "city": "Bristol",
+      "region": "South West",
+      "lat": 51.4395,
+      "lng": -2.6015,
+      "site": "https://www.upfest.co.uk/",
+      "location": "Bedminster & Southville, Bristol — hub around North Street / Tobacco Factory",
+      "postcode": "BS3 1JF",
+      "dates": "15–31 May 2026 (17-day programme)",
+      "dateShort": "15–31 May 2026",
+      "start": "2026-05-15",
+      "end": "2026-05-31",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Biennial (alternates full festival / \"Upfest Presents\"); active",
+      "statusNote": "Biennial — alternates a full festival with the shorter \"Upfest Presents\" programme. Active.",
+      "summary": "Europe's largest street art & graffiti festival. Hundreds of artists paint shopfronts, walls and hoardings across south Bristol, plus live music, workshops, tours and a paint market. Free to attend.",
+      "prev": [
+        {
+          "year": "2024",
+          "note": "'Upfest Presents' — 17 days, 100+ artists"
+        },
+        {
+          "year": "2023",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "Cancelled — replaced by '75 Walls in 75 Days'"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "Edition held"
+        },
+        {
+          "year": "2016",
+          "note": "Edition held"
+        },
+        {
+          "year": "2015",
+          "note": "Peak edition — 250 artists, 25 countries"
+        },
+        {
+          "year": "2008",
+          "note": "Founded"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @upfest",
+          "url": "https://www.instagram.com/upfest/"
+        },
+        {
+          "label": "Facebook Upfest.Bristol",
+          "url": "https://www.facebook.com/Upfest.Bristol/"
+        }
+      ],
+      "instagram": {
+        "handle": "@upfest",
+        "url": "https://www.instagram.com/upfest/"
+      },
+      "stays": [
+        {
+          "id": "upfest-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 51.4457,
+          "lng": -2.6106,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "upfest-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 51.4347,
+          "lng": -2.5911,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "upfest-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 51.4426,
+          "lng": -2.5958,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/upfest/reel/DZexKOMO7UZ/",
+        "https://www.instagram.com/westonwallz/p/DdW1lhWjVJF/",
+        "https://www.instagram.com/upfest/p/DdWoThjDuNz/"
+      ]
+    },
+    {
+      "id": "weston",
+      "name": "Weston Wallz",
+      "city": "Weston-super-Mare",
+      "region": "South West",
+      "lat": 51.3458,
+      "lng": -2.9834,
+      "site": "https://www.upfest.co.uk/festival/weston-wallz-2026/",
+      "location": "Weston-super-Mare town centre & seafront, Somerset — around the Grand Pier",
+      "postcode": "BS23 1AL",
+      "dates": "17–26 July 2026 (10 days)",
+      "dateShort": "17–26 July 2026",
+      "start": "2026-07-17",
+      "end": "2026-07-26",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual; active (run by Upfest)",
+      "statusNote": "Annual, run by the Upfest team. Active.",
+      "summary": "Upfest's seaside sister festival. ~20 new large-scale murals across the town plus community art projects, live painting and creative events. Free.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "5th edition"
+        },
+        {
+          "year": "2024",
+          "note": "Edition held"
+        },
+        {
+          "year": "2023",
+          "note": "Edition held"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "First edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @upfest",
+          "url": "https://www.instagram.com/upfest/"
+        },
+        {
+          "label": "Facebook Upfest.Bristol",
+          "url": "https://www.facebook.com/Upfest.Bristol/"
+        }
+      ],
+      "instagram": {
+        "handle": "@westonwallz",
+        "url": "https://www.instagram.com/westonwallz/"
+      },
+      "stays": [
+        {
+          "id": "weston-stay-0",
+          "kind": "Hotel",
+          "name": "Gasworks House",
+          "detail": "Twin or double, converted works, roof terrace",
+          "price": "£110 / night",
+          "priceValue": 110,
+          "walk": "9 min walk",
+          "lat": 51.352,
+          "lng": -2.9925,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "weston-stay-1",
+          "kind": "Apartment",
+          "name": "Two Yards Flat",
+          "detail": "Whole flat, sleeps four, weekend minimum",
+          "price": "£145 / night",
+          "priceValue": 145,
+          "walk": "14 min walk",
+          "lat": 51.341,
+          "lng": -2.973,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "weston-stay-2",
+          "kind": "Guest house",
+          "name": "Pigment & Pine",
+          "detail": "Six rooms above the café, continental breakfast",
+          "price": "£68 / night",
+          "priceValue": 68,
+          "walk": "5 min walk",
+          "lat": 51.3489,
+          "lng": -2.9777,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/westonwallz/p/DdW1lhWjVJF/",
+        "https://www.instagram.com/westonwallz/p/DdR4dMoDa-d/",
+        "https://www.instagram.com/westonwallz/p/DdKPI3bjbOy/"
+      ]
+    },
+    {
+      "id": "southend",
+      "name": "Southend City Jam",
+      "city": "Southend-on-Sea",
+      "region": "East",
+      "lat": 51.5348,
+      "lng": 0.7135,
+      "site": "https://www.southendcityjam.co.uk/",
+      "location": "Southend-on-Sea city centre, seafront & pier, Essex",
+      "postcode": "SS1 1EE (pier) / SS1 1DL (High St)",
+      "dates": "28–30 August 2026",
+      "dateShort": "28–30 August 2026",
+      "start": "2026-08-28",
+      "end": "2026-08-30",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual; active",
+      "statusNote": "Annual, held over the August bank holiday. Active.",
+      "summary": "Three-day international street art festival with 100–200+ local, national and international artists painting live across the city centre, seafront and pier. Free.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "August edition"
+        },
+        {
+          "year": "2024",
+          "note": "August edition"
+        },
+        {
+          "year": "2023",
+          "note": "August edition"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "First edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Facebook southendcityjam",
+          "url": "https://www.facebook.com/southendcityjam"
+        },
+        {
+          "label": "Instagram @southendcityjamofficial",
+          "url": "https://www.instagram.com/southendcityjamofficial"
+        },
+        {
+          "label": "TikTok @southendcityjam",
+          "url": "https://www.tiktok.com/@southendcityjam"
+        }
+      ],
+      "instagram": {
+        "handle": "@southendcityjamofficial",
+        "url": "https://www.instagram.com/southendcityjamofficial"
+      },
+      "stays": [
+        {
+          "id": "southend-stay-0",
+          "kind": "Hotel",
+          "name": "North Wall Inn",
+          "detail": "Double room, canal side, late check-out",
+          "price": "£88 / night",
+          "priceValue": 88,
+          "walk": "12 min walk",
+          "lat": 51.541,
+          "lng": 0.7044,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "southend-stay-1",
+          "kind": "Hostel",
+          "name": "Depot 14",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£34 / night",
+          "priceValue": 34,
+          "walk": "7 min walk",
+          "lat": 51.53,
+          "lng": 0.7239,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "southend-stay-2",
+          "kind": "Apartment",
+          "name": "Kiln Street Studio",
+          "detail": "Studio flat, sleeps two, self check-in",
+          "price": "£118 / night",
+          "priceValue": 118,
+          "walk": "4 min walk",
+          "lat": 51.5379,
+          "lng": 0.7192,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/doppelwashere/p/DdWqjfgDC0e/",
+        "https://www.instagram.com/portugeezer_raq/p/Dc88E1WAsAZ/",
+        "https://www.instagram.com/scaf_oner/reel/Dc8I-xhRn78/"
+      ]
+    },
+    {
+      "id": "wallgames",
+      "name": "Wall Games UK",
+      "city": "Northampton",
+      "region": "Midlands",
+      "lat": 52.24,
+      "lng": -0.893,
+      "site": "https://www.wallgames.co.uk/",
+      "location": "Northampton town centre — hub at The Roadmender, 1 Lady's Lane",
+      "postcode": "NN1 3AD",
+      "dates": "29–31 August 2026",
+      "dateShort": "29–31 August 2026",
+      "start": "2026-08-29",
+      "end": "2026-08-31",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual; active (relaunched 2026)",
+      "statusNote": "Relaunched for 2026 after a pause mid-decade. Active.",
+      "summary": "Three-day live graffiti and street art event in Northampton town centre — 330+ artists in 2026, plus competitions, workshops, music and family activities. Free.",
+      "prev": [
+        {
+          "year": "2022",
+          "note": "Founding-era edition"
+        },
+        {
+          "year": "2021",
+          "note": "Founding-era edition"
+        },
+        {
+          "year": "2020",
+          "note": "First edition"
+        },
+        {
+          "year": "—",
+          "note": "Paused mid-decade before the 2026 relaunch"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @wallgamesuk",
+          "url": "https://www.instagram.com/wallgamesuk"
+        },
+        {
+          "label": "Facebook Wall Games",
+          "url": "https://www.facebook.com/Wall-Games-102902701494572"
+        },
+        {
+          "label": "info@wallgames.co.uk",
+          "url": "mailto:info@wallgames.co.uk"
+        }
+      ],
+      "instagram": {
+        "handle": "@wallgamesuk",
+        "url": "https://www.instagram.com/wallgamesuk"
+      },
+      "stays": [
+        {
+          "id": "wallgames-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 52.2462,
+          "lng": -0.9021,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "wallgames-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 52.2352,
+          "lng": -0.8826,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "wallgames-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 52.2431,
+          "lng": -0.8873,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/wallgamesuk/p/DdV8_rwMwiR/",
+        "https://www.instagram.com/wallgamesuk/p/DdV8sSWsg3v/",
+        "https://www.instagram.com/wallgamesuk/p/DdV8iyXjFjI/"
+      ]
+    },
+    {
+      "id": "worcester",
+      "name": "Worcester Paint Festival",
+      "city": "Worcester",
+      "region": "Midlands",
+      "lat": 52.213,
+      "lng": -2.174,
+      "site": "https://worcesterpaintfestival.co.uk/",
+      "location": "Worcester — Sixways Hall of Fame legal wall (Sixways, Warriors Way) plus city-wide mural sites",
+      "postcode": "WR3 8ZE",
+      "dates": "5–6 Sept 2026 at Sixways; further murals unveiled from 7, 8 and 18 Sept 2026",
+      "dateShort": "5–6 Sept 2026 at Sixways; further murals unveiled from 7, 8 and 18 Sept 2026",
+      "start": "2026-09-05",
+      "end": "2026-09-06",
+      "extra": [
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-18"
+      ],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual; active (2026 in a new dispersed format)",
+      "statusNote": "Annual. 2026 runs in a new dispersed format rather than a single event day.",
+      "summary": "Worcester's annual street art festival. 2026 dropped the single event day for a spread-out programme: a two-day jam at the Sixways Hall of Fame legal wall plus individual large-scale murals around the city through September.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "Edition held"
+        },
+        {
+          "year": "2024",
+          "note": "Edition held"
+        },
+        {
+          "year": "2023",
+          "note": "Edition held"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "Galleries archived 2021–2025"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @worcesterpaintfestival",
+          "url": "https://www.instagram.com/worcesterpaintfestival"
+        },
+        {
+          "label": "Facebook worcesterpaintfestival",
+          "url": "https://www.facebook.com/worcesterpaintfestival"
+        }
+      ],
+      "instagram": {
+        "handle": "@worcesterpaintfestival",
+        "url": "https://www.instagram.com/worcesterpaintfestival"
+      },
+      "stays": [
+        {
+          "id": "worcester-stay-0",
+          "kind": "Hotel",
+          "name": "Gasworks House",
+          "detail": "Twin or double, converted works, roof terrace",
+          "price": "£110 / night",
+          "priceValue": 110,
+          "walk": "9 min walk",
+          "lat": 52.2192,
+          "lng": -2.1831,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "worcester-stay-1",
+          "kind": "Apartment",
+          "name": "Two Yards Flat",
+          "detail": "Whole flat, sleeps four, weekend minimum",
+          "price": "£145 / night",
+          "priceValue": 145,
+          "walk": "14 min walk",
+          "lat": 52.2082,
+          "lng": -2.1636,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "worcester-stay-2",
+          "kind": "Guest house",
+          "name": "Pigment & Pine",
+          "detail": "Six rooms above the café, continental breakfast",
+          "price": "£68 / night",
+          "priceValue": 68,
+          "walk": "5 min walk",
+          "lat": 52.2161,
+          "lng": -2.1683,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/worcesterpaintfestival/reel/DRPLUn4DTl6/",
+        "https://www.instagram.com/worcesterpaintfestival/reel/CyVjvC2o01L/",
+        "https://www.instagram.com/worcesterpaintfestival/reel/DdYUSO7t4OV/"
+      ]
+    },
+    {
+      "id": "cheltenham",
+      "name": "Cheltenham Paint Festival",
+      "city": "Cheltenham",
+      "region": "South West",
+      "lat": 51.8994,
+      "lng": -2.0783,
+      "site": "https://www.cheltenhampaintfestival.co.uk/",
+      "location": "Cheltenham town centre, Gloucestershire — ~90 sites on a 5-mile walking route",
+      "postcode": "GL50 (town centre)",
+      "dates": "Not confirmed — the 2025 edition was postponed after the loss of North Place car park; check official channels before planning",
+      "dateShort": "Dates not confirmed",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": null,
+      "status": "tbc",
+      "badge": "TBC",
+      "freq": "Annual (usually mid-Sept / summer); currently on hold",
+      "statusNote": "Currently on hold. The 2025 edition was postponed after the loss of North Place car park, disrupting the 2025/26 cycle.",
+      "summary": "One of the UK's biggest free street art festivals — 170+ artists painting ~90 locations across the Regency town, linked by a self-guided art walk. Venue loss disrupted the 2025/26 cycle.",
+      "prev": [
+        {
+          "year": "2024",
+          "note": "27–28 July"
+        },
+        {
+          "year": "2023",
+          "note": "September — saved by a £15k crowdfunder"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "Edition held"
+        },
+        {
+          "year": "2019",
+          "note": "Edition held"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "Founded by Andy 'Dice' Davies"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @cheltenhampaintfestival",
+          "url": "https://www.instagram.com/cheltenhampaintfestival"
+        },
+        {
+          "label": "Facebook cheltenhampaintfestival",
+          "url": "https://www.facebook.com/cheltenhampaintfestival"
+        },
+        {
+          "label": "X @CheltPaintFest",
+          "url": "https://twitter.com/CheltPaintFest"
+        }
+      ],
+      "instagram": {
+        "handle": "@cheltenhampaintfestival",
+        "url": "https://www.instagram.com/cheltenhampaintfestival"
+      },
+      "stays": [
+        {
+          "id": "cheltenham-stay-0",
+          "kind": "Hotel",
+          "name": "North Wall Inn",
+          "detail": "Double room, canal side, late check-out",
+          "price": "£88 / night",
+          "priceValue": 88,
+          "walk": "12 min walk",
+          "lat": 51.9056,
+          "lng": -2.0874,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "cheltenham-stay-1",
+          "kind": "Hostel",
+          "name": "Depot 14",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£34 / night",
+          "priceValue": 34,
+          "walk": "7 min walk",
+          "lat": 51.8946,
+          "lng": -2.0679,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "cheltenham-stay-2",
+          "kind": "Apartment",
+          "name": "Kiln Street Studio",
+          "detail": "Studio flat, sleeps two, self check-in",
+          "price": "£118 / night",
+          "priceValue": 118,
+          "walk": "4 min walk",
+          "lat": 51.9025,
+          "lng": -2.0726,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/cheltenhampaintfestival/p/C91lTjCtjDe/",
+        "https://www.instagram.com/cheltenhampaintfestival/p/C9zDi5gNvDQ/",
+        "https://www.instagram.com/cheltenhampaintfestival/p/C5vcnTzNHwZ/"
+      ]
+    },
+    {
+      "id": "btp",
+      "name": "Bring the Paint",
+      "city": "Leicester",
+      "region": "Midlands",
+      "lat": 52.635,
+      "lng": -1.131,
+      "site": "https://www.bringthepaint.co.uk/",
+      "location": "Leicester city centre — multiple walls across the city",
+      "postcode": "LE1 (city centre)",
+      "dates": "No 2026 edition — next expected 2027 (10th anniversary)",
+      "dateShort": "No 2026 edition",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": null,
+      "status": "none",
+      "badge": "No 2026",
+      "freq": "Biennial; active (between editions)",
+      "statusNote": "Biennial and between editions — the next is expected in 2027, its 10th anniversary.",
+      "summary": "International street art festival billed as one of the UK's biggest, filling Leicester city centre with large-scale murals plus live performances, workshops and community activities every two years.",
+      "prev": [
+        {
+          "year": "2024",
+          "note": "May edition"
+        },
+        {
+          "year": "2022",
+          "note": "May edition"
+        },
+        {
+          "year": "2019",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "First edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Facebook bringthepaintfest",
+          "url": "https://www.facebook.com/bringthepaintfest"
+        },
+        {
+          "label": "Instagram @bringthepaintfest",
+          "url": "https://www.instagram.com/bringthepaintfest"
+        }
+      ],
+      "instagram": {
+        "handle": "@bringthepaintfest",
+        "url": "https://www.instagram.com/bringthepaintfest"
+      },
+      "stays": [
+        {
+          "id": "btp-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 52.6412,
+          "lng": -1.1401,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "btp-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 52.6302,
+          "lng": -1.1206,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "btp-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 52.6381,
+          "lng": -1.1253,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": []
+    },
+    {
+      "id": "mosuk",
+      "name": "Meeting of Styles UK (London)",
+      "city": "East London",
+      "region": "London",
+      "lat": 51.524,
+      "lng": -0.0705,
+      "site": "https://www.meetingofstyles.co.uk/",
+      "location": "Shoreditch / Brick Lane, East London",
+      "postcode": "E1 / E2",
+      "dates": "No confirmed London date for 2026 — the UK edition ran as Meeting of Styles Cymru in Cardiff",
+      "dateShort": "No 2026 edition",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": null,
+      "status": "none",
+      "badge": "No 2026",
+      "freq": "Roughly annual; irregular",
+      "statusNote": "Irregular. For 2026 the UK leg ran as Meeting of Styles Cymru in Cardiff instead.",
+      "summary": "London's largest graffiti, street art and mural festival, run by the EndoftheLine crew as the UK leg of the global Meeting of Styles network — 800+ artists across nine editions since 2008.",
+      "prev": [
+        {
+          "year": "2021",
+          "note": "'Tales of Unity'"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "Edition held"
+        },
+        {
+          "year": "2016",
+          "note": "Edition held"
+        },
+        {
+          "year": "2015",
+          "note": "Edition held"
+        },
+        {
+          "year": "2014",
+          "note": "Edition held"
+        },
+        {
+          "year": "2011",
+          "note": "Edition held"
+        },
+        {
+          "year": "2010",
+          "note": "Edition held"
+        },
+        {
+          "year": "2009",
+          "note": "Edition held"
+        },
+        {
+          "year": "2008",
+          "note": "First UK edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @mos_uk",
+          "url": "https://www.instagram.com/mos_uk"
+        },
+        {
+          "label": "Facebook MeetingofStylesUK",
+          "url": "https://www.facebook.com/MeetingofStylesUK"
+        },
+        {
+          "label": "X @mos_uk",
+          "url": "https://twitter.com/mos_uk"
+        },
+        {
+          "label": "YouTube jimvision",
+          "url": "https://www.youtube.com/jimvision"
+        }
+      ],
+      "instagram": {
+        "handle": "@mos_uk",
+        "url": "https://www.instagram.com/mos_uk"
+      },
+      "stays": [
+        {
+          "id": "mosuk-stay-0",
+          "kind": "Hotel",
+          "name": "Gasworks House",
+          "detail": "Twin or double, converted works, roof terrace",
+          "price": "£110 / night",
+          "priceValue": 110,
+          "walk": "9 min walk",
+          "lat": 51.5302,
+          "lng": -0.0796,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "mosuk-stay-1",
+          "kind": "Apartment",
+          "name": "Two Yards Flat",
+          "detail": "Whole flat, sleeps four, weekend minimum",
+          "price": "£145 / night",
+          "priceValue": 145,
+          "walk": "14 min walk",
+          "lat": 51.5192,
+          "lng": -0.0601,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "mosuk-stay-2",
+          "kind": "Guest house",
+          "name": "Pigment & Pine",
+          "detail": "Six rooms above the café, continental breakfast",
+          "price": "£68 / night",
+          "priceValue": 68,
+          "walk": "5 min walk",
+          "lat": 51.5271,
+          "lng": -0.0648,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/mos_uk/reel/CGDhg8bJZBA/",
+        "https://www.instagram.com/verbal.remedy/reel/DbBCxEJKMbE/",
+        "https://www.instagram.com/onersigns/reel/DakcKG-OFXx/"
+      ]
+    },
+    {
+      "id": "moscymru",
+      "name": "Meeting of Styles Cymru",
+      "city": "Cardiff",
+      "region": "Wales",
+      "lat": 51.468,
+      "lng": -3.19,
+      "site": "https://meetingofstyles.com/03-05-july-2026-cardiff-wales-united-kingdom/",
+      "location": "Cardiff — Sevenoaks Park (Grangetown) and Millennium Walkway by the Principality Stadium, plus Butetown, Wood St, Schooner Way, Callaghan Square",
+      "postcode": "CF11 / CF10",
+      "dates": "3–5 July 2026 (some listings say 2–5 July)",
+      "dateShort": "3–5 July 2026",
+      "start": "2026-07-03",
+      "end": "2026-07-05",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "New in 2026; intended as annual",
+      "statusNote": "New in 2026 and intended to become annual.",
+      "summary": "Wales' first Meeting of Styles: 100+ graffiti and street artists on two major wall spots, with music, food, exhibitions, cyphers, a b-boy battle and film screenings. Theme: 'Togetherness'. Led by Welsh artist Amelia 'Unity' Thomas.",
+      "prev": [
+        {
+          "year": "—",
+          "note": "Inaugural Welsh edition in 2026"
+        },
+        {
+          "year": "1997",
+          "note": "Global Meeting of Styles network running since"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @int_meetingofstyles",
+          "url": "https://www.instagram.com/int_meetingofstyles"
+        },
+        {
+          "label": "Facebook MeetingOfStylesWorldwide",
+          "url": "https://www.facebook.com/MeetingOfStylesWorldwide"
+        },
+        {
+          "label": "X @meetingofstyles",
+          "url": "https://twitter.com/meetingofstyles"
+        }
+      ],
+      "instagram": {
+        "handle": "@int_meetingofstyles",
+        "url": "https://www.instagram.com/int_meetingofstyles"
+      },
+      "stays": [
+        {
+          "id": "moscymru-stay-0",
+          "kind": "Hotel",
+          "name": "North Wall Inn",
+          "detail": "Double room, canal side, late check-out",
+          "price": "£88 / night",
+          "priceValue": 88,
+          "walk": "12 min walk",
+          "lat": 51.4742,
+          "lng": -3.1991,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "moscymru-stay-1",
+          "kind": "Hostel",
+          "name": "Depot 14",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£34 / night",
+          "priceValue": 34,
+          "walk": "7 min walk",
+          "lat": 51.4632,
+          "lng": -3.1796,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "moscymru-stay-2",
+          "kind": "Apartment",
+          "name": "Kiln Street Studio",
+          "detail": "Studio flat, sleeps two, self check-in",
+          "price": "£118 / night",
+          "priceValue": 118,
+          "walk": "4 min walk",
+          "lat": 51.4711,
+          "lng": -3.1843,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/children4changejamaica/p/DdXbUKOgcgS/",
+        "https://www.instagram.com/streetviewjam_artcore/p/DdUSZACjeqN/",
+        "https://www.instagram.com/streetviewjam_artcore/p/DdR2JuDjaN5/"
+      ]
+    },
+    {
+      "id": "yardworks",
+      "name": "Yardworks Festival",
+      "city": "Glasgow",
+      "region": "Scotland",
+      "lat": 55.8656,
+      "lng": -4.2965,
+      "site": "https://swg3.tv/explore/yardworks/festival/",
+      "location": "SWG3, 100 Eastvale Place, Glasgow (Galvanizers Yard)",
+      "postcode": "G3 8QG",
+      "dates": "2–3 May 2026 (10th anniversary)",
+      "dateShort": "2–3 May 2026",
+      "start": "2026-05-02",
+      "end": "2026-05-03",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual (early May); active",
+      "statusNote": "Annual, early May. 2026 is the 10th anniversary. Ticketed.",
+      "summary": "Scotland's biggest street art festival, staged in SWG3's Galvanizers Yard. Live painting by Glasgow, UK and European writers alongside music, workshops, markets and skate/BMX. Ticketed.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "3–4 May"
+        },
+        {
+          "year": "2024",
+          "note": "4–5 May"
+        },
+        {
+          "year": "2023",
+          "note": "5–7 May"
+        },
+        {
+          "year": "2022",
+          "note": "18–19 June"
+        },
+        {
+          "year": "2021",
+          "note": "Small pandemic edition"
+        },
+        {
+          "year": "2019",
+          "note": "Edition held"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "First edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @swg3glasgow",
+          "url": "https://www.instagram.com/swg3glasgow"
+        },
+        {
+          "label": "Facebook SWG3glasgow",
+          "url": "https://www.facebook.com/SWG3glasgow"
+        },
+        {
+          "label": "X @SWG3glasgow",
+          "url": "https://twitter.com/SWG3glasgow"
+        }
+      ],
+      "instagram": {
+        "handle": "@swg3glasgow",
+        "url": "https://www.instagram.com/swg3glasgow"
+      },
+      "stays": [
+        {
+          "id": "yardworks-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 55.8718,
+          "lng": -4.3056,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "yardworks-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 55.8608,
+          "lng": -4.2861,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "yardworks-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 55.8687,
+          "lng": -4.2908,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/swg3glasgow/p/Dcv9D37CEFT/",
+        "https://www.instagram.com/swg3glasgow/reel/DYATsp2RHz2/",
+        "https://www.instagram.com/swg3glasgow/reel/DdW_N1cxrf4/"
+      ]
+    },
+    {
+      "id": "nuart",
+      "name": "Nuart Aberdeen",
+      "city": "Aberdeen",
+      "region": "Scotland",
+      "lat": 57.1462,
+      "lng": -2.1035,
+      "site": "https://www.aberdeeninspired.com/festival/nuart-aberdeen",
+      "location": "Aberdeen city centre — Merchant Quarter, Belmont St, Castlegate and around",
+      "postcode": "AB10 / AB11",
+      "dates": "22–26 April 2026 — theme 'Poetry Is In The Streets'",
+      "dateShort": "22–26 April 2026",
+      "start": "2026-04-22",
+      "end": "2026-04-26",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual (April); active",
+      "statusNote": "Annual, every April. 2026 theme: 'Poetry Is In The Streets'.",
+      "summary": "UK offshoot of Norway's Nuart, run by Aberdeen Inspired. Internationally curated murals and interventions across the Granite City, plus free walking tours, workshops, talks and a symposium.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "Edition held"
+        },
+        {
+          "year": "2024",
+          "note": "Edition held"
+        },
+        {
+          "year": "2023",
+          "note": "Edition held"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2019",
+          "note": "Edition held"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "First edition — 60+ permanent artworks to date"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @nuartaberdeen",
+          "url": "https://www.instagram.com/nuartaberdeen"
+        },
+        {
+          "label": "Facebook NuartAberdeen",
+          "url": "https://www.facebook.com/NuartAberdeen"
+        },
+        {
+          "label": "X @NuartAberdeen",
+          "url": "https://twitter.com/NuartAberdeen"
+        }
+      ],
+      "instagram": {
+        "handle": "@nuartaberdeen",
+        "url": "https://www.instagram.com/nuartaberdeen"
+      },
+      "stays": [
+        {
+          "id": "nuart-stay-0",
+          "kind": "Hotel",
+          "name": "Gasworks House",
+          "detail": "Twin or double, converted works, roof terrace",
+          "price": "£110 / night",
+          "priceValue": 110,
+          "walk": "9 min walk",
+          "lat": 57.1524,
+          "lng": -2.1126,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "nuart-stay-1",
+          "kind": "Apartment",
+          "name": "Two Yards Flat",
+          "detail": "Whole flat, sleeps four, weekend minimum",
+          "price": "£145 / night",
+          "priceValue": 145,
+          "walk": "14 min walk",
+          "lat": 57.1414,
+          "lng": -2.0931,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "nuart-stay-2",
+          "kind": "Guest house",
+          "name": "Pigment & Pine",
+          "detail": "Six rooms above the café, continental breakfast",
+          "price": "£68 / night",
+          "priceValue": 68,
+          "walk": "5 min walk",
+          "lat": 57.1493,
+          "lng": -2.0978,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/abdninspired/reel/DbVtFfCoWU-/",
+        "https://www.instagram.com/nuartfestival/p/DdMAThigqhS/",
+        "https://www.instagram.com/urbanatlasuk/p/DctwKB6jjAN/"
+      ]
+    },
+    {
+      "id": "htn",
+      "name": "Hit the North",
+      "city": "Belfast",
+      "region": "N. Ireland",
+      "lat": 54.6015,
+      "lng": -5.9285,
+      "site": "https://www.seedheadarts.com/htn",
+      "location": "Belfast city centre — Cathedral Quarter, Union Street / Kent Street area",
+      "postcode": "BT1 1LU",
+      "dates": "30 April – 3 May 2026 (13th edition; community jam Sun 3 May, 2–6pm)",
+      "dateShort": "30 April – 3 May 2026",
+      "start": "2026-04-30",
+      "end": "2026-05-03",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual (late April / May Bank Holiday); active",
+      "statusNote": "Annual over the May bank holiday, produced by Seedhead Arts. 2026 is the 13th edition.",
+      "summary": "Ireland's largest street art festival, produced by Seedhead Arts as part of the Cathedral Quarter Arts Festival. A week of painting by ~50 local, national and international artists ending in a public jam. Free.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "Edition held"
+        },
+        {
+          "year": "2024",
+          "note": "Edition held"
+        },
+        {
+          "year": "2023",
+          "note": "Edition held"
+        },
+        {
+          "year": "2022",
+          "note": "Edition held"
+        },
+        {
+          "year": "2021",
+          "note": "Edition held"
+        },
+        {
+          "year": "2019",
+          "note": "Edition held"
+        },
+        {
+          "year": "2018",
+          "note": "Edition held"
+        },
+        {
+          "year": "2017",
+          "note": "Edition held"
+        },
+        {
+          "year": "2016",
+          "note": "Edition held"
+        },
+        {
+          "year": "2015",
+          "note": "Edition held"
+        },
+        {
+          "year": "2014",
+          "note": "Edition held"
+        },
+        {
+          "year": "2013",
+          "note": "First edition — 800+ murals to date"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @seedheadarts",
+          "url": "https://www.instagram.com/seedheadarts"
+        },
+        {
+          "label": "Facebook seedheadarts",
+          "url": "https://www.facebook.com/seedheadarts"
+        },
+        {
+          "label": "info@seedheadarts.com",
+          "url": "mailto:info@seedheadarts.com"
+        }
+      ],
+      "instagram": {
+        "handle": "@seedheadarts",
+        "url": "https://www.instagram.com/seedheadarts"
+      },
+      "stays": [
+        {
+          "id": "htn-stay-0",
+          "kind": "Hotel",
+          "name": "North Wall Inn",
+          "detail": "Double room, canal side, late check-out",
+          "price": "£88 / night",
+          "priceValue": 88,
+          "walk": "12 min walk",
+          "lat": 54.6077,
+          "lng": -5.9376,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "htn-stay-1",
+          "kind": "Hostel",
+          "name": "Depot 14",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£34 / night",
+          "priceValue": 34,
+          "walk": "7 min walk",
+          "lat": 54.5967,
+          "lng": -5.9181,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "htn-stay-2",
+          "kind": "Apartment",
+          "name": "Kiln Street Studio",
+          "detail": "Studio flat, sleeps two, self check-in",
+          "price": "£118 / night",
+          "priceValue": 118,
+          "walk": "4 min walk",
+          "lat": 54.6046,
+          "lng": -5.9228,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/seedheadarts/p/DW9TCT1DCnH/",
+        "https://www.instagram.com/seedheadarts/p/DdW2gKeCE8M/",
+        "https://www.instagram.com/seedheadarts/p/DdG9mIiiAKY/"
+      ]
+    },
+    {
+      "id": "lmf",
+      "name": "London Mural Festival",
+      "city": "London",
+      "region": "London",
+      "lat": 51.495,
+      "lng": -0.115,
+      "site": "https://www.londonmuralfestival.com/",
+      "location": "Multiple sites across ~11 London boroughs (Lambeth, Hackney, Southwark, Croydon and others)",
+      "postcode": "City-wide",
+      "dates": "No confirmed 2026 edition — check official channels",
+      "dateShort": "Dates not confirmed",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": null,
+      "status": "tbc",
+      "badge": "TBC",
+      "freq": "Roughly biennial; intermittent",
+      "statusNote": "Intermittent and roughly biennial. No 2026 edition confirmed.",
+      "summary": "City-wide festival of commissioned large-scale murals by leading international and UK artists, with an interactive map, exhibitions, installations and a live events programme. Free.",
+      "prev": [
+        {
+          "year": "2024",
+          "note": "September — 120+ murals, theme 'Connection'"
+        },
+        {
+          "year": "2022",
+          "note": "September edition"
+        },
+        {
+          "year": "2020",
+          "note": "Inaugural, COVID-restricted"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @londonmuralfest",
+          "url": "https://www.instagram.com/londonmuralfest"
+        },
+        {
+          "label": "Facebook londonmuralfestival",
+          "url": "https://www.facebook.com/londonmuralfestival"
+        }
+      ],
+      "instagram": {
+        "handle": "@londonmuralfest",
+        "url": "https://www.instagram.com/londonmuralfest"
+      },
+      "stays": [
+        {
+          "id": "lmf-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 51.5012,
+          "lng": -0.1241,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "lmf-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 51.4902,
+          "lng": -0.1046,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "lmf-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 51.4981,
+          "lng": -0.1093,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/londonmuralfest/reel/C_0JTmwvZVy/",
+        "https://www.instagram.com/leebofkininspo/p/DdWPo4kgnch/",
+        "https://www.instagram.com/globalstreetart/p/DVq7YnajMof/"
+      ]
+    },
+    {
+      "id": "pasteup",
+      "name": "London International Paste-Up Festival",
+      "city": "East London",
+      "region": "London",
+      "lat": 51.5195,
+      "lng": -0.0765,
+      "site": "https://arthouseprojectlondon.com/londoninternationalpasteupfestival",
+      "location": "Shoreditch & Brick Lane, East London — incl. Cheshire St and Leake Street Tunnel",
+      "postcode": "E1 / E2 · SE1 7NN",
+      "dates": "September 2026 (6th edition) — exact weekend announced via socials",
+      "dateShort": "September 2026 · weekend TBC",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": "2026-09",
+      "status": "month",
+      "badge": "Month TBC",
+      "freq": "Annual (September); active",
+      "statusNote": "Annual every September. The exact weekend is announced via the festival socials.",
+      "summary": "Run by the Art House Project London collective: hundreds of international artists send paper works to be pasted up across Shoreditch and Brick Lane. 300+ artists over its first four editions; supports charitable causes.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "September — 5th edition, 2nd & 4th weekends"
+        },
+        {
+          "year": "2024",
+          "note": "September edition"
+        },
+        {
+          "year": "2023",
+          "note": "September edition"
+        },
+        {
+          "year": "2022",
+          "note": "September edition"
+        },
+        {
+          "year": "2021",
+          "note": "First edition"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @londonintpasteupfest",
+          "url": "https://www.instagram.com/londonintpasteupfest"
+        },
+        {
+          "label": "Instagram @arthouseprojectlondon",
+          "url": "https://www.instagram.com/arthouseprojectlondon"
+        },
+        {
+          "label": "Facebook arthouseprojectlondon",
+          "url": "https://www.facebook.com/arthouseprojectlondon"
+        }
+      ],
+      "instagram": {
+        "handle": "@londonintpasteupfest",
+        "url": "https://www.instagram.com/londonintpasteupfest"
+      },
+      "stays": [
+        {
+          "id": "pasteup-stay-0",
+          "kind": "Hotel",
+          "name": "Gasworks House",
+          "detail": "Twin or double, converted works, roof terrace",
+          "price": "£110 / night",
+          "priceValue": 110,
+          "walk": "9 min walk",
+          "lat": 51.5257,
+          "lng": -0.0856,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "pasteup-stay-1",
+          "kind": "Apartment",
+          "name": "Two Yards Flat",
+          "detail": "Whole flat, sleeps four, weekend minimum",
+          "price": "£145 / night",
+          "priceValue": 145,
+          "walk": "14 min walk",
+          "lat": 51.5147,
+          "lng": -0.0661,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "pasteup-stay-2",
+          "kind": "Guest house",
+          "name": "Pigment & Pine",
+          "detail": "Six rooms above the café, continental breakfast",
+          "price": "£68 / night",
+          "priceValue": 68,
+          "walk": "5 min walk",
+          "lat": 51.5226,
+          "lng": -0.0708,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/londonintpasteupfest/p/Db0RciPCOGk/",
+        "https://www.instagram.com/londonintpasteupfest/p/DcF3CZxCjIs/",
+        "https://www.instagram.com/londonintpasteupfest/p/DcK9xD4iArc/"
+      ]
+    },
+    {
+      "id": "openclose",
+      "name": "Open/Close Dundee",
+      "city": "Dundee",
+      "region": "Scotland",
+      "lat": 56.462,
+      "lng": -2.9707,
+      "site": "https://openclosedundee.co.uk/",
+      "location": "Dundee — city centre lanes and closes, Stobswell and other neighbourhoods",
+      "postcode": "DD1 / DD4",
+      "dates": "Rolling programme rather than fixed festival dates; new doors and walls added through the year",
+      "dateShort": "Rolling programme, all year",
+      "start": null,
+      "end": null,
+      "extra": [],
+      "month": null,
+      "status": "rolling",
+      "badge": "Rolling",
+      "freq": "Ongoing project with annual painting rounds",
+      "statusNote": "An ongoing project with annual painting rounds rather than a single dated festival.",
+      "summary": "Street art trail project rather than a weekend festival: local artists paint doors, closes and walls across Dundee, building a permanent city-wide trail with maps and community commissions.",
+      "prev": [
+        {
+          "year": "2015",
+          "note": "Annual painting programmes since — city centre, Stobswell and Coldside trails"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @openclosedundee",
+          "url": "https://www.instagram.com/openclosedundee"
+        },
+        {
+          "label": "Facebook openclosedundee",
+          "url": "https://www.facebook.com/openclosedundee"
+        }
+      ],
+      "instagram": {
+        "handle": "@openclosedundee",
+        "url": "https://www.instagram.com/openclosedundee"
+      },
+      "stays": [
+        {
+          "id": "openclose-stay-0",
+          "kind": "Hotel",
+          "name": "North Wall Inn",
+          "detail": "Double room, canal side, late check-out",
+          "price": "£88 / night",
+          "priceValue": 88,
+          "walk": "12 min walk",
+          "lat": 56.4682,
+          "lng": -2.9798,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "openclose-stay-1",
+          "kind": "Hostel",
+          "name": "Depot 14",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£34 / night",
+          "priceValue": 34,
+          "walk": "7 min walk",
+          "lat": 56.4572,
+          "lng": -2.9603,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "openclose-stay-2",
+          "kind": "Apartment",
+          "name": "Kiln Street Studio",
+          "detail": "Studio flat, sleeps two, self check-in",
+          "price": "£118 / night",
+          "priceValue": 118,
+          "walk": "4 min walk",
+          "lat": 56.4651,
+          "lng": -2.965,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/openclosedundee/p/C_gHaAOssB-/",
+        "https://www.instagram.com/designdundee/p/DbX9oR-CHiF/",
+        "https://www.instagram.com/openclosedundee/p/DaDGe-mgJoq/"
+      ]
+    },
+    {
+      "id": "muraljam",
+      "name": "Great Yarmouth Mural Jam",
+      "city": "Great Yarmouth",
+      "region": "East",
+      "lat": 52.5675,
+      "lng": 1.7321,
+      "site": "https://www.reprezentproject.co.uk/",
+      "location": "Seafront wall behind the Pleasure Beach, South Beach Parade, Great Yarmouth",
+      "postcode": "NR30 3EH",
+      "dates": "5 Sept 2026, 10am–6pm",
+      "dateShort": "5 Sept 2026",
+      "start": "2026-09-05",
+      "end": "2026-09-05",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Annual (September); active",
+      "statusNote": "Annual, run by Reprezent Project CIC since 2016. The 2026 edition marked the organisation's tenth anniversary.",
+      "summary": "More than 70 artists painted freestyle along a 500-metre stretch of Great Yarmouth's seafront wall behind the Pleasure Beach, drawing on the town's coastline, landmarks and attractions for inspiration. Run by Reprezent Project CIC to mark its tenth anniversary. Free to attend.",
+      "prev": [
+        {
+          "year": "2025",
+          "note": "Edition held"
+        },
+        {
+          "year": "2016",
+          "note": "Reprezent Project CIC founded — Mural Jam began"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @reprezentproject",
+          "url": "https://www.instagram.com/reprezentproject/"
+        },
+        {
+          "label": "Facebook reprezentproject",
+          "url": "https://www.facebook.com/reprezentproject/"
+        }
+      ],
+      "instagram": {
+        "handle": "@reprezentproject",
+        "url": "https://www.instagram.com/reprezentproject/"
+      },
+      "stays": [
+        {
+          "id": "muraljam-stay-0",
+          "kind": "Hotel",
+          "name": "The Sign Painter",
+          "detail": "Double room, town centre, breakfast included",
+          "price": "£96 / night",
+          "priceValue": 96,
+          "walk": "6 min walk",
+          "lat": 52.5737,
+          "lng": 1.723,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "muraljam-stay-1",
+          "kind": "Guest house",
+          "name": "Marlowe Rooms",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£72 / night",
+          "priceValue": 72,
+          "walk": "11 min walk",
+          "lat": 52.5627,
+          "lng": 1.7425,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "muraljam-stay-2",
+          "kind": "Hostel",
+          "name": "Lockup Yard Beds",
+          "detail": "Bunk or private, shared kitchen, artist rate",
+          "price": "£29 / night",
+          "priceValue": 29,
+          "walk": "3 min walk",
+          "lat": 52.5706,
+          "lng": 1.7378,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ],
+      "instagramPosts": [
+        "https://www.instagram.com/reprezentproject/reel/Dc9FkAyBDut/",
+        "https://www.instagram.com/reprezentproject/p/DWi68KlCHC3/",
+        "https://www.instagram.com/reprezentproject/reel/DKH52sdIscY/"
+      ]
+    }
+  ]
+}

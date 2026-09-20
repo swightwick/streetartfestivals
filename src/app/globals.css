@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-bg: #3e2a47;
+  --color-surface: #242424;
+  --color-text: #dfd0b8;
+  --color-divider: #dfd0b83d;
+
+  --color-accent: #ff9700;
+  --color-accent-100: #fff8ed;
+  --color-accent-200: #ffeed6;
+  --color-accent-300: #ffe1b5;
+  --color-accent-400: #ffc97a;
+  --color-accent-500: #ffaa2e;
+  --color-accent-600: #f08e00;
+  --color-accent-700: #bd7000;
+  --color-accent-800: #875000;
+  --color-accent-900: #543200;
+
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --font-sans: var(--font-archivo), Archivo, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-accent-500);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-accent-400);
+  text-decoration: underline;
+}
+a.no-underline:hover {
+  text-decoration: none;
+}
+
+.input {
+  background: #000;
+  border-color: var(--color-divider);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+.input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 38%, transparent);
+}
+
+.grayscale-tile {
+  filter: grayscale(1) contrast(1.08);
+}
+
+/* Leaflet theming to match the atlas's monochrome map */
+.leaflet-container {
+  background: #d9d7d4;
+  font-family: var(--font-sans);
+}
+.leaflet-tile-pane {
+  filter: grayscale(1) contrast(0.9) brightness(1.02);
+}
+.leaflet-tile {
+  opacity: 1 !important;
+  max-width: none !important;
+}
+.leaflet-control-attribution {
+  background: rgba(10, 10, 10, 0.8) !important;
+  color: #7d7979 !important;
+  font-size: 9px !important;
+}
+.leaflet-control-attribution a {
+  color: #9b9797 !important;
+}
+.leaflet-bar a {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border-color: #333 !important;
+  border-radius: 0 !important;
+}
+.leaflet-bar a:hover {
+  background: var(--color-accent) !important;
+  color: var(--color-bg) !important;
+}
+.leaflet-control-locate-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.leaflet-control-locate-error {
+  color: var(--color-accent) !important;
+}
+.leaflet-tooltip {
+  background: var(--color-bg);
+  border: 1px solid var(--color-accent);
+  border-radius: 0;
+  color: var(--color-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: none;
+  padding: 5px 9px;
+  pointer-events: auto;
+}
+.leaflet-tooltip:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+.leaflet-tooltip [data-tip-name] {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.leaflet-tooltip-left::before,
+.leaflet-tooltip-right::before,
+.leaflet-tooltip-top::before,
+.leaflet-tooltip-bottom::before {
+  display: none;
+}
+
+.sa-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #444141 transparent;
+}
+
+@keyframes saRise {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.sa-rise {
+  animation: saRise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Page transitions — route changes are handled by React's <ViewTransition>
+   (see AtlasApp.tsx / festivals/[id]/page.tsx). The map carries a "morph"
+   view-transition-class so it scales/repositions from its old box into its
+   new one instead of cutting; everything else around it (the "atlas-shell"
+   named pair) cross-fades and resizes to the destination layout. */
+::view-transition {
+  /* Let clicks reach the live page instead of the transition overlay. */
+  pointer-events: none;
+}
+
+::view-transition-group(atlas-shell) {
+  animation-duration: 750ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+::view-transition-group(.morph) {
+  animation-duration: 750ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-map-blur;
+  animation-duration: 750ms;
+}
+@keyframes via-map-blur {
+  35% {
+    filter: blur(4px) grayscale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+  .sa-rise {
+    animation: none !important;
+  }
+}
+
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
