@@ -133,6 +133,8 @@ a.no-underline:hover {
 .sa-scroll {
   scrollbar-width: thin;
   scrollbar-color: #444141 transparent;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @keyframes saRise {

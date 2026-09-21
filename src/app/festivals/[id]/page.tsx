@@ -80,7 +80,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
           href={f.site}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto px-3.5 py-[7px] font-[800] text-[11px] uppercase leading-none tracking-[.1em] no-underline"
+          className="ml-auto whitespace-nowrap px-3.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] no-underline"
           style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
         >
           Official site &#8599;
@@ -105,11 +105,19 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
             href={`https://www.google.com/maps/search/?api=1&query=${f.lat},${f.lng}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-2.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
-            style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "var(--color-accent-700)" }}
+            className="absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
+            style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
           >
             Google Maps &#8599;
           </a>
+          {logo && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={logo}
+              alt={`${f.name} logo`}
+              className="absolute bottom-3 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
+            />
+          )}
         </div>
 
         <div className="sa-scroll min-w-0 flex-1 lg:overflow-y-auto">
@@ -119,7 +127,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               <img
                 src={logo}
                 alt={`${f.name} logo`}
-                className="absolute right-4 top-6 h-16 w-16 object-contain md:right-[26px] md:top-[30px] sm:h-28 sm:w-28"
+                className="absolute right-4 top-6 hidden h-16 w-16 object-contain md:right-[26px] md:top-[30px] lg:block sm:h-28 sm:w-28"
               />
             )}
 
@@ -162,15 +170,13 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   2026 dates
                 </div>
-                <div
-                  className="font-normal text-[13px] leading-[1.5]"
-                  style={isPast(f) ? { textDecoration: "line-through", textDecorationThickness: 2 } : undefined}
-                >
+                <div className="font-normal text-[13px] leading-[1.5]">
                   {f.dates}
+                  {isPast(f) && <div>Event passed</div>}
                 </div>
                 <AddToCalendarButton festival={f} />
               </div>
-              <div className="py-4 pb-[18px] pl-[18px] pr-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
+              <div className="py-4 pb-[18px] pr-[18px] lg:border-l lg:pl-[18px] lg:[border-color:var(--color-divider)]">
                 <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Location
                 </div>
@@ -179,7 +185,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 </div>
                 <div className="mt-2 font-[800] text-[13px] leading-none tracking-[.06em]">{f.postcode}</div>
               </div>
-              <div className="py-4 pb-[18px] pl-[18px] pr-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
+              <div className="py-4 pb-[18px] pr-[18px] lg:border-l lg:pl-[18px] lg:[border-color:var(--color-divider)]">
                 <div className="mb-[5px] font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Website
                 </div>
@@ -193,7 +199,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                   {siteShort}
                 </a>
               </div>
-              <div className="py-4 pb-[18px] pl-[18px] lg:border-l lg:[border-color:var(--color-divider)]">
+              <div className="py-4 pb-[18px] lg:border-l lg:pl-[18px] lg:[border-color:var(--color-divider)]">
                 <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   Follow
                 </div>
@@ -298,7 +304,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
 
             <Link
               href="/"
-              className="mt-6 flex items-center justify-center gap-2 border px-4 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:text-white"
+              className="mt-6 flex items-center justify-center gap-2 border px-4 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:text-white"
               style={{ borderColor: "var(--color-divider)" }}
             >
               &#8249; Back to map

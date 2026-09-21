@@ -14,24 +14,41 @@ export function getFestival(id: string): Festival | undefined {
   return data.festivals.find((f) => f.id === id);
 }
 
-export function sortKey(f: Festival): string {
-  if (f.start) return "1" + f.start;
-  if (f.month) return "1" + f.month + "-99";
-  if (f.status === "rolling") return "2";
-  if (f.status === "tbc") return "3" + f.name;
+function lastRelevantDate(f: Festival): string | null | undefined {
+  return f.extra && f.extra.length
+    ? [f.end || f.start, ...f.extra].filter(Boolean).sort().pop()
+    : f.end || f.start;
+}
+
+export function isPast(f: Festival, today: string = SITE.today): boolean {
+  const last = lastRelevantDate(f);
+  return !!last && last < today;
+}
+
+// Invert a "YYYY-MM-DD" date so that ascending string sort on the result
+// orders the underlying dates newest-first instead of oldest-first.
+function invertDate(date: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  return [9999 - y, 99 - m, 99 - d]
+    .map((n, i) => String(n).padStart(i === 0 ? 4 : 2, "0"))
+    .join("-");
+}
+
+// Ranking, top to bottom: upcoming dated/month events (soonest first), then
+// rolling, then TBC, then events that have already happened (most recent
+// first), then anything with no date info at all (alphabetical).
+export function sortKey(f: Festival, today: string = SITE.today): string {
+  const date = f.start ?? (f.month ? f.month + "-99" : undefined);
+  if (date) {
+    return isPast(f, today) ? "3" + invertDate(f.start ?? date) : "0" + date;
+  }
+  if (f.status === "rolling") return "1";
+  if (f.status === "tbc") return "2" + f.name;
   return "4" + f.name;
 }
 
 export function sortedFestivals(list: Festival[] = getAllFestivals()): Festival[] {
   return [...list].sort((a, b) => (sortKey(a) < sortKey(b) ? -1 : 1));
-}
-
-export function isPast(f: Festival, today: string = SITE.today): boolean {
-  const last =
-    f.extra && f.extra.length
-      ? [f.end || f.start, ...f.extra].filter(Boolean).sort().pop()
-      : f.end || f.start;
-  return !!last && last < today;
 }
 
 export function isDated(f: Festival): boolean {

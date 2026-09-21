@@ -15,7 +15,8 @@ export default function StayCard({ stay, bordered }: { stay: Stay; bordered: boo
 
   return (
     <div
-      className={`flex flex-col items-start gap-[5px] px-4 pb-[17px] pt-[15px] text-left transition-colors duration-150 hover:bg-surface ${
+      id={`stay-${stay.id}`}
+      className={`flex flex-col items-start gap-[5px] pb-[17px] pt-[15px] text-left transition-colors duration-150 hover:bg-surface lg:px-4 ${
         bordered ? "lg:border-l lg:[border-color:var(--color-divider)]" : ""
       }`}
     >

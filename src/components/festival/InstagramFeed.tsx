@@ -7,21 +7,13 @@ export default function InstagramFeed({
   festival: Festival;
   galleryImages?: string[];
 }) {
-  const { handle, url } = festival.instagram;
+  const { handle } = festival.instagram;
   const posts = festival.instagramPosts ?? [];
 
   return (
     <div>
       <div className="mb-3.5 flex items-baseline gap-2.5">
         <h2 className="m-0 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">Gallery</h2>
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-[600] text-[11px] leading-none tracking-[.04em]"
-        >
-          {handle}
-        </a>
       </div>
 
       {galleryImages.length > 0 ? (

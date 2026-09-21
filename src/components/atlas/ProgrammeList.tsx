@@ -15,7 +15,7 @@ export default function ProgrammeList({ list, allCount, selectedId, onHover }: P
   const dated = list.filter(isDated).length;
 
   return (
-    <div className="sa-scroll flex min-h-0 flex-col overflow-y-auto">
+    <div className="sa-scroll flex h-full min-h-0 flex-col overflow-y-auto">
       <div
         className="sticky top-0 z-[3] flex flex-wrap items-center gap-x-5 gap-y-1.5 px-5 py-3"
         style={{ background: "var(--color-bg)", borderBottom: "2px solid var(--color-divider)" }}

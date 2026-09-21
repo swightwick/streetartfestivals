@@ -2,7 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, ViewTransition } from "react";
+import { useEffect, useMemo, useState, ViewTransition } from "react";
+import { createPortal } from "react-dom";
 import type { Festival } from "@/lib/types";
 import { sortedFestivals } from "@/lib/festivals";
 import Nav, { STATUS_FILTERS, type StatusFilter } from "./Nav";
@@ -28,6 +29,8 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
   const [listOpen, setListOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "calendar">("list");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -126,57 +129,64 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
           </div>
         </div>
 
-        {/* Mobile / tablet: the programme list + calendar open as an overlay over the map. */}
-        <div
-          className={`fixed inset-0 z-[1200] flex justify-end transition-opacity duration-300 lg:hidden ${
-            listOpen ? "opacity-100" : "pointer-events-none opacity-0"
-          }`}
-          aria-hidden={!listOpen}
-        >
-          <button
-            type="button"
-            aria-label="Close festival list"
-            onClick={() => setListOpen(false)}
-            tabIndex={listOpen ? 0 : -1}
-            className="absolute inset-0 bg-black/60"
-          />
-          <div
-            className={`relative flex h-full w-full max-w-[400px] min-h-0 flex-col transition-transform duration-300 ease-out ${
-              listOpen ? "translate-x-0" : "translate-x-full"
-            }`}
-            style={{ background: "var(--color-bg)", borderLeft: "2px solid var(--color-divider)" }}
-          >
+        {/* Mobile / tablet: the programme list + calendar open as an overlay over the map.
+            Rendered through a portal straight onto <body> — nesting a scrollable
+            fixed-position overlay inside this app's own overflow-hidden/100dvh
+            shell is a known source of broken touch-scrolling on iOS Safari. */}
+        {mounted &&
+          createPortal(
+            <div
+              className={`fixed inset-0 z-[1200] flex justify-end transition-opacity duration-300 lg:hidden ${
+                listOpen ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+              aria-hidden={!listOpen}
+            >
+              <button
+                type="button"
+                aria-label="Close festival list"
+                onClick={() => setListOpen(false)}
+                tabIndex={listOpen ? 0 : -1}
+                className="absolute inset-0 bg-black/60"
+              />
               <div
-                className="flex flex-none items-center gap-2 px-3 py-2.5"
-                style={{ borderBottom: "2px solid var(--color-divider)" }}
+                className={`relative flex h-full w-full min-h-0 flex-col transition-transform duration-300 ease-out ${
+                  listOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+                style={{ background: "var(--color-bg)", borderLeft: "2px solid var(--color-divider)" }}
               >
-                <button
-                  type="button"
-                  onClick={() => setMobileView((v) => (v === "list" ? "calendar" : "list"))}
-                  className="flex h-8 items-center gap-1.5 border px-2.5 font-[800] text-[10px] uppercase leading-none tracking-[.09em] transition-all duration-150 hover:border-accent-500"
-                  style={{ borderColor: "var(--color-divider)", color: "var(--color-text)" }}
+                <div
+                  className="flex flex-none items-center gap-2 px-3 py-2.5"
+                  style={{ borderBottom: "2px solid var(--color-divider)" }}
                 >
-                  {mobileView === "list" ? "Calendar" : "‹ Programme"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setListOpen(false)}
-                  aria-label="Close"
-                  className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
-                  style={{ borderColor: "var(--color-divider)" }}
-                >
-                  &#10005;
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileView((v) => (v === "list" ? "calendar" : "list"))}
+                    className="flex h-8 items-center gap-1.5 border px-2.5 font-[800] text-[10px] uppercase leading-none tracking-[.09em] transition-all duration-150 hover:border-accent-500"
+                    style={{ borderColor: "var(--color-divider)", color: "var(--color-text)" }}
+                  >
+                    {mobileView === "list" ? "Calendar" : "‹ Programme"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setListOpen(false)}
+                    aria-label="Close"
+                    className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
+                    style={{ borderColor: "var(--color-divider)" }}
+                  >
+                    &#10005;
+                  </button>
+                </div>
+                <div className="min-h-0 flex-1">
+                  {mobileView === "list" ? (
+                    <ProgrammeList list={filtered} allCount={festivals.length} selectedId={selectedId} onHover={peek} />
+                  ) : (
+                    <CalendarPanel festivals={festivals} onOpen={focusFromDrawer} fillHeight />
+                  )}
+                </div>
               </div>
-              <div className="min-h-0 flex-1">
-                {mobileView === "list" ? (
-                  <ProgrammeList list={filtered} allCount={festivals.length} selectedId={selectedId} onHover={peek} />
-                ) : (
-                  <CalendarPanel festivals={festivals} onOpen={focusFromDrawer} fillHeight />
-                )}
-              </div>
-          </div>
-        </div>
+            </div>,
+            document.body
+          )}
         {calendarOpen && (
           <div className="fixed inset-0 z-[1200] grid place-items-center p-4">
             <button

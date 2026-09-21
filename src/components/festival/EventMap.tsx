@@ -33,9 +33,9 @@ export default function EventMap({ festival }: { festival: Festival }) {
       });
       const stayIcon = L.divIcon({
         className: "",
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
-        html: '<div style="width:12px;height:12px;background:#000;box-shadow:0 0 0 2px #fff"></div>',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+        html: '<div style="width:16px;height:16px;background:#000;box-shadow:0 0 0 2px #fff"></div>',
       });
 
       L.marker([festival.lat, festival.lng], { icon: eventIcon, title: festival.name }).addTo(map);
@@ -46,7 +46,10 @@ export default function EventMap({ festival }: { festival: Festival }) {
           .bindTooltip(
             `<span data-tip-name="1">${s.name}</span><span style="opacity:.65;font-weight:600"> · ${s.kind} · ${s.walk}</span>`,
             { direction: "top", offset: [0, -4], opacity: 1 }
-          );
+          )
+          .on("click", () => {
+            document.getElementById(`stay-${s.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
       });
 
       map.setView([festival.lat, festival.lng], 14, { animate: false });

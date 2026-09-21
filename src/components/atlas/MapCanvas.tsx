@@ -32,10 +32,12 @@ export default function MapCanvas({
   const youAreHereRef = useRef<Marker | null>(null);
   const onMarkerClickRef = useRef(onMarkerClick);
   const onTooltipClickRef = useRef(onTooltipClick);
+  const selectedIdRef = useRef(selectedId);
   useEffect(() => {
     onMarkerClickRef.current = onMarkerClick;
     onTooltipClickRef.current = onTooltipClick;
-  }, [onMarkerClick, onTooltipClick]);
+    selectedIdRef.current = selectedId;
+  }, [onMarkerClick, onTooltipClick, selectedId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -178,7 +180,20 @@ export default function MapCanvas({
               '</span><span style="opacity:.65;font-weight:600"> · open event &#8250;</span>',
             { direction: "top", offset: [0, -3], opacity: 1, interactive: true }
           )
-          .on("click", () => onMarkerClickRef.current(f.id));
+          .on("click", () => {
+            // First tap: zoom in + select (and let the tooltip open).
+            // Second tap on an already-selected marker: navigate. The ref is
+            // updated synchronously here rather than via a React effect, so
+            // there's no timing gap for a fast real second tap to race —
+            // Leaflet's own click-to-toggle on the tooltip runs independently
+            // of this and doesn't affect whether we navigate.
+            if (selectedIdRef.current === f.id) {
+              onTooltipClickRef.current(f.id);
+            } else {
+              selectedIdRef.current = f.id;
+              onMarkerClickRef.current(f.id);
+            }
+          });
 
         marker.off("mouseout", marker.closeTooltip, marker);
         marker.on("mouseout", () => {
@@ -187,6 +202,14 @@ export default function MapCanvas({
           }, 260);
         });
         marker.on("tooltipopen", (e) => {
+          // Belt-and-braces: tie the zoom-in to the tooltip actually opening
+          // (which fires reliably on real touch devices) rather than relying
+          // solely on our own "click" handler's branch running correctly.
+          if (selectedIdRef.current !== f.id) {
+            selectedIdRef.current = f.id;
+            onMarkerClickRef.current(f.id);
+          }
+
           const tipEl = e.tooltip.getElement();
           if (!tipEl || (tipEl as HTMLElement & { _wired?: boolean })._wired) return;
           (tipEl as HTMLElement & { _wired?: boolean })._wired = true;
@@ -198,11 +221,10 @@ export default function MapCanvas({
             overTip = null;
             marker.closeTooltip();
           });
-          tipEl.addEventListener("click", (ev) => {
-            ev.stopPropagation();
-            overTip = null;
-            onTooltipClickRef.current(f.id);
-          });
+          // No click-to-navigate listener here — it proved unreliable on
+          // real touch devices (small hit target, tooltip repositioning
+          // during the marker's own pan/zoom animation). Tapping the marker
+          // itself a second time (handled above) is the one reliable path.
         });
         if (visibleIds.has(f.id)) marker.addTo(map);
         markersRef.current[f.id] = { marker, solid };
