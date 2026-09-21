@@ -11,7 +11,7 @@ import {
 } from "@/lib/festivals";
 import { buildEventJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getEventGalleryImages, getEventLogo } from "@/lib/gallery";
-import EventMapLoader from "@/components/festival/EventMapLoader";
+import EventMapPanel from "@/components/festival/EventMapPanel";
 import AddToCalendarButton from "@/components/festival/AddToCalendarButton";
 import InstagramFeed from "@/components/festival/InstagramFeed";
 import StayCard from "@/components/festival/StayCard";
@@ -47,8 +47,8 @@ export async function generateMetadata({
   };
 }
 
-const badgeStyle = (status: string) =>
-  status === "confirmed"
+const badgeStyle = (status: string, passed: boolean) =>
+  status === "confirmed" && !passed
     ? { background: "var(--color-accent)", color: "var(--color-bg)" }
     : { border: "1px solid var(--color-accent)", color: "var(--color-accent-500)" };
 
@@ -71,7 +71,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
       style={{ background: "var(--color-bg)" }}
     >
       <header
-        className="z-[5] flex h-[54px] flex-none items-center gap-3.5 px-[18px] py-[11px] shadow-[0_1px_0_rgba(0,0,0,.14),0_5px_14px_-4px_rgba(0,0,0,.34)]"
+        className="z-[5] flex h-[54px] flex-none items-center gap-3.5 px-[18px] py-[11px] shadow-[0_5px_14px_-4px_rgba(0,0,0,.34)]"
       >
         <span className="whitespace-nowrap font-[800] text-[24px] leading-[0.9] tracking-[-0.035em] text-accent">
           streetart<span className="text-white">festivals</span>uk
@@ -80,8 +80,8 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
           href={f.site}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto whitespace-nowrap px-3.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] no-underline"
-          style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+          className="ml-auto whitespace-nowrap border px-3.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:!bg-transparent hover:!text-[var(--color-accent)]"
+          style={{ background: "var(--color-accent)", borderColor: "var(--color-accent)", color: "var(--color-bg)" }}
         >
           Official site &#8599;
         </a>
@@ -91,33 +91,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         <div
           className="relative aspect-square w-full flex-none lg:aspect-auto lg:w-1/3 lg:max-w-[33.333%]"
         >
-          <ViewTransition name="atlas-map" share="morph" default="none">
-            <EventMapLoader festival={f} />
-          </ViewTransition>
-          <Link
-            href="/"
-            className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
-            style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
-          >
-            &#8249; Back to map
-          </Link>
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${f.lat},${f.lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
-            style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
-          >
-            Google Maps &#8599;
-          </a>
-          {logo && (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={logo}
-              alt={`${f.name} logo`}
-              className="absolute bottom-3 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
-            />
-          )}
+          <EventMapPanel festival={f} logo={logo} />
         </div>
 
         <div className="sa-scroll min-w-0 flex-1 lg:overflow-y-auto">
@@ -131,12 +105,12 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               />
             )}
 
-            <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
+            <div className="mb-3.5 flex flex-col items-start gap-3.5">
               <span
                 className="px-[9px] py-[5px] font-[600] text-[10px] uppercase leading-none tracking-[.14em]"
-                style={badgeStyle(f.status)}
+                style={badgeStyle(f.status, isPast(f))}
               >
-                {f.badge}
+                {isPast(f) ? "Passed" : f.badge}
               </span>
               <span className="font-[600] text-[10px] uppercase leading-none tracking-[.14em] text-white">
                 {f.region} · {f.freq}
@@ -285,11 +259,19 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                       }}
                     >
                       <span className="font-[800] text-[12.5px] leading-[1.2] text-white">{r.name}</span>
-                      <span className="flex items-baseline gap-[7px]">
+                      {isPast(r) && (
                         <span
-                          className="font-[400] text-[10.5px] leading-none text-[color-mix(in_srgb,var(--color-text)_60%,transparent)]"
-                          style={isPast(r) ? { textDecoration: "line-through" } : undefined}
+                          className="mt-[3px] px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em]"
+                          style={{
+                            border: "1px solid color-mix(in srgb, var(--color-accent) 70%, transparent)",
+                            color: "var(--color-accent-500)",
+                          }}
                         >
+                          Passed
+                        </span>
+                      )}
+                      <span className="mt-[3px] flex items-baseline gap-[7px]">
+                        <span className="font-[400] text-[10.5px] leading-none text-[color-mix(in_srgb,var(--color-text)_60%,transparent)]">
                           {r.dateShort}
                         </span>
                         <span className="font-[600] text-[10px] leading-none text-accent-500">
@@ -304,7 +286,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
 
             <Link
               href="/"
-              className="mt-6 flex items-center justify-center gap-2 border px-4 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:text-white"
+              className="mt-6 flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
               style={{ borderColor: "var(--color-divider)" }}
             >
               &#8249; Back to map

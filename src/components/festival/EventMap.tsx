@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Festival } from "@/lib/types";
 
-export default function EventMap({ festival }: { festival: Festival }) {
+export default function EventMap({ festival, onLoad }: { festival: Festival; onLoad?: () => void }) {
   const elRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -20,7 +20,11 @@ export default function EventMap({ festival }: { festival: Festival }) {
         fadeAnimation: false,
         maxZoom: 19,
       });
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+      const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+      // Fire once the visible tiles have actually finished loading, not just
+      // once the Leaflet instance exists — otherwise the overlay buttons fade
+      // in while the map underneath is still a blank grey placeholder.
+      tiles.on("load", () => onLoad?.());
       map.zoomControl.setPosition("topright");
 
       const eventIcon = L.divIcon({

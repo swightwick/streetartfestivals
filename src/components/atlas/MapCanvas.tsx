@@ -14,6 +14,7 @@ interface MapCanvasProps {
   visibleIds: Set<string>;
   selectedId: string | null;
   focusRequest: FocusRequest | null;
+  resetRequest?: number | null;
   onMarkerClick: (id: string) => void;
   onTooltipClick: (id: string) => void;
 }
@@ -23,6 +24,7 @@ export default function MapCanvas({
   visibleIds,
   selectedId,
   focusRequest,
+  resetRequest,
   onMarkerClick,
   onTooltipClick,
 }: MapCanvasProps) {
@@ -166,66 +168,28 @@ export default function MapCanvas({
         });
       };
 
-      let overTip: string | null = null;
       festivals.forEach((f) => {
         const solid = f.status === "confirmed" || f.status === "month" || f.status === "rolling";
         const marker = L.marker([f.lat, f.lng], {
           icon: icon(solid, f.id === selectedId),
           riseOnHover: true,
           title: f.name,
-        })
-          .bindTooltip(
-            '<span data-tip-name="1">' +
-              f.name +
-              '</span><span style="opacity:.65;font-weight:600"> · open event &#8250;</span>',
-            { direction: "top", offset: [0, -3], opacity: 1, interactive: true }
-          )
-          .on("click", () => {
-            // First tap: zoom in + select (and let the tooltip open).
-            // Second tap on an already-selected marker: navigate. The ref is
-            // updated synchronously here rather than via a React effect, so
-            // there's no timing gap for a fast real second tap to race —
-            // Leaflet's own click-to-toggle on the tooltip runs independently
-            // of this and doesn't affect whether we navigate.
-            if (selectedIdRef.current === f.id) {
-              onTooltipClickRef.current(f.id);
-            } else {
-              selectedIdRef.current = f.id;
-              onMarkerClickRef.current(f.id);
-            }
-          });
-
-        marker.off("mouseout", marker.closeTooltip, marker);
-        marker.on("mouseout", () => {
-          setTimeout(() => {
-            if (overTip !== f.id) marker.closeTooltip();
-          }, 260);
-        });
-        marker.on("tooltipopen", (e) => {
-          // Belt-and-braces: tie the zoom-in to the tooltip actually opening
-          // (which fires reliably on real touch devices) rather than relying
-          // solely on our own "click" handler's branch running correctly.
-          if (selectedIdRef.current !== f.id) {
+        }).on("click", () => {
+          // First click/tap: zoom in + select (the "sync" effect below opens
+          // the tooltip in response to the selection change). Second
+          // click/tap on an already-selected marker: navigate. We don't use
+          // Leaflet's own bindTooltip hover/click-toggle behaviour at all —
+          // on touch it fires its own click-based toggle independently of
+          // this handler, racing with it. Tooltip visibility is instead
+          // driven purely by our own selectedId state (see the sync effect).
+          if (selectedIdRef.current === f.id) {
+            onTooltipClickRef.current(f.id);
+          } else {
             selectedIdRef.current = f.id;
             onMarkerClickRef.current(f.id);
           }
-
-          const tipEl = e.tooltip.getElement();
-          if (!tipEl || (tipEl as HTMLElement & { _wired?: boolean })._wired) return;
-          (tipEl as HTMLElement & { _wired?: boolean })._wired = true;
-          tipEl.style.cursor = "pointer";
-          tipEl.addEventListener("mouseenter", () => {
-            overTip = f.id;
-          });
-          tipEl.addEventListener("mouseleave", () => {
-            overTip = null;
-            marker.closeTooltip();
-          });
-          // No click-to-navigate listener here — it proved unreliable on
-          // real touch devices (small hit target, tooltip repositioning
-          // during the marker's own pan/zoom animation). Tapping the marker
-          // itself a second time (handled above) is the one reliable path.
         });
+
         if (visibleIds.has(f.id)) marker.addTo(map);
         markersRef.current[f.id] = { marker, solid };
       });
@@ -272,6 +236,10 @@ export default function MapCanvas({
   }, []);
 
   // Sync marker visibility + selected icon whenever filters/selection change.
+  // Tooltip visibility is driven entirely from here (bound only for the
+  // selected marker, as a permanent tooltip) rather than Leaflet's own
+  // hover/click auto-toggle — that toggle fires independently of our click
+  // handler on touch devices and raced with it.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -283,17 +251,49 @@ export default function MapCanvas({
       if (on && !has) entry.marker.addTo(map);
       if (!on && has) map.removeLayer(entry.marker);
       if (iconFn) entry.marker.setIcon(iconFn(entry.solid, id === selectedId));
+
+      if (id === selectedId) {
+        if (!entry.marker.getTooltip()) {
+          const f = festivals.find((x) => x.id === id);
+          if (f) {
+            entry.marker.bindTooltip('<span data-tip-name="1">' + f.name + "</span>", {
+              direction: "top",
+              offset: [0, -5],
+              opacity: 1,
+              permanent: true,
+              interactive: true,
+            });
+          }
+        }
+        entry.marker.openTooltip();
+      } else if (entry.marker.getTooltip()) {
+        entry.marker.unbindTooltip();
+      }
     });
   });
 
-  // Pan/zoom to a focused festival.
+  // Pan/zoom to a focused festival. If already zoomed in past the target
+  // level, just re-centre on the new marker rather than zooming back out.
   useEffect(() => {
     if (!focusRequest) return;
     const map = mapRef.current;
     const entry = markersRef.current[focusRequest.id];
     if (!map || !entry) return;
-    map.setView(entry.marker.getLatLng(), 11, { animate: true });
+    const targetZoom = Math.max(map.getZoom(), 11);
+    map.setView(entry.marker.getLatLng(), targetZoom, { animate: true });
   }, [focusRequest]);
+
+  // "View full map" — zoom back out to fit every visible festival.
+  useEffect(() => {
+    if (resetRequest == null) return;
+    const map = mapRef.current;
+    if (!map) return;
+    const visible = festivals.filter((f) => visibleIds.has(f.id));
+    if (visible.length === 0) return;
+    const bounds = visible.map((f) => [f.lat, f.lng] as [number, number]);
+    map.flyToBounds(bounds, { padding: [44, 44] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetRequest]);
 
   return (
     <div

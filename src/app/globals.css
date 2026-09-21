@@ -103,7 +103,7 @@ a.no-underline:hover {
 }
 .leaflet-tooltip {
   background: var(--color-bg);
-  border: 1px solid var(--color-accent);
+  border: none;
   border-radius: 0;
   color: var(--color-text);
   font-size: 11px;
@@ -111,7 +111,7 @@ a.no-underline:hover {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   box-shadow: none;
-  padding: 5px 9px;
+  padding: 7px 11px;
   pointer-events: auto;
 }
 .leaflet-tooltip:hover {
@@ -120,14 +120,20 @@ a.no-underline:hover {
 }
 .leaflet-tooltip [data-tip-name] {
   font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 .leaflet-tooltip-left::before,
 .leaflet-tooltip-right::before,
-.leaflet-tooltip-top::before,
 .leaflet-tooltip-bottom::before {
   display: none;
+}
+.leaflet-tooltip-top::before {
+  border-width: 5px;
+  margin-left: -5px;
+  margin-bottom: -10px;
+  border-top-color: var(--color-bg);
+}
+.leaflet-tooltip-top:hover::before {
+  border-top-color: var(--color-accent);
 }
 
 .sa-scroll {
@@ -151,19 +157,32 @@ a.no-underline:hover {
   animation: saRise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+@keyframes saFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sa-fade {
+  animation: saFade 0.4s ease both;
+}
+
 /* Page transitions — route changes are handled by React's <ViewTransition>
    (see AtlasApp.tsx / festivals/[id]/page.tsx). The map carries a "morph"
    view-transition-class so it scales/repositions from its old box into its
    new one instead of cutting; everything else around it (the "atlas-shell"
-   named pair) cross-fades and resizes to the destination layout. */
+   named pair) cross-fades in place — its group animation is disabled so the
+   browser doesn't also interpolate size/position between the two pages'
+   differing layouts (which reads as an unwanted "scroll" motion). */
 ::view-transition {
   /* Let clicks reach the live page instead of the transition overlay. */
   pointer-events: none;
 }
 
 ::view-transition-group(atlas-shell) {
-  animation-duration: 750ms;
-  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation: none;
 }
 
 ::view-transition-group(.morph) {
@@ -187,7 +206,8 @@ a.no-underline:hover {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }
-  .sa-rise {
+  .sa-rise,
+  .sa-fade {
     animation: none !important;
   }
 }

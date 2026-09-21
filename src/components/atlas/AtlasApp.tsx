@@ -26,6 +26,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
   const [region, setRegion] = useState("All");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusRequest, setFocusRequest] = useState<{ id: string; nonce: number } | null>(null);
+  const [resetRequest, setResetRequest] = useState<number | null>(null);
   const [listOpen, setListOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "calendar">("list");
@@ -55,6 +56,10 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
     setFocusRequest({ id, nonce: Date.now() });
   };
   const peek = (id: string) => setSelectedId(id);
+  const resetView = () => {
+    setSelectedId(null);
+    setResetRequest(Date.now());
+  };
   // Tooltip click opens the full record (a real navigation); the pin itself
   // just selects + pans, matching the map's "peek vs open" distinction.
   const goToFestival = (id: string) => router.push(`/festivals/${id}`);
@@ -86,15 +91,26 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               style={{ borderRight: "2px solid var(--color-divider)" }}
             >
               <ViewTransition name="atlas-map" share="morph" default="none">
-                <div className="min-h-0 flex-1">
+                <div className="relative min-h-0 flex-1">
                   <MapCanvas
                     festivals={festivals}
                     visibleIds={visibleIds}
                     selectedId={selectedId}
                     focusRequest={focusRequest}
+                    resetRequest={resetRequest}
                     onMarkerClick={focus}
                     onTooltipClick={goToFestival}
                   />
+                  {selectedId && (
+                    <button
+                      type="button"
+                      onClick={resetView}
+                      className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
+                      style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
+                    >
+                      View full map
+                    </button>
+                  )}
                 </div>
               </ViewTransition>
               <div
@@ -149,9 +165,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 className="absolute inset-0 bg-black/60"
               />
               <div
-                className={`relative flex h-full w-full min-h-0 flex-col transition-transform duration-300 ease-out ${
-                  listOpen ? "translate-x-0" : "translate-x-full"
-                }`}
+                className="relative flex h-full w-full min-h-0 flex-col"
                 style={{ background: "var(--color-bg)", borderLeft: "2px solid var(--color-divider)" }}
               >
                 <div
