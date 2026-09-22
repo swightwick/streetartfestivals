@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Festival } from "@/lib/types";
+import { addPriorityTileLayer } from "@/lib/mapTiles";
 
 export default function EventMap({ festival, onLoad }: { festival: Festival; onLoad?: () => void }) {
   const elRef = useRef<HTMLDivElement | null>(null);
@@ -20,7 +21,7 @@ export default function EventMap({ festival, onLoad }: { festival: Festival; onL
         fadeAnimation: false,
         maxZoom: 19,
       });
-      const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+      const tiles = addPriorityTileLayer(L, map, { maxZoom: 19 });
       // Fire once the visible tiles have actually finished loading, not just
       // once the Leaflet instance exists — otherwise the overlay buttons fade
       // in while the map underneath is still a blank grey placeholder.

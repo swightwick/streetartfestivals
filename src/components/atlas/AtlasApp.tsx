@@ -155,13 +155,16 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               className={`fixed inset-0 z-[1200] flex justify-end transition-opacity duration-300 lg:hidden ${
                 listOpen ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
-              aria-hidden={!listOpen}
+              // `inert` (rather than aria-hidden) also pulls every focusable
+              // descendant — the header buttons, the programme list's links —
+              // out of the tab order while the drawer is closed, so it can't
+              // be focused via keyboard while hidden from the a11y tree.
+              inert={!listOpen}
             >
               <button
                 type="button"
                 aria-label="Close festival list"
                 onClick={() => setListOpen(false)}
-                tabIndex={listOpen ? 0 : -1}
                 className="absolute inset-0 bg-black/60"
               />
               <div

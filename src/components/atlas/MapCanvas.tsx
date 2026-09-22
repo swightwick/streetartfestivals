@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap, Marker, DivIcon } from "leaflet";
 import type { Festival } from "@/lib/types";
+import { addPriorityTileLayer } from "@/lib/mapTiles";
 
 interface FocusRequest {
   id: string;
@@ -64,10 +65,10 @@ export default function MapCanvas({
         fadeAnimation: false,
       });
       map.setView([54.6, -3.4], 5);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      addPriorityTileLayer(L, map, {
         maxZoom: 19,
         attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(map);
+      });
       map.zoomControl.setPosition("bottomright");
       mapRef.current = map;
 
