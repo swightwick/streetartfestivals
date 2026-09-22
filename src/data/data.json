@@ -3,8 +3,7 @@
     "name": "streetartfestivalsuk",
     "tagline": "Every street art and graffiti festival in the UK and Ireland, plotted and dated.",
     "url": "https://www.streetartfestivals.uk",
-    "accent": "#948979",
-    "today": "2026-09-16"
+    "accent": "#948979"
   },
   "regions": [
     "South West",

@@ -20,7 +20,14 @@ function lastRelevantDate(f: Festival): string | null | undefined {
     : f.end || f.start;
 }
 
-export function isPast(f: Festival, today: string = SITE.today): boolean {
+// The wall-clock date, not a hand-maintained field — a stored "today" drifts
+// stale between deploys and silently mislabels every "Passed"/"Confirmed"
+// badge, the calendar's today marker, and the ICS DTSTAMP.
+export function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function isPast(f: Festival, today: string = todayIso()): boolean {
   const last = lastRelevantDate(f);
   return !!last && last < today;
 }
@@ -37,7 +44,7 @@ function invertDate(date: string): string {
 // Ranking, top to bottom: upcoming dated/month events (soonest first), then
 // rolling, then TBC, then events that have already happened (most recent
 // first), then anything with no date info at all (alphabetical).
-export function sortKey(f: Festival, today: string = SITE.today): string {
+export function sortKey(f: Festival, today: string = todayIso()): string {
   const date = f.start ?? (f.month ? f.month + "-99" : undefined);
   if (date) {
     return isPast(f, today) ? "3" + invertDate(f.start ?? date) : "0" + date;

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -47,6 +47,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#3e2a47",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

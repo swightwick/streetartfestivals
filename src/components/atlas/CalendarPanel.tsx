@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Festival } from "@/lib/types";
-import { eventsOnDay, SITE } from "@/lib/festivals";
+import { eventsOnDay, todayIso } from "@/lib/festivals";
 
 const MON = [
   "January", "February", "March", "April", "May", "June",
@@ -22,7 +22,7 @@ interface CalendarPanelProps {
 }
 
 export default function CalendarPanel({ festivals, onOpen, fillHeight = false }: CalendarPanelProps) {
-  const today = SITE.today;
+  const today = todayIso();
   const [month, setMonth] = useState(8);
   const [year, setYear] = useState(2026);
   const [cal, setCal] = useState<"month" | "year">("month");

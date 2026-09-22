@@ -1,7 +1,7 @@
 "use client";
 
 import type { Festival } from "@/lib/types";
-import { SITE, isPast } from "@/lib/festivals";
+import { SITE, isPast, todayIso } from "@/lib/festivals";
 
 function pad(s: string) {
   return s.replace(/-/g, "");
@@ -21,7 +21,7 @@ function vevent(f: Festival, start: string, end: string, suffix: string) {
   return [
     "BEGIN:VEVENT",
     `UID:${f.id}${suffix}@${new URL(SITE.url).host}`,
-    `DTSTAMP:${pad(SITE.today)}T090000Z`,
+    `DTSTAMP:${pad(todayIso())}T090000Z`,
     `DTSTART;VALUE=DATE:${pad(start)}`,
     `DTEND;VALUE=DATE:${plusOneDay(end)}`,
     `SUMMARY:${esc(f.name)}`,

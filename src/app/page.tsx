@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import AtlasApp from "@/components/atlas/AtlasApp";
 import { getAllFestivals, siteUrl, SITE, sortedFestivals } from "@/lib/festivals";
 
+// Re-render periodically so "Passed"/"Confirmed" badges and calendar state
+// stay accurate against the real date between deploys, not just at build time.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: `${SITE.name} — UK & Ireland street art festival guide`,
   description: SITE.tagline,

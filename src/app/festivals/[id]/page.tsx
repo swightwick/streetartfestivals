@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ViewTransition } from "react";
 import {
@@ -19,6 +20,10 @@ import StayCard from "@/components/festival/StayCard";
 export function generateStaticParams() {
   return getAllFestivals().map((f) => ({ id: f.id }));
 }
+
+// Re-render periodically so "Passed" status stays accurate against the real
+// date between deploys, not just at build time.
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -97,10 +102,11 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         <div className="sa-scroll min-w-0 flex-1 lg:overflow-y-auto">
           <div className="relative px-4 pb-[60px] pt-6 md:px-[26px] md:pt-[30px] md:pb-8" style={{ maxWidth: 1280 }}>
             {logo && (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
+              <Image
                 src={logo}
                 alt={`${f.name} logo`}
+                width={112}
+                height={112}
                 className="absolute right-4 top-6 hidden h-16 w-16 object-contain md:right-[26px] md:top-[30px] lg:block sm:h-28 sm:w-28"
               />
             )}

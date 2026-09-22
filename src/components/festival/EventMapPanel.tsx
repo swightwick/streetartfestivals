@@ -2,6 +2,7 @@
 
 import { useState, ViewTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import type { Festival } from "@/lib/types";
 
@@ -47,10 +48,11 @@ export default function EventMapPanel({
             Google Maps &#8599;
           </a>
           {logo && (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
+            <Image
               src={logo}
               alt={`${festival.name} logo`}
+              width={64}
+              height={64}
               className="sa-fade absolute bottom-3 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
             />
           )}

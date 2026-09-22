@@ -57,7 +57,6 @@ export interface SiteData {
     tagline: string;
     url: string;
     accent: string;
-    today: string;
   };
   regions: string[];
   festivals: Festival[];
