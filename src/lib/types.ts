@@ -47,7 +47,6 @@ export interface Festival {
   prev: PrevEdition[];
   socials: Social[];
   instagram: { handle: string; url: string };
-  instagramPosts?: string[];
   stays: Stay[];
 }
 
@@ -56,7 +55,6 @@ export interface SiteData {
     name: string;
     tagline: string;
     url: string;
-    accent: string;
   };
   regions: string[];
   festivals: Festival[];

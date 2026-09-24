@@ -92,6 +92,14 @@ export function nearbyFestivals(current: Festival, count = 4): NearbyFestival[] 
     .slice(0, count);
 }
 
+// The next festival after `current` in the same order the homepage list
+// uses (soonest upcoming first, ...), wrapping back to the start at the end.
+export function nextFestival(current: Festival): Festival {
+  const ordered = sortedFestivals();
+  const idx = ordered.findIndex((f) => f.id === current.id);
+  return ordered[(idx + 1) % ordered.length];
+}
+
 export function regionsCount(list: Festival[]): number {
   return new Set(list.map((f) => f.region)).size;
 }

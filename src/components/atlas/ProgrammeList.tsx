@@ -9,9 +9,10 @@ interface ProgrammeListProps {
   allCount: number;
   selectedId: string | null;
   onHover: (id: string) => void;
+  onOpenInfo?: () => void;
 }
 
-export default function ProgrammeList({ list, allCount, selectedId, onHover }: ProgrammeListProps) {
+export default function ProgrammeList({ list, allCount, selectedId, onHover, onOpenInfo }: ProgrammeListProps) {
   const dated = list.filter(isDated).length;
 
   return (
@@ -20,6 +21,18 @@ export default function ProgrammeList({ list, allCount, selectedId, onHover }: P
         className="sticky top-0 z-[3] flex flex-wrap items-center gap-x-5 gap-y-1.5 px-5 py-3"
         style={{ background: "var(--color-bg)", borderBottom: "2px solid var(--color-divider)" }}
       >
+        {onOpenInfo && (
+          <button
+            type="button"
+            onClick={onOpenInfo}
+            className="flex items-center gap-1.5 border-0 bg-transparent p-0 font-[700] text-[13px] uppercase leading-none tracking-[.08em] text-accent-500 transition-colors duration-150 hover:text-accent-400"
+          >
+            <span aria-hidden className="text-[14px] leading-none">
+              &#9432;
+            </span>
+            More information
+          </button>
+        )}
         <span className="font-[600] text-[13px] uppercase leading-none tracking-[.08em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
           <b className="font-[800] text-white">{allCount}</b> festivals
         </span>

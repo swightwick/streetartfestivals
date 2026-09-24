@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { SITE, REGIONS } from "@/lib/festivals";
+import Logo from "@/components/Logo";
 
 export const STATUS_FILTERS = ["All", "2026 dates", "TBC", "No 2026"] as const;
 export type StatusFilter = (typeof STATUS_FILTERS)[number];
@@ -20,7 +22,7 @@ function chipStyle(active: boolean) {
   return {
     borderColor: active ? "var(--color-accent)" : "var(--color-divider)",
     background: active ? "var(--color-accent)" : "transparent",
-    color: active ? "var(--color-bg)" : "color-mix(in srgb, var(--color-text) 72%, transparent)",
+    color: active ? "var(--color-bg)" : "var(--color-text)",
   };
 }
 
@@ -42,9 +44,9 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
   return (
     <nav className="relative z-[600] flex min-w-0 items-center gap-4 px-[18px] py-[11px] shadow-[0_1px_0_rgba(0,0,0,.14),0_5px_14px_-4px_rgba(0,0,0,.34)]">
       <div className="flex min-w-0 flex-none items-center gap-3 overflow-hidden">
-        <span className="whitespace-nowrap font-[800] text-[24px] leading-[0.9] tracking-[-0.035em] text-accent">
-          streetart<span className="text-white">festivals</span>uk
-        </span>
+        <Link href="/" className="group no-underline">
+          <Logo hover />
+        </Link>
         <span className="hidden min-w-0 max-w-[30ch] text-[11px] leading-[1.2] text-[color-mix(in_srgb,var(--color-text)_70%,transparent)] sm:block">
           {SITE.tagline}
         </span>

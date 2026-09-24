@@ -2,7 +2,9 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div
+    <main
+      id="main-content"
+      tabIndex={-1}
       className="flex flex-col items-center justify-center gap-4 px-6 text-center"
       style={{ minHeight: "100dvh", background: "var(--color-bg)" }}
     >
@@ -22,6 +24,6 @@ export default function NotFound() {
       >
         &#8249; Map &amp; calendar
       </Link>
-    </div>
+    </main>
   );
 }

@@ -51,13 +51,13 @@ a.no-underline:hover {
 }
 
 .input {
-  background: #000;
-  border-color: var(--color-divider);
+  background: #312338;
+  border: 1px solid var(--color-divider);
   color: var(--color-text);
   font-family: var(--font-sans);
 }
 .input::placeholder {
-  color: color-mix(in srgb, var(--color-text) 38%, transparent);
+  color: var(--color-text);
 }
 
 .grayscale-tile {

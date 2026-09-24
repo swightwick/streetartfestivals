@@ -8,11 +8,13 @@ import {
   getFestival,
   isPast,
   nearbyFestivals,
+  nextFestival,
   siteUrl,
 } from "@/lib/festivals";
 import { buildEventJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import { getEventGalleryImages, getEventLogo } from "@/lib/gallery";
 import EventMapPanel from "@/components/festival/EventMapPanel";
+import Logo from "@/components/Logo";
 import AddToCalendarButton from "@/components/festival/AddToCalendarButton";
 import InstagramFeed from "@/components/festival/InstagramFeed";
 import StayCard from "@/components/festival/StayCard";
@@ -63,6 +65,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
   if (!f) notFound();
 
   const nearby = nearbyFestivals(f);
+  const next = nextFestival(f);
   const galleryImages = getEventGalleryImages(f.id);
   const logo = getEventLogo(f.id);
   const eventJsonLd = buildEventJsonLd(f);
@@ -78,9 +81,9 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
       <header
         className="z-[5] flex h-[54px] flex-none items-center gap-3.5 px-[18px] py-[11px] shadow-[0_5px_14px_-4px_rgba(0,0,0,.34)]"
       >
-        <span className="whitespace-nowrap font-[800] text-[24px] leading-[0.9] tracking-[-0.035em] text-accent">
-          streetart<span className="text-white">festivals</span>uk
-        </span>
+        <Link href="/" className="group no-underline">
+          <Logo hover />
+        </Link>
         <a
           href={f.site}
           target="_blank"
@@ -92,7 +95,12 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         </a>
       </header>
 
-      <div className="flex flex-1 flex-col overflow-visible lg:flex-row lg:overflow-hidden" style={{ minHeight: 0 }}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex flex-1 flex-col overflow-visible lg:flex-row lg:overflow-hidden"
+        style={{ minHeight: 0 }}
+      >
         <div
           className="relative aspect-square w-full flex-none lg:aspect-auto lg:w-1/3 lg:max-w-[33.333%]"
         >
@@ -264,18 +272,13 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                         minWidth: 200,
                       }}
                     >
-                      <span className="font-[800] text-[12.5px] leading-[1.2] text-white">{r.name}</span>
-                      {isPast(r) && (
-                        <span
-                          className="mt-[3px] px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em]"
-                          style={{
-                            border: "1px solid color-mix(in srgb, var(--color-accent) 70%, transparent)",
-                            color: "var(--color-accent-500)",
-                          }}
-                        >
-                          Passed
-                        </span>
-                      )}
+                      <span
+                        className="px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em]"
+                        style={badgeStyle(r.status, isPast(r))}
+                      >
+                        {isPast(r) ? "Passed" : r.badge}
+                      </span>
+                      <span className="mt-[3px] font-[800] text-[12.5px] leading-[1.2] text-white">{r.name}</span>
                       <span className="mt-[3px] flex items-baseline gap-[7px]">
                         <span className="font-[400] text-[10.5px] leading-none text-[color-mix(in_srgb,var(--color-text)_60%,transparent)]">
                           {r.dateShort}
@@ -290,16 +293,27 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               </div>
             )}
 
-            <Link
-              href="/"
-              className="mt-6 flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
-              style={{ borderColor: "var(--color-divider)" }}
-            >
-              &#8249; Back to map
-            </Link>
+            <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <Link
+                href="/"
+                className="flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
+                style={{ borderColor: "var(--color-divider)" }}
+              >
+                &#8249; Back to map
+              </Link>
+              {next.id !== f.id && (
+                <Link
+                  href={`/festivals/${next.id}`}
+                  className="flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
+                  style={{ borderColor: "var(--color-divider)" }}
+                >
+                  Next event &#8250;
+                </Link>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </main>
 
       {eventJsonLd && (
         <script

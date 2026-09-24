@@ -34,27 +34,6 @@ export default function InstagramFeed({
           Coming soon...
         </p>
       )}
-
-      {festival.instagramPosts && festival.instagramPosts.length > 0 && (
-        <div className="mt-3.5 flex flex-col gap-[5px]">
-          <div className="font-[600] text-[9px] uppercase leading-none tracking-[.16em] text-[color-mix(in_srgb,var(--color-text)_45%,transparent)]">
-            Recent posts
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {festival.instagramPosts.map((url, i) => (
-              <a
-                key={url}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-[600] text-[11px] leading-[1.4]"
-              >
-                Post {i + 1} &#8599;
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

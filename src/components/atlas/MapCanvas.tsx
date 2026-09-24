@@ -10,6 +10,14 @@ interface FocusRequest {
   nonce: number;
 }
 
+// UK + Ireland extent — also the map's maxBounds, so "View full map" always
+// zooms back out to the whole atlas rather than a tight crop around
+// whichever markers happen to be visible under the current filters.
+const UK_IE_BOUNDS: [[number, number], [number, number]] = [
+  [49.2, -11.6],
+  [61.2, 3.2],
+];
+
 interface MapCanvasProps {
   festivals: Festival[];
   visibleIds: Set<string>;
@@ -56,10 +64,7 @@ export default function MapCanvas({
         attributionControl: true,
         maxZoom: 16,
         zoomSnap: 0.25,
-        maxBounds: [
-          [49.2, -11.6],
-          [61.2, 3.2],
-        ],
+        maxBounds: UK_IE_BOUNDS,
         maxBoundsViscosity: 1,
         worldCopyJump: false,
         fadeAnimation: false,
@@ -195,7 +200,6 @@ export default function MapCanvas({
         markersRef.current[f.id] = { marker, solid };
       });
 
-      const bounds = L.latLngBounds(festivals.map((f) => [f.lat, f.lng]));
       const fit = () => {
         if (!el.clientHeight) {
           setTimeout(fit, 150);
@@ -203,9 +207,11 @@ export default function MapCanvas({
         }
         map.invalidateSize({ animate: false });
         map.setMinZoom(0);
-        map.fitBounds(bounds, { padding: [44, 44], animate: false });
-        const z = map.getBoundsZoom(bounds, false, L.point(44, 44));
+        map.fitBounds(UK_IE_BOUNDS, { animate: false });
+        const z = map.getBoundsZoom(UK_IE_BOUNDS, false);
         map.setMinZoom(Math.min(map.getZoom(), z));
+        map.setZoom(map.getZoom() + 0.5, { animate: false });
+        map.panBy([0, 40], { animate: false });
       };
       requestAnimationFrame(() => requestAnimationFrame(fit));
       setTimeout(fit, 400);
@@ -259,7 +265,7 @@ export default function MapCanvas({
           if (f) {
             entry.marker.bindTooltip('<span data-tip-name="1">' + f.name + "</span>", {
               direction: "top",
-              offset: [0, -5],
+              offset: [0, -12],
               opacity: 1,
               permanent: true,
               interactive: true,
@@ -284,15 +290,13 @@ export default function MapCanvas({
     map.setView(entry.marker.getLatLng(), targetZoom, { animate: true });
   }, [focusRequest]);
 
-  // "View full map" — zoom back out to fit every visible festival.
+  // "View full map" — zoom back out to the whole UK + Ireland extent, not
+  // just a crop around whichever markers are currently visible.
   useEffect(() => {
     if (resetRequest == null) return;
     const map = mapRef.current;
     if (!map) return;
-    const visible = festivals.filter((f) => visibleIds.has(f.id));
-    if (visible.length === 0) return;
-    const bounds = visible.map((f) => [f.lat, f.lng] as [number, number]);
-    map.flyToBounds(bounds, { padding: [44, 44] });
+    map.flyToBounds(UK_IE_BOUNDS);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetRequest]);
 

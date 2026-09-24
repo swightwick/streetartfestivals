@@ -1,18 +1,15 @@
 "use client";
 
-import { useState, ViewTransition } from "react";
+import { Fragment, useState, ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import type { Festival } from "@/lib/types";
+import MapSpinner from "@/components/MapSpinner";
 
 const EventMap = dynamic(() => import("./EventMap"), {
   ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 grid place-items-center" style={{ background: "#d9d7d4" }}>
-      <span className="font-[600] text-[10px] uppercase tracking-[.1em] text-[#7d7979]">Loading map…</span>
-    </div>
-  ),
+  loading: () => <MapSpinner />,
 });
 
 export default function EventMapPanel({
@@ -29,8 +26,13 @@ export default function EventMapPanel({
       <ViewTransition name="atlas-map" share="morph" default="none">
         <EventMap festival={festival} onLoad={() => setLoaded(true)} />
       </ViewTransition>
+      {!loaded && <MapSpinner />}
       {loaded && (
-        <>
+        // Keyed on festival.id so navigating between events (which doesn't
+        // remount this component, only updates its props) still recreates
+        // these elements — otherwise the sa-fade entrance animation, which
+        // only plays on mount, never replays after the first page load.
+        <Fragment key={festival.id}>
           <Link
             href="/"
             className="sa-fade absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)] hover:no-underline"
@@ -56,7 +58,7 @@ export default function EventMapPanel({
               className="sa-fade absolute bottom-3 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
             />
           )}
-        </>
+        </Fragment>
       )}
     </>
   );
