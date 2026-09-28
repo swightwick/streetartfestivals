@@ -33,6 +33,39 @@ function useHasMounted() {
   );
 }
 
+const WELCOME_SEEN_KEY = "streetartfestivals:welcome-seen";
+const welcomeSeenListeners = new Set<() => void>();
+
+function getWelcomeSeenSnapshot(): boolean {
+  try {
+    return window.localStorage.getItem(WELCOME_SEEN_KEY) === "1";
+  } catch {
+    return true;
+  }
+}
+
+function subscribeWelcomeSeen(listener: () => void) {
+  welcomeSeenListeners.add(listener);
+  return () => welcomeSeenListeners.delete(listener);
+}
+
+function markWelcomeSeen() {
+  try {
+    window.localStorage.setItem(WELCOME_SEEN_KEY, "1");
+  } catch {
+    // Ignore — worst case the welcome reappears next visit.
+  }
+  welcomeSeenListeners.forEach((listener) => listener());
+}
+
+// A real external store (rather than a plain render-time localStorage read)
+// so dismissing the welcome modal — which doesn't otherwise change any
+// React state, since `infoOpen` stays false throughout — still triggers the
+// re-render that hides it.
+function useWelcomeSeen() {
+  return useSyncExternalStore(subscribeWelcomeSeen, getWelcomeSeenSnapshot, () => true);
+}
+
 export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
   const router = useRouter();
   const [q, setQ] = useState("");
@@ -47,24 +80,39 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
   const [mobileView, setMobileView] = useState<"list" | "calendar">("list");
   const mounted = useHasMounted();
 
+  // Server snapshot is "seen" (true) — matching the server's markup, which
+  // never includes the auto-opened welcome modal — so this only reflects
+  // the real flag once we're safely past hydration and `mounted` is true.
+  const welcomeSeenStore = useWelcomeSeen();
+  const welcomeSeen = mounted ? welcomeSeenStore : true;
+  // Manual opens (the "more info" buttons) go through infoOpen; the welcome
+  // modal instead opens itself the first time mounted flips true and the
+  // flag hasn't been set yet.
+  const effectiveInfoOpen = infoOpen || (mounted && !welcomeSeen);
+
+  const closeInfo = () => {
+    setInfoOpen(false);
+    markWelcomeSeen();
+  };
+
   const listPanelRef = useRef<HTMLDivElement>(null);
   const calendarPanelRef = useRef<HTMLDivElement>(null);
   const infoPanelRef = useRef<HTMLDivElement>(null);
   useFocusTrap(listOpen, listPanelRef);
   useFocusTrap(calendarOpen, calendarPanelRef);
-  useFocusTrap(infoOpen, infoPanelRef);
+  useFocusTrap(effectiveInfoOpen, infoPanelRef);
 
   useEffect(() => {
-    if (!listOpen && !calendarOpen && !infoOpen) return;
+    if (!listOpen && !calendarOpen && !effectiveInfoOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (infoOpen) setInfoOpen(false);
+      if (effectiveInfoOpen) closeInfo();
       else if (calendarOpen) setCalendarOpen(false);
       else if (listOpen) setListOpen(false);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [listOpen, calendarOpen, infoOpen]);
+  }, [listOpen, calendarOpen, effectiveInfoOpen]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -112,7 +160,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
           // this wrapper — inerting it while either is open keeps Tab from
           // walking a keyboard user out of the open dialog into the map/nav
           // underneath it.
-          inert={listOpen || calendarOpen || infoOpen}
+          inert={listOpen || calendarOpen || effectiveInfoOpen}
         >
           <Nav
             q={q}
@@ -207,7 +255,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 type="button"
                 aria-label="Close festival list"
                 onClick={() => setListOpen(false)}
-                className="absolute inset-0 bg-black/60"
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
               />
               <div
                 ref={listPanelRef}
@@ -268,7 +316,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               type="button"
               aria-label="Close calendar"
               onClick={() => setCalendarOpen(false)}
-              className="absolute inset-0 bg-black/70"
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             />
             <div
               ref={calendarPanelRef}
@@ -277,7 +325,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               aria-label="Festival calendar"
               tabIndex={-1}
               className="relative flex flex-col overflow-hidden"
-              style={{ width: "90vw", height: "90vh", background: "var(--color-bg)", border: "2px solid var(--color-divider)" }}
+              style={{ width: "90vw", height: "90vh", background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
               <div
                 className="flex flex-none items-center gap-2 px-4 py-2.5"
@@ -309,7 +357,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
             </div>
           </div>
         )}
-        {infoOpen && (
+        {effectiveInfoOpen && (
           // z-[1300] — above the mobile list drawer's portalled z-[1200]
           // overlay (this "more information" button also lives inside that
           // drawer), which otherwise stacks on top since it's portalled
@@ -319,28 +367,28 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
             <button
               type="button"
               aria-label="Close more information"
-              onClick={() => setInfoOpen(false)}
-              className="absolute inset-0 bg-black/70"
+              onClick={closeInfo}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             />
             <div
               ref={infoPanelRef}
               role="dialog"
               aria-modal="true"
-              aria-label="More information"
+              aria-label={welcomeSeen ? "More information" : `Welcome to ${SITE.name}`}
               tabIndex={-1}
               className="relative flex w-full max-w-[420px] flex-col overflow-hidden"
-              style={{ background: "var(--color-bg)", border: "2px solid var(--color-divider)" }}
+              style={{ background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
               <div
                 className="flex flex-none items-center gap-2 px-4 py-2.5"
                 style={{ borderBottom: "2px solid var(--color-divider)" }}
               >
                 <span className="font-[800] text-[11px] uppercase leading-none tracking-[.12em]">
-                  More information
+                  {welcomeSeen ? "More information" : `Welcome to ${SITE.name}`}
                 </span>
                 <button
                   type="button"
-                  onClick={() => setInfoOpen(false)}
+                  onClick={closeInfo}
                   aria-label="Close"
                   className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
                   style={{ borderColor: "var(--color-divider)" }}
@@ -348,30 +396,101 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                   &#10005;
                 </button>
               </div>
-              <div className="flex flex-col items-start gap-4 px-5 py-6">
-                <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
-                <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
-                  {SITE.name} is an independent, non-commercial guide to every street art and graffiti festival in the
-                  UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
-                </p>
-                <div>
-                  <div className="mb-1 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
-                    Get in touch
+              {welcomeSeen ? (
+                <div className="flex flex-col items-start gap-4 px-5 py-6">
+                  <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
+                  <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
+                    {SITE.name} is an independent, non-commercial guide to every street art and graffiti festival in
+                    the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <div>
+                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                        Get in touch
+                      </div>
+                      <a
+                        href={`mailto:streetartfestivals@samwightwick.co.uk?subject=${encodeURIComponent("Enquiry from StreetArtFestivalsUK")}`}
+                        className="inline-flex items-center gap-1.5 border-0 px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
+                        style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                      >
+                        Email us &#8250;
+                      </a>
+                    </div>
+                    <div>
+                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                        Support this site
+                      </div>
+                      <a
+                        href="https://www.buymeacoffee.com/sjw87"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 border-0 px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
+                        style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                      >
+                        ☕ Buy me a coffee
+                      </a>
+                    </div>
                   </div>
-                  <a href="mailto:sjwightwick@protonmail.com" className="font-[600] text-[13.5px]">
-                    sjwightwick@protonmail.com
-                  </a>
+                  <p
+                    className="m-0 text-[11.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]"
+                    style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 14 }}
+                  >
+                    Built by {" "}
+                    <a href="https://samwightwick.co.uk" target="_blank" rel="noopener noreferrer">
+                      samwightwick.co.uk
+                    </a>
+                  </p>
                 </div>
-                <p
-                  className="m-0 text-[11.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]"
-                  style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 14 }}
-                >
-                  Built by Sam Wightwick —{" "}
-                  <a href="https://samwightwick.co.uk" target="_blank" rel="noopener noreferrer">
-                    samwightwick.co.uk
-                  </a>
-                </p>
-              </div>
+              ) : (
+                <>
+                  <div className="flex flex-col items-start gap-4 px-5 py-6">
+                    <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
+                    <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
+                      {SITE.name} is an independent, non-commercial guide to every street art and graffiti festival
+                      in the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
+                    </p>
+                    <div className="w-full" style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 14 }}>
+                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                        How to use this site
+                      </div>
+                      <ul className="m-0 flex list-none flex-col gap-2.5 p-0 text-[13px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_85%,transparent)]">
+                        <li className="flex gap-2.5">
+                          <span aria-hidden className="flex-none font-[800]" style={{ color: "var(--color-accent)" }}>
+                            &#8250;
+                          </span>
+                          <span>Search or filter by status and region to narrow down the map.</span>
+                        </li>
+                        <li className="flex gap-2.5">
+                          <span aria-hidden className="flex-none font-[800]" style={{ color: "var(--color-accent)" }}>
+                            &#8250;
+                          </span>
+                          <span>Click a pin to preview a festival, then click it again to open the full listing.</span>
+                        </li>
+                        <li className="flex gap-2.5">
+                          <span aria-hidden className="flex-none font-[800]" style={{ color: "var(--color-accent)" }}>
+                            &#8250;
+                          </span>
+                          <span>Browse the programme list alongside the map, sorted soonest first.</span>
+                        </li>
+                        <li className="flex gap-2.5">
+                          <span aria-hidden className="flex-none font-[800]" style={{ color: "var(--color-accent)" }}>
+                            &#8250;
+                          </span>
+                          <span>Open the festival calendar for a month-by-month view of every date.</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeInfo}
+                    className="flex-none border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                    style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
+                  >
+                    Start exploring &#8250;
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}

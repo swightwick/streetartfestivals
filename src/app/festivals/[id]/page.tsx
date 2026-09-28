@@ -157,11 +157,11 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               <div className="py-4 pb-[18px] pr-[18px]">
                 <div className="mb-2 font-[600] text-[13px] uppercase leading-none tracking-[.16em] text-white font-bold">
                   2026 dates
+                  {isPast(f) && (
+                    <span className="text-[color-mix(in_srgb,var(--color-text)_55%,transparent)]"> — Event passed</span>
+                  )}
                 </div>
-                <div className="font-normal text-[13px] leading-[1.5]">
-                  {f.dates}
-                  {isPast(f) && <div>Event passed</div>}
-                </div>
+                <div className="font-normal text-[13px] leading-[1.5]">{f.dates}</div>
                 <AddToCalendarButton festival={f} />
               </div>
               <div className="py-4 pb-[18px] pr-[18px] lg:border-l lg:pl-[18px] lg:[border-color:var(--color-divider)]">
@@ -244,13 +244,10 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
             <div className="pb-[26px] pt-[22px]" style={{ borderTop: "2px solid var(--color-divider)" }}>
               <div className="mb-3.5 flex items-baseline gap-3">
                 <h2 className="m-0 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">Places to stay</h2>
-                <span className="font-[600] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_45%,transparent)]">
-                  Placeholder listings · black pins on the map
-                </span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-[repeat(auto-fit,minmax(190px,1fr))]">
                 {f.stays.map((s, i) => (
-                  <StayCard key={s.id} stay={s} bordered={i > 0} />
+                  <StayCard key={s.id} stay={s} bordered={i > 0} index={i} />
                 ))}
               </div>
             </div>

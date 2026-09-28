@@ -1,36 +1,43 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { Stay } from "@/lib/types";
 
-export default function StayCard({ stay, bordered }: { stay: Stay; bordered: boolean }) {
+// public/hotels holds 3 folders of 3 stock photos each — one folder per
+// "places to stay" card position, cycled with `index % 3` since every
+// festival has exactly 3 stays. Not tied to any real property.
+const HOTEL_FOLDERS = ["1", "2", "3"];
+
+export default function StayCard({ stay, bordered, index }: { stay: Stay; bordered: boolean; index: number }) {
   const [shot, setShot] = useState(0);
-  const n = stay.shots.length;
+  const folder = HOTEL_FOLDERS[index % HOTEL_FOLDERS.length];
+  const shots = ["1", "2", "3"].map((n) => `/hotels/${folder}/${n}.avif`);
+  const n = shots.length;
   const step = (delta: number) => (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setShot((s) => (s + delta + n) % n);
   };
-  const slug = stay.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
   return (
     <div
       id={`stay-${stay.id}`}
-      className={`flex flex-col items-start gap-[5px] pb-[17px] pt-[15px] text-left transition-colors duration-150 hover:bg-surface lg:px-4 ${
+      className={`group flex flex-col items-start gap-[5px] pb-[17px] pt-[15px] text-left transition-colors duration-150 hover:bg-surface lg:px-4 ${
         bordered ? "lg:border-l lg:[border-color:var(--color-divider)]" : ""
       }`}
     >
       <div
         className="grayscale-tile relative mb-[9px] w-full overflow-hidden"
-        style={{
-          aspectRatio: "4/3",
-          background:
-            "repeating-linear-gradient(135deg, var(--color-surface) 0 7px, color-mix(in srgb, var(--color-surface) 82%, white) 7px 14px)",
-        }}
+        style={{ aspectRatio: "4/3", background: "var(--color-surface)" }}
       >
-        <span className="absolute bottom-[7px] left-2 font-[500] text-[8.5px] leading-[1.2] tracking-[.04em] text-[#8d8a88] [font-family:ui-monospace,Menlo,monospace]">
-          {slug} · {stay.shots[shot]}
-        </span>
+        <Image
+          src={shots[shot]}
+          alt={`${stay.name} — photo ${shot + 1} of ${n}`}
+          fill
+          sizes="(min-width: 1024px) 25vw, 50vw"
+          className="object-cover"
+        />
         <button
           type="button"
           aria-label="Previous photo"
@@ -48,7 +55,7 @@ export default function StayCard({ stay, bordered }: { stay: Stay; bordered: boo
           &#8250;
         </button>
         <span className="absolute bottom-2 right-2 flex gap-1">
-          {stay.shots.map((_, i) => (
+          {shots.map((_, i) => (
             <span
               key={i}
               className="h-[5px] w-[5px]"
