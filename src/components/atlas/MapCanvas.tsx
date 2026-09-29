@@ -281,12 +281,21 @@ export default function MapCanvas({
 
   // Pan/zoom to a focused festival. If already zoomed in past the target
   // level, just re-centre on the new marker rather than zooming back out.
+  // The map blurs for the duration of the fly-to and clears once it settles
+  // (`moveend`) — reads as the view "loading in" rather than just snapping.
   useEffect(() => {
     if (!focusRequest) return;
     const map = mapRef.current;
     const entry = markersRef.current[focusRequest.id];
     if (!map || !entry) return;
     const targetZoom = Math.max(map.getZoom(), 11);
+    const container = map.getContainer();
+    container.classList.add("sa-map-transitioning");
+    const clear = () => {
+      container.classList.remove("sa-map-transitioning");
+      map.off("moveend", clear);
+    };
+    map.on("moveend", clear);
     map.setView(entry.marker.getLatLng(), targetZoom, { animate: true });
   }, [focusRequest]);
 

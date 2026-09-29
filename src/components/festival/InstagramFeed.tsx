@@ -8,32 +8,28 @@ export default function InstagramFeed({
   festival: Festival;
   galleryImages?: string[];
 }) {
+  if (galleryImages.length === 0) return null;
+
   return (
     <div>
       <div className="mb-3.5 flex items-baseline gap-2.5">
         <h2 className="m-0 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">Gallery</h2>
       </div>
 
-      {galleryImages.length > 0 ? (
-        <div className="grid grid-cols-3 gap-0.5" role="list" aria-label={`${festival.name} — event photos`}>
-          {galleryImages.map((src, i) => (
-            <div key={src} role="listitem" className="relative aspect-square overflow-hidden">
-              <Image
-                src={src}
-                alt={`${festival.name} — photo ${i + 1} of ${galleryImages.length}`}
-                fill
-                sizes="(min-width: 1024px) 20vw, 33vw"
-                className="object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="font-[500] text-[10px] leading-[1.5] text-[#605d5d] [font-family:ui-monospace,Menlo,monospace]">
-          Coming soon...
-        </p>
-      )}
+      <div className="grid grid-cols-3 gap-0.5" role="list" aria-label={`${festival.name} — event photos`}>
+        {galleryImages.map((src, i) => (
+          <div key={src} role="listitem" className="relative aspect-square overflow-hidden">
+            <Image
+              src={src}
+              alt={`${festival.name} — photo ${i + 1} of ${galleryImages.length}`}
+              fill
+              sizes="(min-width: 1024px) 20vw, 33vw"
+              className="object-cover"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -72,6 +72,10 @@ a.no-underline:hover {
 .leaflet-container {
   background: #d9d7d4;
   font-family: var(--font-sans);
+  transition: filter 0.35s ease;
+}
+.sa-map-transitioning {
+  filter: blur(6px) grayscale(0.3);
 }
 .leaflet-tile-pane {
   filter: grayscale(1) contrast(0.9) brightness(1.02);
@@ -215,6 +219,12 @@ a.no-underline:hover {
   .sa-rise,
   .sa-fade {
     animation: none !important;
+  }
+  .leaflet-container {
+    transition: none !important;
+  }
+  .sa-map-transitioning {
+    filter: none !important;
   }
 }
 

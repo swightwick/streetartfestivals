@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SITE, REGIONS } from "@/lib/festivals";
 import Logo from "@/components/Logo";
@@ -27,20 +26,6 @@ function chipStyle(active: boolean) {
 }
 
 export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpenList }: NavProps) {
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!filtersOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setFiltersOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [filtersOpen]);
-
-  const activeFilterCount = (status !== "All" ? 1 : 0) + (region !== "All" ? 1 : 0) + (q.trim() ? 1 : 0);
-
   return (
     <nav className="relative z-[600] flex min-w-0 items-center gap-4 px-[18px] py-[11px] shadow-[0_1px_0_rgba(0,0,0,.14),0_5px_14px_-4px_rgba(0,0,0,.34)]">
       <div className="flex min-w-0 flex-none items-center gap-3 overflow-hidden">
@@ -90,89 +75,8 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
         />
       </div>
 
-      {/* Mobile / tablet controls — filters collapse into a dropdown, list opens as an overlay */}
+      {/* Mobile / tablet — filters float over the map (top-left); this is just the list opener */}
       <div className="ml-auto flex flex-none items-center gap-2 lg:hidden">
-        <div ref={panelRef} className="relative">
-          <button
-            type="button"
-            onClick={() => setFiltersOpen((o) => !o)}
-            aria-expanded={filtersOpen}
-            className="flex h-8 items-center gap-1.5 border px-2.5 font-[600] text-[9.5px] uppercase tracking-[.08em]"
-            style={{
-              borderColor: filtersOpen || activeFilterCount ? "var(--color-accent)" : "var(--color-divider)",
-              color: "var(--color-text)",
-            }}
-          >
-            Filters
-            {activeFilterCount > 0 && (
-              <span
-                className="grid h-[14px] min-w-[14px] place-items-center px-1 font-[800] text-[8px] leading-none"
-                style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
-              >
-                {activeFilterCount}
-              </span>
-            )}
-            <span
-              className="text-[8px] leading-none transition-transform"
-              style={{ transform: filtersOpen ? "rotate(180deg)" : "none" }}
-            >
-              &#9662;
-            </span>
-          </button>
-
-          {filtersOpen && (
-            <>
-              <button
-                type="button"
-                aria-hidden
-                tabIndex={-1}
-                onClick={() => setFiltersOpen(false)}
-                className="fixed inset-0 z-[640] cursor-default bg-transparent"
-              />
-              <div
-                className="absolute right-0 top-full z-[650] mt-2 flex w-[280px] flex-col gap-3 p-3"
-                style={{ background: "var(--color-surface)", border: "1px solid var(--color-divider)", boxShadow: "var(--shadow-lg)" }}
-              >
-                <input
-                  className="input h-9 w-full px-2 text-[12px]"
-                  type="text"
-                  placeholder="Search festival, city, postcode"
-                  value={q}
-                  onChange={(e) => onQ(e.target.value)}
-                  aria-label="Search festivals"
-                  autoFocus
-                />
-                <select
-                  className="input h-9 w-full cursor-pointer px-2 font-[600] text-[10px] uppercase tracking-[.06em]"
-                  value={region}
-                  onChange={(e) => onRegion(e.target.value)}
-                  aria-label="Filter by region"
-                >
-                  <option value="All">All regions</option>
-                  {REGIONS.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-                <div className="flex flex-wrap gap-1.5">
-                  {STATUS_FILTERS.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => onStatus(s)}
-                      className="inline-flex h-8 items-center whitespace-nowrap border px-[9px] font-[600] text-[9.5px] uppercase tracking-[.08em]"
-                      style={chipStyle(status === s)}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
         <button
           type="button"
           onClick={onOpenList}

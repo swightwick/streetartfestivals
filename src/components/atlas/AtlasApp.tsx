@@ -10,6 +10,7 @@ import { useFocusTrap } from "@/lib/useFocusTrap";
 import MapSpinner from "@/components/MapSpinner";
 import Logo from "@/components/Logo";
 import Nav, { STATUS_FILTERS, type StatusFilter } from "./Nav";
+import MapFilters from "./MapFilters";
 import ProgrammeList from "./ProgrammeList";
 import CalendarPanel from "./CalendarPanel";
 
@@ -191,11 +192,15 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                     onMarkerClick={focus}
                     onTooltipClick={goToFestival}
                   />
+                  <MapFilters q={q} onQ={setQ} status={status} onStatus={setStatus} region={region} onRegion={setRegion} />
                   {selectedId && (
                     <button
                       type="button"
                       onClick={resetView}
-                      className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
+                      // top-14 on mobile/tablet clears the floating Filters
+                      // trigger sat above it at top-3; lg+ has no Filters
+                      // overlay (it's inline in the nav there), so top-3.
+                      className="absolute left-3 top-14 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)] lg:top-3"
                       style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
                     >
                       View full map
@@ -263,8 +268,10 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 aria-modal="true"
                 aria-label="Festival list and calendar"
                 tabIndex={-1}
-                className="relative flex h-full w-full min-h-0 flex-col"
-                style={{ background: "var(--color-bg)" }}
+                className={`relative flex h-full w-full min-h-0 flex-col transition-transform duration-300 ${
+                  listOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+                style={{ background: "var(--color-bg)", transitionTimingFunction: "cubic-bezier(0.2,0.7,0.2,1)" }}
               >
                 <div
                   className="flex flex-none items-center gap-2 px-3 py-2.5"
@@ -316,7 +323,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               type="button"
               aria-label="Close calendar"
               onClick={() => setCalendarOpen(false)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              className="sa-fade absolute inset-0 bg-black/70 backdrop-blur-sm"
             />
             <div
               ref={calendarPanelRef}
@@ -324,7 +331,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               aria-modal="true"
               aria-label="Festival calendar"
               tabIndex={-1}
-              className="relative flex flex-col overflow-hidden"
+              className="sa-rise relative flex flex-col overflow-hidden"
               style={{ width: "90vw", height: "90vh", background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
               <div
@@ -368,7 +375,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               type="button"
               aria-label="Close more information"
               onClick={closeInfo}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              className="sa-fade absolute inset-0 bg-black/70 backdrop-blur-sm"
             />
             <div
               ref={infoPanelRef}
@@ -376,7 +383,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               aria-modal="true"
               aria-label={welcomeSeen ? "More information" : `Welcome to ${SITE.name}`}
               tabIndex={-1}
-              className="relative flex w-full max-w-[420px] flex-col overflow-hidden"
+              className="sa-rise relative flex w-full max-w-[420px] flex-col overflow-hidden"
               style={{ background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
               {welcomeSeen ? (

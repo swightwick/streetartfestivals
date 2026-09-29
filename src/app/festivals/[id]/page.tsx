@@ -54,6 +54,14 @@ export async function generateMetadata({
   };
 }
 
+// Social labels are stored as "Instagram @handle" / "Facebook Some.Page" —
+// split off the network name so it can be rendered with a trailing hyphen.
+const formatSocialLabel = (label: string) => {
+  const spaceIndex = label.indexOf(" ");
+  if (spaceIndex === -1) return label;
+  return `${label.slice(0, spaceIndex)} - ${label.slice(spaceIndex + 1)}`;
+};
+
 const badgeStyle = (status: string, passed: boolean) =>
   status === "confirmed" && !passed
     ? { background: "var(--color-accent)", color: "var(--color-bg)" }
@@ -108,7 +116,10 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         </div>
 
         <div className="sa-scroll min-w-0 flex-1 lg:overflow-y-auto">
-          <div className="relative px-4 pb-[60px] pt-6 md:px-[26px] md:pt-[30px] md:pb-8" style={{ maxWidth: 1280 }}>
+          <div
+            className="relative px-4 pb-[calc(4.5rem+env(safe-area-inset-bottom))] pt-6 md:px-[26px] md:pt-[30px] lg:pb-8"
+            style={{ maxWidth: 1280 }}
+          >
             {logo && (
               <Image
                 src={logo}
@@ -194,7 +205,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 <div className="flex flex-col gap-[5px]">
                   {f.socials.map((s) => (
                     <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer" className="font-[600] text-[13px] leading-[1.5]">
-                      {s.label}
+                      {formatSocialLabel(s.label)}
                     </a>
                   ))}
                 </div>
@@ -234,11 +245,13 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 </div>
               </div>
 
-              <div
-                className="border-t pt-[22px] lg:border-t-0 lg:py-[26px] lg:pl-[30px] lg:pt-[26px] [border-color:var(--color-divider)]"
-              >
-                <InstagramFeed festival={f} galleryImages={galleryImages} />
-              </div>
+              {galleryImages.length > 0 && (
+                <div
+                  className="border-t pt-[22px] lg:border-t-0 lg:py-[26px] lg:pl-[30px] lg:pt-[26px] [border-color:var(--color-divider)]"
+                >
+                  <InstagramFeed festival={f} galleryImages={galleryImages} />
+                </div>
+              )}
             </div>
 
             <div className="pb-[26px] pt-[22px]" style={{ borderTop: "2px solid var(--color-divider)" }}>
@@ -291,10 +304,13 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
             )}
 
             <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              {/* Fixed to the bottom of the viewport on mobile/tablet, so it stays
+                  reachable without scrolling the whole page; back to being a normal
+                  inline button once the two-column desktop layout kicks in at lg. */}
               <Link
                 href="/"
-                className="flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
-                style={{ borderColor: "var(--color-divider)" }}
+                className="fixed inset-x-0 bottom-0 z-[500] flex items-center justify-center gap-2 border-t px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:static lg:inset-auto lg:border lg:px-24 lg:py-3 lg:inline-flex"
+                style={{ borderColor: "var(--color-divider)", background: "var(--color-bg)" }}
               >
                 &#8249; Back to map
               </Link>
