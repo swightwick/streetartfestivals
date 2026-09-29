@@ -88,7 +88,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
           href={f.site}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto whitespace-nowrap border px-3.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:!bg-transparent hover:!text-[var(--color-accent)]"
+          className="ml-auto hidden whitespace-nowrap border px-3.5 py-[7px] font-[800] text-[9px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:!bg-transparent hover:!text-[var(--color-accent)] lg:inline-block"
           style={{ background: "var(--color-accent)", borderColor: "var(--color-accent)", color: "var(--color-bg)" }}
         >
           Official site &#8599;

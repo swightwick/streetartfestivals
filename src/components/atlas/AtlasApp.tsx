@@ -226,7 +226,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               <button
                 type="button"
                 onClick={() => setCalendarOpen(true)}
-                className="flex-none border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                className="flex-none border-0 px-5 py-5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
                 style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
               >
                 View festival calendar &#8250;
@@ -379,77 +379,76 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               className="relative flex w-full max-w-[420px] flex-col overflow-hidden"
               style={{ background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
-              <div
-                className="flex flex-none items-center gap-2 px-4 py-2.5"
-                style={{ borderBottom: "2px solid var(--color-divider)" }}
-              >
-                <span className="font-[800] text-[11px] uppercase leading-none tracking-[.12em]">
-                  {welcomeSeen ? "More information" : `Welcome to ${SITE.name}`}
-                </span>
-                <button
-                  type="button"
-                  onClick={closeInfo}
-                  aria-label="Close"
-                  className="ml-auto grid h-8 w-8 flex-none place-items-center border transition-all duration-150 hover:border-accent-500"
-                  style={{ borderColor: "var(--color-divider)" }}
-                >
-                  &#10005;
-                </button>
-              </div>
               {welcomeSeen ? (
-                <div className="flex flex-col items-start gap-4 px-5 py-6">
-                  <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
-                  <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
-                    {SITE.name} is an independent, non-commercial guide to every street art and graffiti festival in
-                    the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
-                  </p>
-                  <div className="flex flex-wrap gap-4">
-                    <div>
-                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
-                        Get in touch
-                      </div>
-                      <a
-                        href={`mailto:streetartfestivals@samwightwick.co.uk?subject=${encodeURIComponent("Enquiry from StreetArtFestivalsUK")}`}
-                        className="inline-flex items-center gap-1.5 border-0 px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
-                        style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
-                      >
-                        Email us &#8250;
-                      </a>
+                <>
+                  <div className="flex flex-col items-start gap-5 px-7 pb-8 pt-10">
+                    <div className="flex w-full justify-center">
+                      <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
                     </div>
-                    <div>
-                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
-                        Support this site
+                    <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
+                      streetart festivals uk is an independent, non-commercial guide to every street art and graffiti
+                      festival in the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
+                    </p>
+                    <div className="flex w-full flex-wrap justify-center gap-5 text-center">
+                      <div>
+                        <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                          Get in touch
+                        </div>
+                        <a
+                          href={`mailto:streetartfestivals@samwightwick.co.uk?subject=${encodeURIComponent("Enquiry from StreetArtFestivalsUK")}`}
+                          className="inline-flex items-center gap-1.5 border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
+                          style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                        >
+                          Email us &#8250;
+                        </a>
                       </div>
+                      <div>
+                        <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                          Support this site
+                        </div>
+                        <a
+                          href="https://www.buymeacoffee.com/sjw87"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
+                          style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                        >
+                          ☕ Buy me a coffee
+                        </a>
+                      </div>
+                    </div>
+                    <p className="m-0 w-full text-center text-[11.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]">
+                      Built by{" "}
                       <a
-                        href="https://www.buymeacoffee.com/sjw87"
+                        href="https://samwightwick.co.uk"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 border-0 px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
-                        style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                        className="text-inherit"
                       >
-                        ☕ Buy me a coffee
+                        samwightwick.co.uk
                       </a>
-                    </div>
+                    </p>
                   </div>
-                  <p
-                    className="m-0 text-[11.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_50%,transparent)]"
-                    style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 14 }}
+                  <button
+                    type="button"
+                    onClick={closeInfo}
+                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                    style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
-                    Built by {" "}
-                    <a href="https://samwightwick.co.uk" target="_blank" rel="noopener noreferrer">
-                      samwightwick.co.uk
-                    </a>
-                  </p>
-                </div>
+                    Close
+                  </button>
+                </>
               ) : (
                 <>
-                  <div className="flex flex-col items-start gap-4 px-5 py-6">
-                    <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
+                  <div className="flex flex-col items-start gap-5 px-7 pb-8 pt-10">
+                    <div className="flex w-full justify-center">
+                      <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
+                    </div>
                     <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
-                      {SITE.name} is an independent, non-commercial guide to every street art and graffiti festival
-                      in the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
+                      streetart festivals uk is an independent, non-commercial guide to every street art and graffiti
+                      festival in the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
                     </p>
-                    <div className="w-full" style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 14 }}>
+                    <div className="w-full" style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 16 }}>
                       <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
                         How to use this site
                       </div>
@@ -484,7 +483,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                   <button
                     type="button"
                     onClick={closeInfo}
-                    className="flex-none border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
                     style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
                     Start exploring &#8250;
