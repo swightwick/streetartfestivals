@@ -38,6 +38,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Tailwind's preflight resets <button> to cursor: default (matching native
+   button behaviour) — every clickable control in this app is a CTA, so opt
+   back in to the pointer cursor site-wide rather than per component. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
 a {
   color: var(--color-accent-500);
   text-decoration: none;
@@ -206,6 +214,18 @@ a.no-underline:hover {
 @keyframes via-map-blur {
   35% {
     filter: blur(4px) grayscale(1);
+  }
+}
+
+/* Below `lg` the map and event pages are stacked full-screen views (not the
+   side-by-side desktop layout), so the "atlas-shell" cross-fade just reads as
+   a flash over whichever screen is already filling the viewport — cut it,
+   leaving the map's own morph/blur transition as the only motion. */
+@media (max-width: 1023px) {
+  ::view-transition-old(atlas-shell),
+  ::view-transition-new(atlas-shell) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 }
 

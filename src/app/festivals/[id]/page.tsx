@@ -6,6 +6,7 @@ import { ViewTransition } from "react";
 import {
   getAllFestivals,
   getFestival,
+  isDated,
   isPast,
   nearbyFestivals,
   nextFestival,
@@ -53,6 +54,9 @@ export async function generateMetadata({
     },
   };
 }
+
+// Temporarily hidden site-wide (desktop + mobile) until stay listings are ready.
+const SHOW_PLACES_TO_STAY = false;
 
 // Social labels are stored as "Instagram @handle" / "Facebook Some.Page" —
 // split off the network name so it can be rendered with a trailing hyphen.
@@ -156,13 +160,13 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               {f.summary}
             </p>
 
-            <hr className="hr m-0" style={{ height: 2, border: 0, background: "var(--color-divider)" }} />
+            <hr className="hr m-0" style={{ height: 1, border: 0, background: "var(--color-divider)" }} />
 
             <div
               className="grid"
               style={{
                 gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-                borderBottom: "2px solid var(--color-divider)",
+                borderBottom: "1px solid var(--color-divider)",
               }}
             >
               <div className="py-4 pb-[18px] pr-[18px]">
@@ -212,7 +216,10 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
 
-            <div className="grid grid-cols-1 items-start lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            {/* items-stretch (the grid default) so the "Previous editions" column's
+                right-hand border-r stretches to match the Gallery column's height
+                instead of stopping at its own shorter content. */}
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
               <div
                 className="py-[22px] lg:border-r lg:py-[26px] lg:pr-[30px] lg:[border-color:var(--color-divider)]"
               >
@@ -247,58 +254,81 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
 
               {galleryImages.length > 0 && (
                 <div
-                  className="border-t pt-[22px] lg:border-t-0 lg:py-[26px] lg:pl-[30px] lg:pt-[26px] [border-color:var(--color-divider)]"
+                  className="border-t pb-[22px] pt-[22px] lg:border-t-0 lg:py-[26px] lg:pl-[30px] lg:pt-[26px] [border-color:var(--color-divider)]"
                 >
                   <InstagramFeed festival={f} galleryImages={galleryImages} />
                 </div>
               )}
             </div>
 
-            <div className="pb-[26px] pt-[22px]" style={{ borderTop: "2px solid var(--color-divider)" }}>
-              <div className="mb-3.5 flex items-baseline gap-3">
-                <h2 className="m-0 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">Places to stay</h2>
+            {SHOW_PLACES_TO_STAY && (
+              <div className="pb-[26px] pt-[22px]" style={{ borderTop: "1px solid var(--color-divider)" }}>
+                <div className="mb-3.5 flex items-baseline gap-3">
+                  <h2 className="m-0 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">Places to stay</h2>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-[repeat(auto-fit,minmax(190px,1fr))]">
+                  {f.stays.map((s, i) => (
+                    <StayCard key={s.id} stay={s} bordered={i > 0} index={i} />
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-[repeat(auto-fit,minmax(190px,1fr))]">
-                {f.stays.map((s, i) => (
-                  <StayCard key={s.id} stay={s} bordered={i > 0} index={i} />
-                ))}
-              </div>
-            </div>
+            )}
 
             {nearby.length > 0 && (
-              <div className="pt-[22px]" style={{ borderTop: "2px solid var(--color-divider)" }}>
+              <div className="pt-[22px]" style={{ borderTop: "1px solid var(--color-divider)" }}>
                 <h2 className="m-0 mb-3.5 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">
                   Nearby
                 </h2>
-                <div className="flex flex-wrap gap-2">
-                  {nearby.map(({ festival: r, distanceKm }) => (
-                    <Link
-                      key={r.id}
-                      href={`/festivals/${r.id}`}
-                      className="flex flex-col items-start gap-[5px] px-3.5 py-[11px] text-text no-underline transition-all duration-150 hover:bg-black"
-                      style={{
-                        background: "var(--color-surface)",
-                        border: "1px solid var(--color-divider)",
-                        minWidth: 200,
-                      }}
-                    >
-                      <span
-                        className="px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em]"
-                        style={badgeStyle(r.status, isPast(r))}
+                <div className="flex flex-col">
+                  {nearby.map(({ festival: r, distanceKm }) => {
+                    const dot = isDated(r)
+                      ? { background: "var(--color-accent)" }
+                      : { border: "2px solid var(--color-accent)" };
+                    return (
+                      <Link
+                        key={r.id}
+                        href={`/festivals/${r.id}`}
+                        className="flex items-start gap-2.5 border-0 py-[18px] pl-0.5 pr-1 text-left text-text no-underline transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
+                        style={{ borderBottom: "1px solid var(--color-divider)" }}
                       >
-                        {isPast(r) ? "Passed" : r.badge}
-                      </span>
-                      <span className="mt-[3px] font-[800] text-[12.5px] leading-[1.2] text-white">{r.name}</span>
-                      <span className="mt-[3px] flex items-baseline gap-[7px]">
-                        <span className="font-[400] text-[10.5px] leading-none text-[color-mix(in_srgb,var(--color-text)_60%,transparent)]">
-                          {r.dateShort}
+                        <span className="mt-[5px] block h-[9px] w-[9px] flex-none" style={dot} />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-[7px]">
+                            <span className="font-[800] text-[15px] leading-[1.2] tracking-[-0.01em] text-white">
+                              {r.name}
+                            </span>
+                            <span
+                              className="hidden px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em] lg:inline-block"
+                              style={badgeStyle(r.status, isPast(r))}
+                            >
+                              {isPast(r) ? "Passed" : r.badge}
+                            </span>
+                          </span>
+                          <span className="mt-1 block font-[600] text-[9px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_42%,transparent)] text-white">
+                            {r.city} · {r.region}
+                          </span>
                         </span>
-                        <span className="font-[600] text-[10px] leading-none text-accent-500">
-                          {Math.round(distanceKm)} km
+                        <span className="flex flex-none flex-col items-end gap-1 self-center text-right">
+                          <span
+                            className="px-[5px] py-[2px] font-[600] text-[8px] uppercase leading-none tracking-[.1em] lg:hidden"
+                            style={badgeStyle(r.status, isPast(r))}
+                          >
+                            {isPast(r) ? "Passed" : r.badge}
+                          </span>
+                          <span
+                            className="line-clamp-2 text-[11px] leading-[1.45] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]"
+                            style={{ maxWidth: "22ch" }}
+                          >
+                            {r.dateShort}
+                          </span>
+                          <span className="font-[600] text-[10px] leading-none text-accent-500">
+                            {Math.round(distanceKm)} km
+                          </span>
                         </span>
-                      </span>
-                    </Link>
-                  ))}
+                        <span className="self-center font-[800] text-[13px] leading-none text-accent-500">&#8250;</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -309,16 +339,15 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                   inline button once the two-column desktop layout kicks in at lg. */}
               <Link
                 href="/"
-                className="fixed inset-x-0 bottom-0 z-[500] flex items-center justify-center gap-2 border-t px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:static lg:inset-auto lg:border lg:px-24 lg:py-3 lg:inline-flex"
-                style={{ borderColor: "var(--color-divider)", background: "var(--color-bg)" }}
+                className="fixed inset-x-0 bottom-0 z-[500] flex items-center justify-center gap-2 border-t px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 [border-color:var(--color-divider)] hover:bg-accent hover:!text-white lg:static lg:inset-auto lg:border lg:px-24 lg:py-3 lg:[border-color:var(--color-accent)] lg:inline-flex"
+                style={{ background: "var(--color-bg)" }}
               >
                 &#8249; Back to map
               </Link>
               {next.id !== f.id && (
                 <Link
                   href={`/festivals/${next.id}`}
-                  className="flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 hover:bg-accent hover:!text-white lg:inline-flex"
-                  style={{ borderColor: "var(--color-divider)" }}
+                  className="flex items-center justify-center gap-2 border px-24 py-6 md:py-3 font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 [border-color:var(--color-divider)] hover:bg-accent hover:!text-white lg:[border-color:var(--color-accent)] lg:inline-flex"
                 >
                   Next event &#8250;
                 </Link>

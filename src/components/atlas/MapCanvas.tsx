@@ -305,8 +305,7 @@ export default function MapCanvas({
     if (resetRequest == null) return;
     const map = mapRef.current;
     if (!map) return;
-    map.flyToBounds(UK_IE_BOUNDS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    map.flyToBounds(UK_IE_BOUNDS, { duration: 0.2 });
   }, [resetRequest]);
 
   return (

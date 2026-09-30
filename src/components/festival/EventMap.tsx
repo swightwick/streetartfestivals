@@ -4,6 +4,10 @@ import { useEffect, useRef } from "react";
 import type { Festival } from "@/lib/types";
 import { addPriorityTileLayer } from "@/lib/mapTiles";
 
+// Temporarily hidden alongside the "Places to stay" section (see
+// SHOW_PLACES_TO_STAY in festivals/[id]/page.tsx) until stay listings are ready.
+const SHOW_STAY_MARKERS = false;
+
 export default function EventMap({ festival, onLoad }: { festival: Festival; onLoad?: () => void }) {
   const elRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<import("leaflet").Map | null>(null);
@@ -83,26 +87,27 @@ export default function EventMap({ festival, onLoad }: { festival: Festival; onL
           '<div style="width:20px;height:20px;background:var(--color-accent);' +
           'box-shadow:0 0 0 2px var(--color-bg), 0 0 0 7px rgba(223,208,184,.28);"></div>',
       });
-      const stayIcon = L.divIcon({
-        className: "",
-        iconSize: [16, 16],
-        iconAnchor: [8, 8],
-        html: '<div style="width:16px;height:16px;background:#000;box-shadow:0 0 0 2px #fff"></div>',
-      });
-
       L.marker([festival.lat, festival.lng], { icon: eventIcon, title: festival.name }).addTo(layer);
 
-      festival.stays.forEach((s) => {
-        L.marker([s.lat, s.lng], { icon: stayIcon, title: s.name })
-          .addTo(layer)
-          .bindTooltip(
-            `<span data-tip-name="1">${s.name}</span><span style="opacity:.65;font-weight:600"> · ${s.kind} · ${s.walk}</span>`,
-            { direction: "top", offset: [0, -4], opacity: 1 }
-          )
-          .on("click", () => {
-            document.getElementById(`stay-${s.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
-      });
+      if (SHOW_STAY_MARKERS) {
+        const stayIcon = L.divIcon({
+          className: "",
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+          html: '<div style="width:16px;height:16px;background:#000;box-shadow:0 0 0 2px #fff"></div>',
+        });
+        festival.stays.forEach((s) => {
+          L.marker([s.lat, s.lng], { icon: stayIcon, title: s.name })
+            .addTo(layer)
+            .bindTooltip(
+              `<span data-tip-name="1">${s.name}</span><span style="opacity:.65;font-weight:600"> · ${s.kind} · ${s.walk}</span>`,
+              { direction: "top", offset: [0, -4], opacity: 1 }
+            )
+            .on("click", () => {
+              document.getElementById(`stay-${s.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+        });
+      }
 
       if (isFirst) {
         map.setView([festival.lat, festival.lng], 14, { animate: false });
@@ -123,7 +128,11 @@ export default function EventMap({ festival, onLoad }: { festival: Festival; onL
       className="absolute inset-0"
       style={{ background: "#d9d7d4" }}
       role="application"
-      aria-label={`Interactive map showing ${festival.name} in ${festival.city} and nearby places to stay`}
+      aria-label={
+        SHOW_STAY_MARKERS
+          ? `Interactive map showing ${festival.name} in ${festival.city} and nearby places to stay`
+          : `Interactive map showing ${festival.name} in ${festival.city}`
+      }
     />
   );
 }

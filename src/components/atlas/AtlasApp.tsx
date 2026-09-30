@@ -179,7 +179,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
           <main id="main-content" tabIndex={-1} className="grid min-h-0 grid-cols-1 lg:grid-cols-[3fr_2fr]">
             <section
               className="relative flex min-h-0 min-w-0 flex-col overflow-hidden"
-              style={{ borderRight: "2px solid var(--color-divider)" }}
+              style={{ borderRight: "1px solid var(--color-divider)" }}
             >
               <ViewTransition name="atlas-map" share="morph" default="none">
                 <div className="relative min-h-0 flex-1">
@@ -192,15 +192,18 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                     onMarkerClick={focus}
                     onTooltipClick={goToFestival}
                   />
-                  <MapFilters q={q} onQ={setQ} status={status} onStatus={setStatus} region={region} onRegion={setRegion} />
+                  {/* Filters trigger and "View full map" share the same top-left
+                      spot and are mutually exclusive — once zoomed into a
+                      festival there's nothing to filter into view, so the
+                      reset control takes over instead of stacking on top. */}
+                  {!selectedId && (
+                    <MapFilters q={q} onQ={setQ} status={status} onStatus={setStatus} region={region} onRegion={setRegion} />
+                  )}
                   {selectedId && (
                     <button
                       type="button"
                       onClick={resetView}
-                      // top-14 on mobile/tablet clears the floating Filters
-                      // trigger sat above it at top-3; lg+ has no Filters
-                      // overlay (it's inline in the nav there), so top-3.
-                      className="absolute left-3 top-14 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)] lg:top-3"
+                      className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
                       style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
                     >
                       View full map
@@ -232,7 +235,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 type="button"
                 onClick={() => setCalendarOpen(true)}
                 className="flex-none border-0 px-5 py-5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
-                style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
+                style={{ borderTop: "1px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
               >
                 View festival calendar &#8250;
               </button>
@@ -275,7 +278,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               >
                 <div
                   className="flex flex-none items-center gap-2 px-3 py-2.5"
-                  style={{ borderBottom: "2px solid var(--color-divider)" }}
+                  style={{ borderBottom: "1px solid var(--color-divider)" }}
                 >
                   <button
                     type="button"
@@ -336,7 +339,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
             >
               <div
                 className="flex flex-none items-center gap-2 px-4 py-2.5"
-                style={{ borderBottom: "2px solid var(--color-divider)" }}
+                style={{ borderBottom: "1px solid var(--color-divider)" }}
               >
                 <span className="font-[800] text-[11px] uppercase leading-none tracking-[.12em]">
                   Festival calendar
@@ -440,7 +443,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                     type="button"
                     onClick={closeInfo}
                     className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
-                    style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
+                    style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
                     Close
                   </button>
@@ -455,8 +458,8 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                       streetart festivals uk is an independent, non-commercial guide to every street art and graffiti
                       festival in the UK and Ireland — plotted, dated and kept up to date so you don&rsquo;t miss one.
                     </p>
-                    <div className="w-full" style={{ borderTop: "1px solid var(--color-divider)", paddingTop: 16 }}>
-                      <div className="mb-2 font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
+                    <div className="w-full">
+                      <div className="mb-4 w-full text-center font-[700] text-[10px] uppercase leading-none tracking-[.1em] text-[color-mix(in_srgb,var(--color-text)_58%,transparent)]">
                         How to use this site
                       </div>
                       <ul className="m-0 flex list-none flex-col gap-2.5 p-0 text-[13px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_85%,transparent)]">
@@ -491,7 +494,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                     type="button"
                     onClick={closeInfo}
                     className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
-                    style={{ borderTop: "2px solid var(--color-divider)", background: "var(--color-accent)", color: "var(--color-bg)" }}
+                    style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
                     Start exploring &#8250;
                   </button>

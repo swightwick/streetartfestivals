@@ -35,7 +35,7 @@ export default function EventMapPanel({
         <Fragment key={festival.id}>
           <Link
             href="/"
-            className="sa-fade absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)] hover:no-underline"
+            className="sa-fade absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] no-underline transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
             style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
           >
             &#8249; Back to map
@@ -44,7 +44,7 @@ export default function EventMapPanel({
             href={`https://www.google.com/maps/search/?api=1&query=${festival.lat},${festival.lng}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="sa-fade absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)] hover:no-underline"
+            className="sa-fade absolute bottom-3 left-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] no-underline transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
             style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
           >
             Google Maps &#8599;
