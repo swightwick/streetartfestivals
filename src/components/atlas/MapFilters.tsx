@@ -91,7 +91,7 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
               aria-label="Search festivals"
             />
             <select
-              className="input h-9 w-full cursor-pointer px-2 font-[600] text-[10px] uppercase tracking-[.06em]"
+              className="input select-arrow h-9 w-full cursor-pointer pl-2 pr-6 font-[600] text-[10px] uppercase tracking-[.06em]"
               value={region}
               onChange={(e) => onRegion(e.target.value)}
               aria-label="Filter by region"

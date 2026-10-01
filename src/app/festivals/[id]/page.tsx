@@ -317,7 +317,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                           </span>
                           <span
                             className="line-clamp-2 text-[11px] leading-[1.45] text-[color-mix(in_srgb,var(--color-text)_62%,transparent)]"
-                            style={{ maxWidth: "22ch" }}
+                            style={{ maxWidth: "34ch" }}
                           >
                             {r.dateShort}
                           </span>

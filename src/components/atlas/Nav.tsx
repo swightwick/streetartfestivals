@@ -53,7 +53,7 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
           ))}
         </div>
         <select
-          className="input h-8 min-h-8 flex-none cursor-pointer px-2 font-[600] text-[9.5px] uppercase tracking-[.06em]"
+          className="input select-arrow h-8 min-h-8 flex-none cursor-pointer pl-2 pr-6 font-[600] text-[9.5px] uppercase tracking-[.06em]"
           value={region}
           onChange={(e) => onRegion(e.target.value)}
           aria-label="Filter by region"
