@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import ReactDOM from "react-dom";
+import Script from "next/script";
 import { Archivo } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -91,6 +92,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${archivo.variable} h-full`}>
       <body className="min-h-full antialiased">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-5LZWJN8J9N"
+          strategy="afterInteractive"
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[2000] focus:px-4 focus:py-2.5 focus:font-[800] focus:text-[11px] focus:uppercase focus:leading-none focus:tracking-[.1em]"
