@@ -1,5 +1,5 @@
 import raw from "@/data/data.json";
-import type { Festival, SiteData } from "@/lib/types";
+import type { Festival, MapFestival, SiteData } from "@/lib/types";
 
 const data = raw as SiteData;
 
@@ -10,11 +10,25 @@ export function getAllFestivals(): Festival[] {
   return data.festivals;
 }
 
+// Strips a Festival down to just the fields the map/list/calendar/search
+// (AtlasApp and its children) actually read, before it crosses the
+// server→client boundary — a plain TS type annotation doesn't stop the
+// extra fields (summary, prev, socials, stays, ...) from being serialized
+// at runtime, so this is a real copy, not just a narrower type.
+function toMapFestival(f: Festival): MapFestival {
+  const { id, name, city, region, lat, lng, postcode, location, start, end, extra, month, status, badge, dateShort } = f;
+  return { id, name, city, region, lat, lng, postcode, location, start, end, extra, month, status, badge, dateShort };
+}
+
+export function getAllMapFestivals(): MapFestival[] {
+  return data.festivals.map(toMapFestival);
+}
+
 export function getFestival(id: string): Festival | undefined {
   return data.festivals.find((f) => f.id === id);
 }
 
-function lastRelevantDate(f: Festival): string | null | undefined {
+function lastRelevantDate(f: MapFestival): string | null | undefined {
   return f.extra && f.extra.length
     ? [f.end || f.start, ...f.extra].filter(Boolean).sort().pop()
     : f.end || f.start;
@@ -27,7 +41,7 @@ export function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function isPast(f: Festival, today: string = todayIso()): boolean {
+export function isPast(f: MapFestival, today: string = todayIso()): boolean {
   const last = lastRelevantDate(f);
   return !!last && last < today;
 }
@@ -44,7 +58,7 @@ function invertDate(date: string): string {
 // Ranking, top to bottom: upcoming dated/month events (soonest first), then
 // rolling, then TBC, then events that have already happened (most recent
 // first), then anything with no date info at all (alphabetical).
-export function sortKey(f: Festival, today: string = todayIso()): string {
+export function sortKey(f: MapFestival, today: string = todayIso()): string {
   const date = f.start ?? (f.month ? f.month + "-99" : undefined);
   if (date) {
     return isPast(f, today) ? "3" + invertDate(f.start ?? date) : "0" + date;
@@ -54,15 +68,15 @@ export function sortKey(f: Festival, today: string = todayIso()): string {
   return "4" + f.name;
 }
 
-export function sortedFestivals(list: Festival[] = getAllFestivals()): Festival[] {
+export function sortedFestivals<T extends MapFestival>(list: T[] = getAllFestivals() as unknown as T[]): T[] {
   return [...list].sort((a, b) => (sortKey(a) < sortKey(b) ? -1 : 1));
 }
 
-export function isDated(f: Festival): boolean {
+export function isDated(f: MapFestival): boolean {
   return f.status === "confirmed" || f.status === "month" || f.status === "rolling";
 }
 
-export function eventsOnDay(list: Festival[], dayIso: string): Festival[] {
+export function eventsOnDay<T extends MapFestival>(list: T[], dayIso: string): T[] {
   return list.filter((f) => {
     if (f.start && dayIso >= f.start && dayIso <= (f.end || f.start)) return true;
     return !!(f.extra && f.extra.includes(dayIso));
@@ -95,12 +109,12 @@ export function nearbyFestivals(current: Festival, count = 4): NearbyFestival[] 
 // The next festival after `current` in the same order the homepage list
 // uses (soonest upcoming first, ...), wrapping back to the start at the end.
 export function nextFestival(current: Festival): Festival {
-  const ordered = sortedFestivals();
+  const ordered = sortedFestivals<Festival>();
   const idx = ordered.findIndex((f) => f.id === current.id);
   return ordered[(idx + 1) % ordered.length];
 }
 
-export function regionsCount(list: Festival[]): number {
+export function regionsCount(list: MapFestival[]): number {
   return new Set(list.map((f) => f.region)).size;
 }
 

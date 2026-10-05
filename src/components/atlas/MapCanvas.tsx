@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap, Marker, DivIcon } from "leaflet";
-import type { Festival } from "@/lib/types";
+import type { MapFestival } from "@/lib/types";
 import { addPriorityTileLayer } from "@/lib/mapTiles";
 
 interface FocusRequest {
@@ -19,11 +19,17 @@ const UK_IE_BOUNDS: [[number, number], [number, number]] = [
 ];
 
 interface MapCanvasProps {
-  festivals: Festival[];
+  festivals: MapFestival[];
   visibleIds: Set<string>;
   selectedId: string | null;
   focusRequest: FocusRequest | null;
   resetRequest?: number | null;
+  // Crop the initial view to these bounds instead of the full UK + Ireland
+  // extent — used by the regional pages so e.g. /regions/scotland opens
+  // already zoomed to Scotland rather than the whole atlas. "View full
+  // map" still resets to UK_IE_BOUNDS, and minZoom is still derived from
+  // it, so a visitor can always zoom/pan back out to everywhere.
+  initialBounds?: [[number, number], [number, number]];
   onMarkerClick: (id: string) => void;
   onTooltipClick: (id: string) => void;
 }
@@ -34,6 +40,7 @@ export default function MapCanvas({
   selectedId,
   focusRequest,
   resetRequest,
+  initialBounds,
   onMarkerClick,
   onTooltipClick,
 }: MapCanvasProps) {
@@ -207,7 +214,7 @@ export default function MapCanvas({
         }
         map.invalidateSize({ animate: false });
         map.setMinZoom(0);
-        map.fitBounds(UK_IE_BOUNDS, { animate: false });
+        map.fitBounds(initialBounds ?? UK_IE_BOUNDS, { animate: false });
         const z = map.getBoundsZoom(UK_IE_BOUNDS, false);
         map.setMinZoom(Math.min(map.getZoom(), z));
         map.setZoom(map.getZoom() + 0.5, { animate: false });

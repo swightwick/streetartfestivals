@@ -1865,6 +1865,109 @@
           ]
         }
       ]
+    },
+    {
+      "id": "concretecanvas",
+      "name": "Concrete Canvas",
+      "city": "Chelmsford",
+      "region": "East",
+      "lat": 51.7436,
+      "lng": 0.4739,
+      "site": "https://www.chelmsfordforyou.co.uk/concretecanvas",
+      "location": "City-wide mural trail across Chelmsford; Street Party at Bond Street Bowl, HQ at Patch, Grays Yard",
+      "postcode": "CM1 1GD",
+      "dates": "11–17 May 2026 (Street Party: Sat 16 May, 10am–5pm)",
+      "dateShort": "11–17 May 2026",
+      "start": "2026-05-11",
+      "end": "2026-05-17",
+      "extra": [],
+      "month": null,
+      "status": "confirmed",
+      "badge": "Confirmed",
+      "freq": "Roughly biennial (2022, 2024, 2026); active",
+      "statusNote": "Returns for a third edition in 2026 after 2022 and 2024. Murals installed city-wide 11–17 May, with a free Street Party on Saturday 16 May.",
+      "summary": "City-wide urban art festival turning overlooked corners of Chelmsford into an open-air gallery, with murals from 40+ local, national and international artists. Culminates in a free Street Party at Bond Street Bowl with live painting, music, creative activities and a local arts market. Run by Chelmsford For You in collaboration with artist Candy Joyce.",
+      "prev": [
+        {
+          "year": "2024",
+          "note": "Edition held"
+        },
+        {
+          "year": "2022",
+          "note": "First edition, launched with artist Candy Joyce"
+        }
+      ],
+      "socials": [
+        {
+          "label": "Instagram @ConcreteCanvasChelmsford",
+          "url": "https://www.instagram.com/ConcreteCanvasChelmsford/"
+        },
+        {
+          "label": "Instagram @chelmsfordforyou",
+          "url": "https://www.instagram.com/chelmsfordforyou/"
+        },
+        {
+          "label": "Facebook chelmsfordforyou",
+          "url": "https://www.facebook.com/chelmsfordforyou/"
+        }
+      ],
+      "instagram": {
+        "handle": "@ConcreteCanvasChelmsford",
+        "url": "https://www.instagram.com/ConcreteCanvasChelmsford/"
+      },
+      "stays": [
+        {
+          "id": "concretecanvas-stay-0",
+          "kind": "Hotel",
+          "name": "Shire Hall Rooms",
+          "detail": "Double room, city centre, breakfast included",
+          "price": "£92 / night",
+          "priceValue": 92,
+          "walk": "5 min walk",
+          "lat": 51.7357,
+          "lng": 0.4692,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "concretecanvas-stay-1",
+          "kind": "Guest house",
+          "name": "Moulsham Lodge",
+          "detail": "Family-run B&B, four rooms, off-street parking",
+          "price": "£75 / night",
+          "priceValue": 75,
+          "walk": "14 min walk",
+          "lat": 51.7291,
+          "lng": 0.4703,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        },
+        {
+          "id": "concretecanvas-stay-2",
+          "kind": "Hostel",
+          "name": "Grays Yard Beds",
+          "detail": "Dorm beds and pods, bike store, 24h desk",
+          "price": "£33 / night",
+          "priceValue": 33,
+          "walk": "3 min walk",
+          "lat": 51.7363,
+          "lng": 0.4701,
+          "shots": [
+            "room 01",
+            "exterior",
+            "lounge",
+            "breakfast"
+          ]
+        }
+      ]
     }
   ]
 }

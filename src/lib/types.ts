@@ -50,6 +50,31 @@ export interface Festival {
   stays: Stay[];
 }
 
+// The subset of a Festival actually needed to render the map, programme
+// list, calendar and search — used instead of the full Festival on the
+// homepage and region pages, which would otherwise serialize every
+// festival's summary/prev editions/socials/stays to the client just to
+// plot a pin and a list row. The per-festival detail page still uses the
+// full Festival.
+export type MapFestival = Pick<
+  Festival,
+  | "id"
+  | "name"
+  | "city"
+  | "region"
+  | "lat"
+  | "lng"
+  | "postcode"
+  | "location"
+  | "start"
+  | "end"
+  | "extra"
+  | "month"
+  | "status"
+  | "badge"
+  | "dateShort"
+>;
+
 export interface SiteData {
   site: {
     name: string;

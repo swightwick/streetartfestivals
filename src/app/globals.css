@@ -194,6 +194,20 @@ a.no-underline:hover {
   animation: saFade 0.4s ease both;
 }
 
+@keyframes saScaleFade {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.sa-scale-fade {
+  animation: saScaleFade 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 /* Page transitions — route changes are handled by React's <ViewTransition>
    (see AtlasApp.tsx / festivals/[id]/page.tsx). The map carries a "morph"
    view-transition-class so it scales/repositions from its old box into its
@@ -244,7 +258,8 @@ a.no-underline:hover {
     animation-delay: 0s !important;
   }
   .sa-rise,
-  .sa-fade {
+  .sa-fade,
+  .sa-scale-fade {
     animation: none !important;
   }
   .leaflet-container {

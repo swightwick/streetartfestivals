@@ -1,18 +1,22 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import type { Festival } from "@/lib/types";
+import type { MapFestival } from "@/lib/types";
 import { isDated, isPast, regionsCount } from "@/lib/festivals";
 
 interface ProgrammeListProps {
-  list: Festival[];
+  list: MapFestival[];
   allCount: number;
   selectedId: string | null;
   onHover: (id: string) => void;
   onOpenInfo?: () => void;
+  // Rendered after the last festival (e.g. a "view all regions" link on a
+  // region page) — part of the scrolling list content, not a fixed footer.
+  afterList?: ReactNode;
 }
 
-export default function ProgrammeList({ list, allCount, selectedId, onHover, onOpenInfo }: ProgrammeListProps) {
+export default function ProgrammeList({ list, allCount, selectedId, onHover, onOpenInfo, afterList }: ProgrammeListProps) {
   const dated = list.filter(isDated).length;
 
   return (
@@ -78,10 +82,12 @@ export default function ProgrammeList({ list, allCount, selectedId, onHover, onO
               onPointerEnter={(e) => {
                 if (e.pointerType === "mouse") onHover(f.id);
               }}
-              className="flex items-start gap-2.5 border-0 py-[18px] pl-0.5 pr-1 text-left text-text no-underline transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
+              className="sa-fade flex items-start gap-2.5 border-0 py-[18px] pl-0.5 pr-1 text-left text-text no-underline transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
               style={{
                 borderBottom: "1px solid var(--color-divider)",
                 background: active ? "color-mix(in srgb, var(--color-accent) 14%, transparent)" : "transparent",
+                animationDelay: `${Math.min(i, 14) * 18}ms`,
+                animationDuration: "0.25s",
               }}
             >
               <span className="mt-[5px] block h-[9px] w-[9px] flex-none" style={dot} />
@@ -122,6 +128,7 @@ export default function ProgrammeList({ list, allCount, selectedId, onHover, onO
             No festivals match those filters.
           </p>
         )}
+        {afterList}
       </div>
     </div>
   );

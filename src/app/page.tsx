@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AtlasApp from "@/components/atlas/AtlasApp";
-import { getAllFestivals, siteUrl, SITE, sortedFestivals } from "@/lib/festivals";
+import { getAllFestivals, getAllMapFestivals, siteUrl, SITE, sortedFestivals } from "@/lib/festivals";
 
 // Re-render periodically so "Passed"/"Confirmed" badges and calendar state
 // stay accurate against the real date between deploys, not just at build time.
@@ -35,7 +35,7 @@ export default function HomePage() {
       <h1 className="sr-only">
         {SITE.name} — every street art and graffiti festival in the UK and Ireland
       </h1>
-      <AtlasApp festivals={festivals} />
+      <AtlasApp festivals={getAllMapFestivals()} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}

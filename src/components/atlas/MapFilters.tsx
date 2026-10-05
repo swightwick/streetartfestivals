@@ -39,7 +39,7 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
   const activeFilterCount = (status !== "All" ? 1 : 0) + (region !== "All" ? 1 : 0) + (q.trim() ? 1 : 0);
 
   return (
-    <div ref={panelRef} className="absolute left-3 top-3 z-[500] lg:hidden">
+    <div ref={panelRef} className="relative z-[500] lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

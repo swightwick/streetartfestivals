@@ -10,9 +10,11 @@ import {
   isPast,
   nearbyFestivals,
   nextFestival,
+  REGIONS,
   siteUrl,
 } from "@/lib/festivals";
-import { buildEventJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
+import { buildEventJsonLd, buildBreadcrumbJsonLd, metaDescription } from "@/lib/seo";
+import { regionSlug } from "@/lib/regions";
 import { getEventGalleryImages, getEventLogo } from "@/lib/gallery";
 import EventMapPanel from "@/components/festival/EventMapPanel";
 import Logo from "@/components/Logo";
@@ -36,21 +38,24 @@ export async function generateMetadata({
   const { id } = await params;
   const f = getFestival(id);
   if (!f) return {};
-  const title = `${f.name} — ${f.city} · ${f.dates}`;
+  // dateShort, not dates — the long form ("… Street Party: Sat 16 May, 10am–5pm")
+  // pushes several titles past Google's ~60-char SERP truncation point.
+  const title = `${f.name} — ${f.city} · ${f.dateShort}`;
+  const description = metaDescription(f.summary);
   return {
     title,
-    description: f.summary,
+    description,
     alternates: { canonical: `/festivals/${f.id}` },
     openGraph: {
       type: "article",
       title,
-      description: f.summary,
+      description,
       url: siteUrl(`/festivals/${f.id}`),
     },
     twitter: {
       card: "summary",
       title,
-      description: f.summary,
+      description,
     },
   };
 }
@@ -130,7 +135,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 alt={`${f.name} logo`}
                 width={112}
                 height={112}
-                className="absolute right-4 top-6 hidden h-16 w-16 object-contain md:right-[26px] md:top-[30px] lg:block sm:h-28 sm:w-28"
+                className="sa-scale-fade absolute right-4 top-6 hidden h-16 w-16 object-contain md:right-[26px] md:top-[30px] lg:block sm:h-28 sm:w-28"
               />
             )}
 
@@ -280,7 +285,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                   Nearby
                 </h2>
                 <div className="flex flex-col">
-                  {nearby.map(({ festival: r, distanceKm }) => {
+                  {nearby.map(({ festival: r, distanceKm }, i) => {
                     const dot = isDated(r)
                       ? { background: "var(--color-accent)" }
                       : { border: "2px solid var(--color-accent)" };
@@ -288,8 +293,12 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                       <Link
                         key={r.id}
                         href={`/festivals/${r.id}`}
-                        className="flex items-start gap-2.5 border-0 py-[18px] pl-0.5 pr-1 text-left text-text no-underline transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
-                        style={{ borderBottom: "1px solid var(--color-divider)" }}
+                        className="sa-fade flex items-start gap-2.5 border-0 py-[18px] pl-0.5 pr-1 text-left text-text no-underline transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
+                        style={{
+                          borderBottom: "1px solid var(--color-divider)",
+                          animationDelay: `${Math.min(i, 14) * 18}ms`,
+                          animationDuration: "0.25s",
+                        }}
                       >
                         <span className="mt-[5px] block h-[9px] w-[9px] flex-none" style={dot} />
                         <span className="min-w-0 flex-1">
@@ -332,6 +341,28 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
                 </div>
               </div>
             )}
+
+            <div className="pt-[22px]" style={{ borderTop: "1px solid var(--color-divider)" }}>
+              <h2 className="m-0 mb-3.5 font-[800] text-[13px] uppercase leading-none tracking-[.14em] text-white">
+                Browse by region
+              </h2>
+              <div className="flex flex-wrap gap-1.5">
+                {REGIONS.map((r) => (
+                  <Link
+                    key={r}
+                    href={`/regions/${regionSlug(r)}`}
+                    className="inline-flex h-8 items-center whitespace-nowrap border px-[9px] font-[600] text-[9.5px] uppercase tracking-[.08em] no-underline transition-all duration-150 hover:border-accent-500"
+                    style={{
+                      borderColor: r === f.region ? "var(--color-accent)" : "var(--color-divider)",
+                      background: r === f.region ? "var(--color-accent)" : "transparent",
+                      color: r === f.region ? "var(--color-bg)" : "var(--color-text)",
+                    }}
+                  >
+                    {r}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
             <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               {/* Fixed to the bottom of the viewport on mobile/tablet, so it stays

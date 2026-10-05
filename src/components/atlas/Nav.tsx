@@ -32,7 +32,7 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
         <Link href="/" className="group no-underline">
           <Logo hover />
         </Link>
-        <span className="hidden min-w-0 max-w-[30ch] text-[11px] leading-[1.2] text-[color-mix(in_srgb,var(--color-text)_70%,transparent)] sm:block">
+        <span className="hidden min-w-0 text-[11px] leading-[1.2] text-[color-mix(in_srgb,var(--color-text)_70%,transparent)] sm:block">
           {SITE.tagline}
         </span>
       </div>

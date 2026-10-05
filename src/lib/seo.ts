@@ -5,6 +5,16 @@ function cleanPostcode(postcode: string): string {
   return postcode.split(/[(/]/)[0].trim();
 }
 
+// f.summary is written for the page body and often runs well past Google's
+// ~155-160 char SERP cutoff, where it gets truncated mid-word. Trim it to a
+// clean word boundary for <meta description>/OG/Twitter instead.
+export function metaDescription(text: string, max = 155): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return cut.slice(0, lastSpace > 0 ? lastSpace : max).trimEnd() + "…";
+}
+
 /**
  * Only festivals with a confirmed, fully-dated 2026 edition get Event
  * structured data — Google's guidance is not to mark up events without a

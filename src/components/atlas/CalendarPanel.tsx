@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Festival } from "@/lib/types";
+import type { MapFestival } from "@/lib/types";
 import { eventsOnDay, todayIso } from "@/lib/festivals";
 
 const MON = [
@@ -16,7 +16,7 @@ function iso(y: number, m: number, d: number) {
 }
 
 interface CalendarPanelProps {
-  festivals: Festival[];
+  festivals: MapFestival[];
   onOpen: (id: string) => void;
   fillHeight?: boolean;
 }
@@ -39,6 +39,10 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
       setYear((y) => y + 1);
     } else setMonth((m) => m + 1);
   };
+  // In the year view the header only ever shows a year, so the arrows step
+  // a year at a time there instead of dragging the (hidden) month along.
+  const goPrev = () => (cal === "year" ? setYear((y) => y - 1) : prevMonth());
+  const goNext = () => (cal === "year" ? setYear((y) => y + 1) : nextMonth());
 
   const cells = useMemo(() => {
     const first = new Date(Date.UTC(year, month, 1));
@@ -114,13 +118,13 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
         style={{ borderBottom: "1px solid var(--color-divider)" }}
       >
         <span className="font-[800] text-[19px] leading-none tracking-[-0.01em]">
-          {MON[month]} {year}
+          {cal === "year" ? year : `${MON[month]} ${year}`}
         </span>
         <div className="ml-auto flex items-center gap-1">
           <button
             type="button"
-            onClick={prevMonth}
-            aria-label="Previous month"
+            onClick={goPrev}
+            aria-label={cal === "year" ? "Previous year" : "Previous month"}
             className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
             style={{ borderColor: "var(--color-divider)", background: "transparent", color: "var(--color-text)" }}
           >
@@ -128,8 +132,8 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
           </button>
           <button
             type="button"
-            onClick={nextMonth}
-            aria-label="Next month"
+            onClick={goNext}
+            aria-label={cal === "year" ? "Next year" : "Next month"}
             className="grid h-[34px] w-[34px] place-items-center border font-[800] text-[17px] leading-none transition-all duration-150 hover:bg-accent hover:text-[var(--color-bg)]"
             style={{ borderColor: "var(--color-divider)", background: "transparent", color: "var(--color-text)" }}
           >
@@ -182,18 +186,14 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
             }}
           >
             {cells.map((c) => (
-              <button
+              <div
                 key={c.key}
-                type="button"
-                onClick={c.evs.length ? () => onOpen(c.evs[0].id) : undefined}
-                disabled={!c.evs.length}
-                className={`flex flex-col gap-0.5 px-1 pb-1 pt-[3px] text-left transition-all duration-150 hover:enabled:bg-black disabled:cursor-default ${fillHeight ? "" : "aspect-square"}`}
+                className={`flex flex-col gap-0.5 px-1 pb-1 pt-[3px] text-left ${fillHeight ? "" : "aspect-square"}`}
                 style={{
                   borderRight: "1px solid var(--color-divider)",
                   borderBottom: "1px solid var(--color-divider)",
                   background: "transparent",
                   opacity: c.inM ? 1 : 0.28,
-                  cursor: c.evs.length ? "pointer" : "default",
                 }}
               >
                 <span
@@ -221,21 +221,27 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
                 {c.evs.slice(0, 2).map((f) => {
                   const label = c.key === f.start || c.firstCol || f.extra.includes(c.key);
                   return (
-                    <div
+                    <button
                       key={f.id}
-                      className="min-h-4 overflow-hidden whitespace-nowrap text-ellipsis px-[3px] py-[1px] font-[700] text-[10.5px] leading-[1.25] tracking-[.01em] text-white"
+                      type="button"
+                      onClick={() => onOpen(f.id)}
+                      className="min-h-4 overflow-hidden whitespace-nowrap text-ellipsis border-0 px-[3px] py-1 text-left font-[700] text-[10.5px] leading-[1.25] tracking-[.01em] text-white transition-all duration-150 hover:brightness-110"
                       style={{ background: f.status === "confirmed" ? "var(--color-accent)" : "var(--color-accent-700)" }}
                     >
                       {label ? f.name : ""}
-                    </div>
+                    </button>
                   );
                 })}
                 {c.evs.length > 2 && (
-                  <div className="px-[3px] font-[700] text-[10.5px] leading-[1.25] text-accent-400">
+                  <button
+                    type="button"
+                    onClick={() => onOpen(c.evs[2].id)}
+                    className="border-0 bg-transparent px-[3px] text-left font-[700] text-[10.5px] leading-[1.25] text-accent-400 transition-colors duration-150 hover:text-accent-300"
+                  >
                     +{c.evs.length - 2}
-                  </div>
+                  </button>
                 )}
-              </button>
+              </div>
             ))}
           </div>
           {notes.length > 0 && (
@@ -263,8 +269,12 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
 
       {cal === "year" && (
         <div
-          className="grid grid-cols-3 gap-px"
-          style={{ background: "var(--color-divider)", borderTop: "1px solid var(--color-divider)" }}
+          className={`grid grid-cols-3 gap-px ${fillHeight ? "min-h-0 flex-1" : ""}`}
+          style={{
+            background: "var(--color-divider)",
+            borderTop: "1px solid var(--color-divider)",
+            gridTemplateRows: fillHeight ? "repeat(4, 1fr)" : undefined,
+          }}
         >
           {yearMonths.map((m) => (
             <button
@@ -274,30 +284,32 @@ export default function CalendarPanel({ festivals, onOpen, fillHeight = false }:
                 setCal("month");
                 setMonth(m.mi);
               }}
-              className="cursor-pointer border-0 px-[9px] pb-[9px] pt-2 text-left transition-all duration-150 hover:bg-black"
+              className={`cursor-pointer border-0 px-[9px] pb-[9px] pt-2 text-left transition-all duration-150 hover:bg-black ${fillHeight ? "flex flex-col" : ""}`}
               style={{ background: "var(--color-surface)", color: "var(--color-text)" }}
             >
               <div
-                className="mb-[5px] font-[800] text-[12.5px] uppercase leading-none tracking-[.06em]"
+                className="mb-[5px] flex-none font-[800] text-[12.5px] uppercase leading-none tracking-[.06em]"
                 style={{ color: m.any ? "var(--color-text)" : "color-mix(in srgb, var(--color-text) 40%, transparent)" }}
               >
                 {m.name}
               </div>
-              <div className="grid grid-cols-7">
-                {m.days.map((d, i) => (
-                  <span
-                    key={i}
-                    className="grid h-4 place-items-center font-[500] text-[10px] leading-none [font-variant-numeric:tabular-nums]"
-                    style={{
-                      fontWeight: d.evs ? 800 : 500,
-                      background: d.evs ? "var(--color-accent)" : "transparent",
-                      color: d.evs ? "var(--color-bg)" : "color-mix(in srgb, var(--color-text) 45%, transparent)",
-                      outline: d.isToday && !d.evs ? "1px solid var(--color-accent-500)" : undefined,
-                    }}
-                  >
-                    {d.num}
-                  </span>
-                ))}
+              <div className={fillHeight ? "flex flex-1 flex-col justify-center" : undefined}>
+                <div className="grid w-full grid-cols-7">
+                  {m.days.map((d, i) => (
+                    <span
+                      key={i}
+                      className="grid h-4 place-items-center font-[500] text-[10px] leading-none [font-variant-numeric:tabular-nums]"
+                      style={{
+                        fontWeight: d.evs ? 800 : 500,
+                        background: d.evs ? "var(--color-accent)" : "transparent",
+                        color: d.evs ? "var(--color-bg)" : "color-mix(in srgb, var(--color-text) 45%, transparent)",
+                        outline: d.isToday && !d.evs ? "1px solid var(--color-accent-500)" : undefined,
+                      }}
+                    >
+                      {d.num}
+                    </span>
+                  ))}
+                </div>
               </div>
             </button>
           ))}

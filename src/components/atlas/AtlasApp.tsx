@@ -1,11 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, ViewTransition } from "react";
 import { createPortal } from "react-dom";
-import type { Festival } from "@/lib/types";
+import type { MapFestival } from "@/lib/types";
 import { sortedFestivals, SITE } from "@/lib/festivals";
+import { regionSlug } from "@/lib/regions";
 import { useFocusTrap } from "@/lib/useFocusTrap";
 import MapSpinner from "@/components/MapSpinner";
 import Logo from "@/components/Logo";
@@ -67,11 +69,47 @@ function useWelcomeSeen() {
   return useSyncExternalStore(subscribeWelcomeSeen, getWelcomeSeenSnapshot, () => true);
 }
 
-export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
+// Padding (degrees) added around a region's festivals when cropping the
+// map to them, so markers near the edge aren't flush against the viewport.
+const REGION_BOUNDS_PADDING = 0.35;
+
+function regionBounds(fs: MapFestival[]): [[number, number], [number, number]] | undefined {
+  if (fs.length === 0) return undefined;
+  const lats = fs.map((f) => f.lat);
+  const lngs = fs.map((f) => f.lng);
+  return [
+    [Math.min(...lats) - REGION_BOUNDS_PADDING, Math.min(...lngs) - REGION_BOUNDS_PADDING],
+    [Math.max(...lats) + REGION_BOUNDS_PADDING, Math.max(...lngs) + REGION_BOUNDS_PADDING],
+  ];
+}
+
+export default function AtlasApp({
+  festivals,
+  initialRegion,
+}: {
+  festivals: MapFestival[];
+  // Pre-filters to this region and crops the map's initial view to it —
+  // used by /regions/[slug] to reuse the homepage shell instead of a
+  // separate layout. "All" still works like any other region selection
+  // afterwards (the dropdown, search, etc. are all unaffected).
+  initialRegion?: string;
+}) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<StatusFilter>(STATUS_FILTERS[0]);
-  const [region, setRegion] = useState("All");
+  // Not a useState: switching regions now navigates to /regions/[slug]
+  // (see goToRegion below) rather than re-filtering in place, so this only
+  // ever reflects whichever region the current page loaded with.
+  const region = initialRegion ?? "All";
+  const initialMapBounds = useMemo(
+    () => (initialRegion ? regionBounds(festivals.filter((f) => f.region === initialRegion)) : undefined),
+    // Intentionally only computed once from the region the page loaded
+    // with — switching the region dropdown afterwards re-filters the list
+    // and markers but shouldn't yank the map to a new crop underneath the
+    // visitor.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusRequest, setFocusRequest] = useState<{ id: string; nonce: number } | null>(null);
   const [resetRequest, setResetRequest] = useState<number | null>(null);
@@ -145,10 +183,18 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
   // Tooltip click opens the full record (a real navigation); the pin itself
   // just selects + pans, matching the map's "peek vs open" distinction.
   const goToFestival = (id: string) => router.push(`/festivals/${id}`);
-  const focusFromDrawer = (id: string) => {
-    focus(id);
-    setListOpen(false);
-  };
+  const allRegionsLink = initialRegion && (
+    <Link
+      href="/"
+      className="mt-5 inline-block font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-accent-500 transition-colors duration-150 hover:text-accent-400"
+    >
+      &#8249; View all regions
+    </Link>
+  );
+  // The region filter is a real page (/regions/[slug]), not just client
+  // state, so switching it in the nav navigates there instead — gives the
+  // region a shareable/indexable URL rather than only a query-less filter.
+  const goToRegion = (next: string) => router.push(next === "All" ? "/" : `/regions/${regionSlug(next)}`);
 
   return (
     <ViewTransition name="atlas-shell" share="auto" default="none">
@@ -169,7 +215,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
             status={status}
             onStatus={setStatus}
             region={region}
-            onRegion={setRegion}
+            onRegion={goToRegion}
             onOpenList={() => {
               setMobileView("list");
               setListOpen(true);
@@ -189,26 +235,33 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                     selectedId={selectedId}
                     focusRequest={focusRequest}
                     resetRequest={resetRequest}
+                    initialBounds={initialMapBounds}
                     onMarkerClick={focus}
                     onTooltipClick={goToFestival}
                   />
-                  {/* Filters trigger and "View full map" share the same top-left
-                      spot and are mutually exclusive — once zoomed into a
-                      festival there's nothing to filter into view, so the
-                      reset control takes over instead of stacking on top. */}
-                  {!selectedId && (
-                    <MapFilters q={q} onQ={setQ} status={status} onStatus={setStatus} region={region} onRegion={setRegion} />
-                  )}
-                  {selectedId && (
-                    <button
-                      type="button"
-                      onClick={resetView}
-                      className="absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
-                      style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
-                    >
-                      View full map
-                    </button>
-                  )}
+                  {/* Filters trigger and "View full map" share the top-left
+                      corner, side by side where both apply. Once zoomed into
+                      a festival there's nothing left to filter into view, so
+                      filters drop out and the reset control takes over alone.
+                      On a region page the map opens cropped to that region,
+                      so the reset control is shown even with nothing
+                      selected — same persistent "back to the full map"
+                      affordance as the festival page's map panel. */}
+                  <div className="absolute left-3 top-3 z-[500] flex items-start gap-2">
+                    {!selectedId && (
+                      <MapFilters q={q} onQ={setQ} status={status} onStatus={setStatus} region={region} onRegion={goToRegion} />
+                    )}
+                    {(selectedId || initialRegion) && (
+                      <button
+                        type="button"
+                        onClick={resetView}
+                        className="flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
+                        style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
+                      >
+                        View full map
+                      </button>
+                    )}
+                  </div>
                 </div>
               </ViewTransition>
               <div
@@ -230,7 +283,14 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
               className="hidden min-h-0 min-w-0 overflow-hidden lg:grid"
               style={{ gridTemplateRows: "minmax(0,1fr) auto", background: "var(--color-bg)" }}
             >
-              <ProgrammeList list={filtered} allCount={festivals.length} selectedId={selectedId} onHover={peek} onOpenInfo={() => setInfoOpen(true)} />
+              <ProgrammeList
+                list={filtered}
+                allCount={festivals.length}
+                selectedId={selectedId}
+                onHover={peek}
+                onOpenInfo={() => setInfoOpen(true)}
+                afterList={allRegionsLink}
+              />
               <button
                 type="button"
                 onClick={() => setCalendarOpen(true)}
@@ -311,9 +371,15 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 </div>
                 <div className="min-h-0 flex-1">
                   {mobileView === "list" ? (
-                    <ProgrammeList list={filtered} allCount={festivals.length} selectedId={selectedId} onHover={peek} />
+                    <ProgrammeList
+                      list={filtered}
+                      allCount={festivals.length}
+                      selectedId={selectedId}
+                      onHover={peek}
+                      afterList={allRegionsLink}
+                    />
                   ) : (
-                    <CalendarPanel festivals={festivals} onOpen={focusFromDrawer} fillHeight />
+                    <CalendarPanel festivals={festivals} onOpen={goToFestival} fillHeight />
                   )}
                 </div>
               </div>
@@ -355,14 +421,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                 </button>
               </div>
               <div className="min-h-0 flex-1">
-                <CalendarPanel
-                  festivals={festivals}
-                  onOpen={(id) => {
-                    focus(id);
-                    setCalendarOpen(false);
-                  }}
-                  fillHeight
-                />
+                <CalendarPanel festivals={festivals} onOpen={goToFestival} fillHeight />
               </div>
             </div>
           </div>
@@ -493,7 +552,7 @@ export default function AtlasApp({ festivals }: { festivals: Festival[] }) {
                   <button
                     type="button"
                     onClick={closeInfo}
-                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110 focus-visible:outline-none"
                     style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
                     Start exploring &#8250;
