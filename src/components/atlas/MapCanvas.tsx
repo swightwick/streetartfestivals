@@ -17,6 +17,11 @@ interface FocusRequest {
 // Leaflet's [[lat,lng],[lat,lng]] corner pairs.
 const UK_IE_BOUNDS: [number, number, number, number] = [-11.6, 49.2, 3.2, 61.2];
 
+// Below this width, markers get a bigger invisible hit area (see
+// applyHitAreaStyle) — matches the lg breakpoint the rest of the atlas
+// shell switches its mobile/desktop layout at.
+const MOBILE_MARKER_BREAKPOINT = 1024;
+
 // Pure — no per-instance state — so it lives at module scope rather than
 // being stashed on the map instance (as the old Leaflet code did) or put in
 // a ref (which would be the right tool only if it needed to vary per
@@ -35,6 +40,22 @@ function applyMarkerStyle(el: HTMLElement, solid: boolean, sel: boolean) {
   // map during a zoom gesture and "catch up" afterwards instead of moving
   // with it. Only the state-change properties below should ease.
   el.style.transition = "width .18s, height .18s, background-color .18s, border-color .18s, box-shadow .18s";
+}
+
+// Padding on the marker's hit-area wrapper (not the visible dot itself,
+// see festivals.forEach below) — grows the tappable area around small
+// markers on mobile without changing how big they look. Symmetric padding
+// keeps the dot centered on its actual lng/lat, same as unpadded.
+function applyHitAreaStyle(el: HTMLElement) {
+  const mobile = typeof window !== "undefined" && window.innerWidth < MOBILE_MARKER_BREAKPOINT;
+  el.style.padding = mobile ? "13px" : "0";
+}
+
+// The wrapper's only child is the visible dot applyMarkerStyle styles —
+// see festivals.forEach below for why marker.getElement() (the wrapper)
+// isn't styled directly.
+function getDotEl(marker: Marker): HTMLElement {
+  return marker.getElement().firstElementChild as HTMLElement;
 }
 
 interface MapCanvasProps {
@@ -81,6 +102,7 @@ export default function MapCanvas({
   useEffect(() => {
     let cancelled = false;
     let resizeObserver: ResizeObserver | null = null;
+    let onWindowResize: (() => void) | null = null;
 
     (async () => {
       const maplibregl = await loadMapLibre();
@@ -208,6 +230,11 @@ export default function MapCanvas({
             closeOnClick: false,
             anchor: "bottom",
             offset: 12,
+            // Default 240px forces long names to wrap, which pushes the
+            // flex-centered arrow down next to the wrapped second line
+            // instead of staying beside the (first line of the) name.
+            // "none" lets the pill grow to fit the name on one row instead.
+            maxWidth: "none",
           })
             .setLngLat(entry.marker.getLngLat())
             .setHTML(
@@ -240,11 +267,24 @@ export default function MapCanvas({
 
       festivals.forEach((f) => {
         const solid = f.status === "confirmed" || f.status === "month" || f.status === "rolling";
+
+        // markerEl is a hit-area wrapper, not the visible marker — keeps
+        // the dot's own size untouched while still growing what's tappable
+        // on mobile (applyHitAreaStyle), via padding around a centered
+        // child rather than a bigger dot.
         const markerEl = document.createElement("div");
-        applyMarkerStyle(markerEl, solid, f.id === selectedId);
+        markerEl.style.display = "flex";
+        markerEl.style.alignItems = "center";
+        markerEl.style.justifyContent = "center";
+        markerEl.style.cursor = "pointer";
         markerEl.title = f.name;
         markerEl.setAttribute("aria-label", f.name);
-        markerEl.style.cursor = "pointer";
+        applyHitAreaStyle(markerEl);
+
+        const dotEl = document.createElement("div");
+        applyMarkerStyle(dotEl, solid, f.id === selectedId);
+        markerEl.appendChild(dotEl);
+
         markerEl.addEventListener("mouseenter", () => {
           markerEl.style.zIndex = "10";
         });
@@ -326,6 +366,16 @@ export default function MapCanvas({
         resizeObserver.observe(el);
       }
 
+      // Re-apply hit-area padding on resize (orientation change, devtools
+      // resize, etc.) — applyHitAreaStyle reads window.innerWidth itself,
+      // so this just needs to re-trigger it for every existing marker.
+      onWindowResize = () => {
+        Object.values(markersRef.current).forEach((entry) => {
+          applyHitAreaStyle(entry.marker.getElement());
+        });
+      };
+      window.addEventListener("resize", onWindowResize);
+
       // Expose for the sync effect below without re-running this whole
       // mount effect — a ref, not stashed on the map instance the way the
       // old Leaflet code did.
@@ -335,6 +385,7 @@ export default function MapCanvas({
     return () => {
       cancelled = true;
       resizeObserver?.disconnect();
+      if (onWindowResize) window.removeEventListener("resize", onWindowResize);
       mapRef.current?.remove();
       mapRef.current = null;
       markersRef.current = {};
@@ -362,7 +413,7 @@ export default function MapCanvas({
         entry.marker.remove();
         entry.addedToMap = false;
       }
-      applyMarkerStyle(entry.marker.getElement(), entry.solid, id === selectedId);
+      applyMarkerStyle(getDotEl(entry.marker), entry.solid, id === selectedId);
 
       if (id === selectedId) {
         tooltipFns?.show(id);

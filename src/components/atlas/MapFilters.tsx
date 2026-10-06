@@ -60,9 +60,6 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
             {activeFilterCount}
           </span>
         )}
-        <span className="text-[8px] leading-none transition-transform" style={{ transform: open ? "rotate(180deg)" : "none" }}>
-          &#9662;
-        </span>
       </button>
 
       {open && (
@@ -78,18 +75,31 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
             className="sa-rise absolute left-0 top-full z-[650] mt-2 flex w-[280px] max-w-[calc(100vw-1.5rem)] flex-col gap-3 p-3"
             style={{ background: "var(--color-surface)", border: "1px solid var(--color-divider)", boxShadow: "var(--shadow-lg)" }}
           >
-            <input
-              // autoFocus (not zoom-triggering — iOS/Android only zoom on
-              // focus when the input's font-size is under 16px, hence
-              // text-[16px] here rather than the 12px used elsewhere).
-              autoFocus
-              className="input h-9 w-full px-2 text-[16px]"
-              type="text"
-              placeholder="Search festival, city, postcode"
-              value={q}
-              onChange={(e) => onQ(e.target.value)}
-              aria-label="Search festivals"
-            />
+            <div className="relative">
+              <input
+                // autoFocus (not zoom-triggering — iOS/Android only zoom on
+                // focus when the input's font-size is under 16px, hence
+                // text-[16px] here rather than the 12px used elsewhere).
+                autoFocus
+                className="input h-9 w-full px-2 text-[16px]"
+                style={q ? { paddingRight: "28px" } : undefined}
+                type="text"
+                placeholder="Search festival, city, postcode"
+                value={q}
+                onChange={(e) => onQ(e.target.value)}
+                aria-label="Search festivals"
+              />
+              {q && (
+                <button
+                  type="button"
+                  onClick={() => onQ("")}
+                  aria-label="Clear search"
+                  className="absolute right-2 top-1/2 grid h-5 w-5 -translate-y-1/2 place-items-center text-[13px] leading-none text-[color-mix(in_srgb,var(--color-text)_55%,transparent)] transition-colors duration-150 hover:text-accent-500"
+                >
+                  &#10005;
+                </button>
+              )}
+            </div>
             <select
               className="input select-arrow h-9 w-full cursor-pointer pl-2 pr-6 font-[600] text-[10px] uppercase tracking-[.06em]"
               value={region}
@@ -125,8 +135,7 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
                   onRegion("All");
                   setOpen(false);
                 }}
-                className="w-full pt-3 text-center font-[700] text-[9.5px] uppercase tracking-[.08em] text-[color-mix(in_srgb,var(--color-text)_65%,transparent)] transition-colors duration-150 hover:text-accent-500"
-                style={{ borderTop: "1px solid var(--color-divider)" }}
+                className="w-full text-center font-[700] text-[9.5px] uppercase tracking-[.08em] text-[color-mix(in_srgb,var(--color-text)_65%,transparent)] transition-colors duration-150 hover:text-accent-500"
               >
                 Clear all
               </button>

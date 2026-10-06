@@ -176,9 +176,16 @@ export default function AtlasApp({
     setFocusRequest({ id, nonce: Date.now() });
   };
   const peek = (id: string) => setSelectedId(id);
+  // "View full map" clears every filter along with the view, not just the
+  // selection — otherwise it zooms back out to the full UK + Ireland extent
+  // while a search/status/region filter is still hiding most of the pins
+  // that view would otherwise show.
   const resetView = () => {
     setSelectedId(null);
     setResetRequest(Date.now());
+    setQ("");
+    setStatus(STATUS_FILTERS[0]);
+    if (initialRegion) router.push("/");
   };
   // Tooltip click opens the full record (a real navigation); the pin itself
   // just selects + pans, matching the map's "peek vs open" distinction.
@@ -258,7 +265,7 @@ export default function AtlasApp({
                       <button
                         type="button"
                         onClick={resetView}
-                        className="flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
+                        className="flex h-8 flex-none items-center whitespace-nowrap border px-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]"
                         style={{ background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" }}
                       >
                         View full map

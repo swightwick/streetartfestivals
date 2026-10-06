@@ -65,14 +65,27 @@ export default function Nav({ q, onQ, status, onStatus, region, onRegion, onOpen
             </option>
           ))}
         </select>
-        <input
-          className="input h-8 min-h-8 max-w-[260px] min-w-0 flex-[1_1_130px] px-2 font-[600] text-[9.5px] uppercase tracking-[.06em]"
-          type="text"
-          placeholder="Search festival, city, postcode"
-          value={q}
-          onChange={(e) => onQ(e.target.value)}
-          aria-label="Search festivals"
-        />
+        <div className="relative min-w-0 max-w-[260px] flex-[1_1_130px]">
+          <input
+            className="input h-8 min-h-8 w-full px-2 font-[600] text-[9.5px] uppercase tracking-[.06em]"
+            style={q ? { paddingRight: "22px" } : undefined}
+            type="text"
+            placeholder="Search festival, city, postcode"
+            value={q}
+            onChange={(e) => onQ(e.target.value)}
+            aria-label="Search festivals"
+          />
+          {q && (
+            <button
+              type="button"
+              onClick={() => onQ("")}
+              aria-label="Clear search"
+              className="absolute right-1.5 top-1/2 grid h-4 w-4 -translate-y-1/2 place-items-center text-[11px] leading-none text-[color-mix(in_srgb,var(--color-text)_55%,transparent)] transition-colors duration-150 hover:text-accent-500"
+            >
+              &#10005;
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Mobile / tablet — filters float over the map (top-left); this is just the list opener */}

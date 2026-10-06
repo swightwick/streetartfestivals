@@ -6,6 +6,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import type { Festival } from "@/lib/types";
 import MapSpinner from "@/components/MapSpinner";
+import ArrowIcon from "@/components/ArrowIcon";
 import WithRegionParam from "./WithRegionParam";
 
 const EventMap = dynamic(() => import("./EventMap"), {
@@ -14,7 +15,7 @@ const EventMap = dynamic(() => import("./EventMap"), {
 });
 
 const backToMapLinkClassName =
-  "sa-fade absolute left-3 top-3 z-[500] flex-none whitespace-nowrap border px-4 py-2.5 font-[800] text-[11px] uppercase leading-none tracking-[.1em] no-underline transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]";
+  "sa-fade absolute left-3 top-3 z-[500] inline-flex flex-none items-center gap-1 whitespace-nowrap border px-3 py-2 font-[800] text-[11px] uppercase leading-none tracking-[.1em] no-underline transition-all duration-150 hover:!bg-accent hover:!text-[var(--color-bg)]";
 const backToMapLinkStyle = { background: "var(--color-bg)", borderColor: "var(--color-accent)", color: "#fff" };
 
 export default function EventMapPanel({ festival, logo }: { festival: Festival; logo: string | null }) {
@@ -35,7 +36,8 @@ export default function EventMapPanel({ festival, logo }: { festival: Festival; 
           <Suspense
             fallback={
               <Link href="/" className={backToMapLinkClassName} style={backToMapLinkStyle}>
-                &#8249; Back to map
+                <ArrowIcon size={20} flip />
+                Back to map
               </Link>
             }
           >
@@ -46,7 +48,8 @@ export default function EventMapPanel({ festival, logo }: { festival: Festival; 
                   className={backToMapLinkClassName}
                   style={backToMapLinkStyle}
                 >
-                  &#8249; Back to map
+                  <ArrowIcon size={20} flip />
+                  Back to map
                 </Link>
               )}
             </WithRegionParam>

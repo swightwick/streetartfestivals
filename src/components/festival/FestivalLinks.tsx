@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ArrowIcon from "@/components/ArrowIcon";
 import { isDated, isPast, type NearbyFestival } from "@/lib/festivals";
 
 const badgeStyle = (status: string, passed: boolean) =>
@@ -71,7 +72,8 @@ export function backAndNext(festivalId: string, nextId: string, regionSlug: stri
         className="fixed inset-x-0 bottom-0 z-[500] flex items-center justify-center gap-2 border-t px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] font-[800] text-[11px] uppercase leading-none tracking-[.1em] text-text no-underline transition-all duration-150 [border-color:var(--color-divider)] hover:bg-accent hover:!text-white lg:static lg:inset-auto lg:border lg:px-24 lg:py-3 lg:[border-color:var(--color-accent)] lg:inline-flex"
         style={{ background: "var(--color-bg)" }}
       >
-        &#8249; Back to map
+        <ArrowIcon size={20} flip />
+        Back to map
       </Link>
       {nextId !== festivalId && (
         <Link

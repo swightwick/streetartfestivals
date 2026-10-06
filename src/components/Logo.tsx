@@ -41,10 +41,16 @@ export default function Logo({
         className={`flex-none text-accent${hover ? " transition-colors duration-500 group-hover:text-white" : ""}`}
       />
       <span
-        className="whitespace-nowrap font-[800] leading-[0.9] tracking-[-0.035em] text-accent"
+        className={`whitespace-nowrap font-[800] leading-[0.9] tracking-[-0.035em] text-accent${
+          hover ? " transition-colors duration-500 group-hover:text-white" : ""
+        }`}
         style={{ fontSize: textSize }}
       >
-        streetart<span className="text-white">festivals</span>uk
+        streetart
+        <span className={`text-white${hover ? " transition-colors duration-500 group-hover:text-accent" : ""}`}>
+          festivals
+        </span>
+        uk
       </span>
     </span>
   );

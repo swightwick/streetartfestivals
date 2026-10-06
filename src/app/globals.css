@@ -178,6 +178,9 @@ a.no-underline:hover {
   border: 1px solid #333 !important;
 }
 .maplibregl-popup-content {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
   background: var(--color-bg);
   border-radius: 0;
   color: var(--color-text);
@@ -199,11 +202,15 @@ a.no-underline:hover {
 }
 .maplibregl-popup-content [data-tip-arrow] {
   display: inline-flex;
+  flex: none;
   align-items: center;
-  margin-left: 4px;
-  vertical-align: -2px;
+  margin-left: 6px;
   color: var(--color-accent);
   transition: color 0.15s ease;
+}
+.maplibregl-popup-content [data-tip-arrow] svg {
+  width: 20px;
+  height: 20px;
 }
 .maplibregl-popup-content:hover [data-tip-arrow] {
   color: var(--color-bg);
