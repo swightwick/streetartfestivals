@@ -99,7 +99,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         className="z-[5] flex h-[54px] flex-none items-center gap-3.5 px-[18px] py-[11px] shadow-[0_5px_14px_-4px_rgba(0,0,0,.34)]"
       >
         <Link href="/" className="group no-underline">
-          <Logo hover />
+          <Logo hover className="-translate-y-[2px]" />
         </Link>
         <a
           href={f.site}

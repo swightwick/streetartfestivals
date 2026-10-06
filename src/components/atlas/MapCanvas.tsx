@@ -96,9 +96,20 @@ export default function MapCanvas({
         maxBounds: UK_IE_BOUNDS,
         renderWorldCopies: false,
         attributionControl: false,
+        // No compass control (showCompass: false below) means there's no UI
+        // to reset a rotated view — so disable rotation entirely, both
+        // mouse-drag (dragRotate) and the touch twist gesture, rather than
+        // let mobile users accidentally spin into a stuck orientation.
+        dragRotate: false,
+        touchPitch: false,
       });
+      map.touchZoomRotate.disableRotation();
       map.addControl(
-        new maplibregl.AttributionControl({ compact: true, customAttribution: MAP_ATTRIBUTION }),
+        // compact: false — compact mode's toggle button stays permanently
+        // open anyway (the attribution text is short enough that MapLibre
+        // never collapses it), so compact just adds an extra "i" button
+        // for no functional benefit. Plain mode skips that button.
+        new maplibregl.AttributionControl({ compact: false, customAttribution: MAP_ATTRIBUTION }),
         "bottom-right"
       );
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
