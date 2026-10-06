@@ -1,6 +1,18 @@
 import type * as Leaflet from "leaflet";
 
-export const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+// MapTiler's basic-v2-dark basemap rather than tile.openstreetmap.org
+// directly: the latter is explicitly for light/dev use only (its usage
+// policy disallows production traffic, and it sends `cache-control:
+// no-cache` so every tile is refetched on every load). MapTiler's tiles are
+// cached for a day. The key is restricted (see MapTiler dashboard) to this
+// site's domains, so it's safe to expose via NEXT_PUBLIC_.
+// No {r} retina placeholder: tile.openstreetmap.org never served @2x either
+// (everyone got flat 256px tiles), and requesting @2x here triples the
+// payload per tile on any modern retina screen — which undoes the whole
+// point of this switch.
+export const TILE_URL = `https://api.maptiler.com/maps/basic-v2-dark/256/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
+export const TILE_ATTRIBUTION =
+  '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
 // How long after mount tiles are treated as part of the initial paint.
 // Callers here set an initial view and then immediately re-fit it (e.g.

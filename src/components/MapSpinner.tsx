@@ -2,7 +2,7 @@ export default function MapSpinner() {
   return (
     <div
       className="absolute inset-0 z-[600] grid place-items-center"
-      style={{ background: "#d9d7d4" }}
+      style={{ background: "#2b2b2b" }}
     >
       <div className="flex flex-col items-center gap-2.5">
         <div

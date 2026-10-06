@@ -55,7 +55,7 @@ export default function EventMapPanel({
               alt={`${festival.name} logo`}
               width={64}
               height={64}
-              className="sa-fade absolute bottom-3 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
+              className="sa-fade absolute bottom-7 right-3 z-[500] h-16 w-16 object-contain lg:hidden"
             />
           )}
         </Fragment>

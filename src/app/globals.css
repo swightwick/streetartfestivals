@@ -85,7 +85,7 @@ a.no-underline:hover {
 
 /* Leaflet theming to match the atlas's monochrome map */
 .leaflet-container {
-  background: #d9d7d4;
+  background: #2b2b2b;
   font-family: var(--font-sans);
   transition: filter 0.35s ease;
 }
@@ -93,7 +93,7 @@ a.no-underline:hover {
   filter: blur(6px) grayscale(0.3);
 }
 .leaflet-tile-pane {
-  filter: grayscale(1) contrast(0.9) brightness(1.02);
+  filter: grayscale(1) contrast(0.8) brightness(0.99);
 }
 .leaflet-tile {
   opacity: 1 !important;

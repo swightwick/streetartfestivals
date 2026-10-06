@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Map as LeafletMap, Marker, DivIcon } from "leaflet";
 import type { MapFestival } from "@/lib/types";
-import { addPriorityTileLayer } from "@/lib/mapTiles";
+import { addPriorityTileLayer, TILE_ATTRIBUTION } from "@/lib/mapTiles";
 
 interface FocusRequest {
   id: string;
@@ -79,7 +79,7 @@ export default function MapCanvas({
       map.setView([54.6, -3.4], 5);
       addPriorityTileLayer(L, map, {
         maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors",
+        attribution: TILE_ATTRIBUTION,
       });
       map.zoomControl.setPosition("bottomright");
       mapRef.current = map;
@@ -320,7 +320,7 @@ export default function MapCanvas({
       ref={elRef}
       data-map-root
       className="h-full w-full"
-      style={{ background: "#d9d7d4" }}
+      style={{ background: "#2b2b2b" }}
       role="application"
       aria-label="Map of UK and Ireland street art festivals"
     />

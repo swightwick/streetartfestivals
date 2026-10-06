@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Festival } from "@/lib/types";
-import { addPriorityTileLayer } from "@/lib/mapTiles";
+import { addPriorityTileLayer, TILE_ATTRIBUTION } from "@/lib/mapTiles";
 
 // Temporarily hidden alongside the "Places to stay" section (see
 // SHOW_PLACES_TO_STAY in festivals/[id]/page.tsx) until stay listings are ready.
@@ -31,16 +31,20 @@ export default function EventMap({ festival, onLoad }: { festival: Festival; onL
 
       const map = L.map(elRef.current, {
         zoomControl: true,
-        attributionControl: false,
+        attributionControl: true,
         fadeAnimation: false,
         maxZoom: 19,
       });
-      const tiles = addPriorityTileLayer(L, map, { maxZoom: 19 });
+      const tiles = addPriorityTileLayer(L, map, { maxZoom: 19, attribution: TILE_ATTRIBUTION });
       // Fire once the visible tiles have actually finished loading, not just
       // once the Leaflet instance exists — otherwise the overlay buttons fade
       // in while the map underneath is still a blank grey placeholder.
       tiles.on("load", () => onLoadRef.current?.());
       map.zoomControl.setPosition("topright");
+      // Trim the "Leaflet |" prefix so the badge is as small as possible —
+      // it still sits bottom-right, under the festival logo overlay, so
+      // EventMapPanel gives the logo enough bottom offset to clear it.
+      map.attributionControl.setPrefix(false);
       layerRef.current = L.layerGroup().addTo(map);
       mapRef.current = map;
 
@@ -126,7 +130,7 @@ export default function EventMap({ festival, onLoad }: { festival: Festival; onL
     <div
       ref={elRef}
       className="absolute inset-0"
-      style={{ background: "#d9d7d4" }}
+      style={{ background: "#2b2b2b" }}
       role="application"
       aria-label={
         SHOW_STAY_MARKERS

@@ -60,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   // painted element (LCP) on most screens. Preconnecting shaves the
   // DNS/TLS/TCP handshake off the moment the client-side map code actually
   // requests the first tile.
-  ReactDOM.preconnect("https://tile.openstreetmap.org");
+  ReactDOM.preconnect("https://api.maptiler.com");
 
   const jsonLd = {
     "@context": "https://schema.org",
