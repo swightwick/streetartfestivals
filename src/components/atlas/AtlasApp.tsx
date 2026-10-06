@@ -182,7 +182,10 @@ export default function AtlasApp({
   };
   // Tooltip click opens the full record (a real navigation); the pin itself
   // just selects + pans, matching the map's "peek vs open" distinction.
-  const goToFestival = (id: string) => router.push(`/festivals/${id}`);
+  // Carries the current region as a ?region= param so the festival page's
+  // "Back to map" button can return to this same crop (see ProgrammeList).
+  const goToFestival = (id: string) =>
+    router.push(region !== "All" ? `/festivals/${id}?region=${regionSlug(region)}` : `/festivals/${id}`);
   const allRegionsLink = initialRegion && (
     <Link
       href="/"
@@ -290,6 +293,7 @@ export default function AtlasApp({
                 onHover={peek}
                 onOpenInfo={() => setInfoOpen(true)}
                 afterList={allRegionsLink}
+                region={region}
               />
               <button
                 type="button"
@@ -377,6 +381,7 @@ export default function AtlasApp({
                       selectedId={selectedId}
                       onHover={peek}
                       afterList={allRegionsLink}
+                      region={region}
                     />
                   ) : (
                     <CalendarPanel festivals={festivals} onOpen={goToFestival} fillHeight />

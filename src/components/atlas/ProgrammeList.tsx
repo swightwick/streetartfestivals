@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import type { MapFestival } from "@/lib/types";
 import { isDated, isPast, regionsCount } from "@/lib/festivals";
+import { regionSlug } from "@/lib/regions";
 
 interface ProgrammeListProps {
   list: MapFestival[];
@@ -14,10 +15,24 @@ interface ProgrammeListProps {
   // Rendered after the last festival (e.g. a "view all regions" link on a
   // region page) — part of the scrolling list content, not a fixed footer.
   afterList?: ReactNode;
+  // The region the list is currently scoped to ("All" or a REGIONS entry).
+  // Threaded onto each festival link as a ?region= param so the festival
+  // page's "Back to map" button can return to this same region crop instead
+  // of always resetting to the full UK + Ireland map.
+  region?: string;
 }
 
-export default function ProgrammeList({ list, allCount, selectedId, onHover, onOpenInfo, afterList }: ProgrammeListProps) {
+export default function ProgrammeList({
+  list,
+  allCount,
+  selectedId,
+  onHover,
+  onOpenInfo,
+  afterList,
+  region,
+}: ProgrammeListProps) {
   const dated = list.filter(isDated).length;
+  const regionQuery = region && region !== "All" ? `?region=${regionSlug(region)}` : "";
 
   return (
     <div className="sa-scroll flex h-full min-h-0 flex-col overflow-y-auto">
@@ -73,7 +88,7 @@ export default function ProgrammeList({ list, allCount, selectedId, onHover, onO
             ),
             <Link
               key={f.id}
-              href={`/festivals/${f.id}`}
+              href={`/festivals/${f.id}${regionQuery}`}
               // Only preview on a genuine mouse hover. onMouseEnter also
               // fires from a touch tap's synthesized mouse events — updating
               // selectedId there (which re-renders the map) right before the
