@@ -278,6 +278,10 @@ export default function MapCanvas({
         markerEl.style.justifyContent = "center";
         markerEl.style.cursor = "pointer";
         markerEl.title = f.name;
+        // A plain <div> has an implicit ARIA role of "generic", which
+        // doesn't permit aria-label (axe's "aria-allowed-attr" rule) — it's
+        // clickable, so "button" is both accurate and makes the label valid.
+        markerEl.setAttribute("role", "button");
         markerEl.setAttribute("aria-label", f.name);
         applyHitAreaStyle(markerEl);
 
