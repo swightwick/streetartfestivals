@@ -116,6 +116,21 @@ export default function MapFilters({ q, onQ, status, onStatus, region, onRegion 
                 </button>
               ))}
             </div>
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  onQ("");
+                  onStatus(STATUS_FILTERS[0]);
+                  onRegion("All");
+                  setOpen(false);
+                }}
+                className="w-full pt-3 text-center font-[700] text-[9.5px] uppercase tracking-[.08em] text-[color-mix(in_srgb,var(--color-text)_65%,transparent)] transition-colors duration-150 hover:text-accent-500"
+                style={{ borderTop: "1px solid var(--color-divider)" }}
+              >
+                Clear all
+              </button>
+            )}
           </div>
         </>
       )}
