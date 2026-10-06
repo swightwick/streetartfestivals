@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 import {
   getAllFestivals,
+  getAllMapFestivals,
   getFestival,
   isPast,
   nearbyFestivals,
@@ -16,8 +17,13 @@ import { buildEventJsonLd, buildBreadcrumbJsonLd, metaDescription } from "@/lib/
 import { regionSlug } from "@/lib/regions";
 import { getEventGalleryImages, getEventLogo } from "@/lib/gallery";
 import EventMapPanel from "@/components/festival/EventMapPanel";
+import EventListMenu from "@/components/festival/EventListMenu";
 import { backAndNext, nearbyItem } from "@/components/festival/FestivalLinks";
-import { RegionAwareBackAndNext, RegionAwareNearby } from "@/components/festival/RegionAwareLinks";
+import {
+  RegionAwareBackAndNext,
+  RegionAwareEventListMenu,
+  RegionAwareNearby,
+} from "@/components/festival/RegionAwareLinks";
 import Logo from "@/components/Logo";
 import AddToCalendarButton from "@/components/festival/AddToCalendarButton";
 import InstagramFeed from "@/components/festival/InstagramFeed";
@@ -82,6 +88,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
   const f = getFestival(id);
   if (!f) notFound();
 
+  const allMapFestivals = getAllMapFestivals();
   const nearby = nearbyFestivals(f);
   const next = nextFestival(f);
   const galleryImages = getEventGalleryImages(f.id);
@@ -111,6 +118,15 @@ export default async function FestivalPage({ params }: { params: Promise<{ id: s
         >
           Official site &#8599;
         </a>
+        {/* Mobile/tablet only (EventListMenu's button is lg:hidden) — the
+            same "open festival list" affordance Nav.tsx gives the homepage,
+            so a visitor who lands straight on an event page can still
+            browse the rest of the programme without leaving. */}
+        <div className="ml-auto lg:hidden">
+          <Suspense fallback={<EventListMenu festivals={allMapFestivals} currentId={f.id} region={null} />}>
+            <RegionAwareEventListMenu festivals={allMapFestivals} currentId={f.id} />
+          </Suspense>
+        </div>
       </header>
 
       <main

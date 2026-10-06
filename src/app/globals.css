@@ -258,6 +258,23 @@ a.no-underline:hover {
   animation: saScaleFade 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* MapSpinner's loading mark: an orange copy of the logo icon clipped from
+   the top, animating that clip from fully hidden to fully shown and back —
+   reads as liquid rising inside the grey mark underneath rather than a
+   generic spinner. */
+@keyframes saLoaderFill {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0% 0 0 0);
+  }
+}
+.sa-loader-fill {
+  overflow: hidden;
+  animation: saLoaderFill 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
 /* Page transitions — route changes are handled by React's <ViewTransition>
    (see AtlasApp.tsx / festivals/[id]/page.tsx). The map carries a "morph"
    view-transition-class so it scales/repositions from its old box into its
@@ -309,7 +326,8 @@ a.no-underline:hover {
   }
   .sa-rise,
   .sa-fade,
-  .sa-scale-fade {
+  .sa-scale-fade,
+  .sa-loader-fill {
     animation: none !important;
   }
   .maplibregl-map {
