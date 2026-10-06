@@ -198,8 +198,10 @@ a.no-underline:hover {
   font-weight: 800;
 }
 .maplibregl-popup-content [data-tip-arrow] {
-  margin-left: 6px;
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  vertical-align: -2px;
   color: var(--color-accent);
   transition: color 0.15s ease;
 }

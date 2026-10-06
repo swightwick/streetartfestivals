@@ -210,7 +210,13 @@ export default function MapCanvas({
             offset: 12,
           })
             .setLngLat(entry.marker.getLngLat())
-            .setHTML('<span data-tip-name="1">' + f.name + '</span><span data-tip-arrow="1">&#8250;</span>');
+            .setHTML(
+              '<span data-tip-name="1">' +
+                f.name +
+                '</span><span data-tip-arrow="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">' +
+                '<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>' +
+                "</svg></span>"
+            );
           popup.on("open", () => {
             // Clicking the tooltip behaves the same as clicking its marker —
             // mirrors the marker's own select/navigate click handler so the
