@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Map as LeafletMap, Marker, DivIcon } from "leaflet";
+import type { Map as MapLibreMap, Marker, IControl, Popup, LngLatBoundsLike } from "maplibre-gl";
 import type { MapFestival } from "@/lib/types";
-import { addPriorityTileLayer, TILE_ATTRIBUTION } from "@/lib/mapTiles";
+import { MAP_STYLE_URL, MAP_ATTRIBUTION, loadMapLibre } from "@/lib/mapTiles";
 
 interface FocusRequest {
   id: string;
@@ -13,10 +13,29 @@ interface FocusRequest {
 // UK + Ireland extent — also the map's maxBounds, so "View full map" always
 // zooms back out to the whole atlas rather than a tight crop around
 // whichever markers happen to be visible under the current filters.
-const UK_IE_BOUNDS: [[number, number], [number, number]] = [
-  [49.2, -11.6],
-  [61.2, 3.2],
-];
+// MapLibre bounds are [west, south, east, north] (lng/lat), unlike
+// Leaflet's [[lat,lng],[lat,lng]] corner pairs.
+const UK_IE_BOUNDS: [number, number, number, number] = [-11.6, 49.2, 3.2, 61.2];
+
+// Pure — no per-instance state — so it lives at module scope rather than
+// being stashed on the map instance (as the old Leaflet code did) or put in
+// a ref (which would be the right tool only if it needed to vary per
+// component instance, which it doesn't).
+function applyMarkerStyle(el: HTMLElement, solid: boolean, sel: boolean) {
+  const size = sel ? 20 : 13;
+  el.style.width = `${size}px`;
+  el.style.height = `${size}px`;
+  el.style.background = solid ? "var(--color-accent)" : "transparent";
+  el.style.border = solid ? "" : "2.5px solid var(--color-accent)";
+  el.style.boxShadow = `0 0 0 2px var(--color-bg)${sel ? ", 0 0 0 7px rgba(223,208,184,.28)" : ""}`;
+  // NOT "all" — MapLibre repositions markers every animation frame during
+  // pan/zoom by setting this same element's `transform` directly (see
+  // Marker's internal `_element.style.transform = ...`). Transitioning
+  // "all" eases that repositioning too, so markers visibly lag behind the
+  // map during a zoom gesture and "catch up" afterwards instead of moving
+  // with it. Only the state-change properties below should ease.
+  el.style.transition = "width .18s, height .18s, background-color .18s, border-color .18s, box-shadow .18s";
+}
 
 interface MapCanvasProps {
   festivals: MapFestival[];
@@ -45,8 +64,10 @@ export default function MapCanvas({
   onTooltipClick,
 }: MapCanvasProps) {
   const elRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<LeafletMap | null>(null);
-  const markersRef = useRef<Record<string, { marker: Marker; solid: boolean }>>({});
+  const mapRef = useRef<MapLibreMap | null>(null);
+  const markersRef = useRef<Record<string, { marker: Marker; solid: boolean; addedToMap: boolean }>>({});
+  const popupsRef = useRef<Record<string, Popup>>({});
+  const tooltipFnsRef = useRef<{ show: (id: string) => void; hide: (id: string) => void } | null>(null);
   const youAreHereRef = useRef<Marker | null>(null);
   const onMarkerClickRef = useRef(onMarkerClick);
   const onTooltipClickRef = useRef(onTooltipClick);
@@ -62,85 +83,87 @@ export default function MapCanvas({
     let resizeObserver: ResizeObserver | null = null;
 
     (async () => {
-      const L = (await import("leaflet")).default;
+      const maplibregl = await loadMapLibre();
       if (cancelled || !elRef.current) return;
       const el = elRef.current;
 
-      const map = L.map(el, {
-        zoomControl: true,
-        attributionControl: true,
+      const map = new maplibregl.Map({
+        container: el,
+        style: MAP_STYLE_URL,
+        center: [-3.4, 54.6],
+        zoom: 5,
         maxZoom: 16,
-        zoomSnap: 0.25,
         maxBounds: UK_IE_BOUNDS,
-        maxBoundsViscosity: 1,
-        worldCopyJump: false,
-        fadeAnimation: false,
+        renderWorldCopies: false,
+        attributionControl: false,
       });
-      map.setView([54.6, -3.4], 5);
-      addPriorityTileLayer(L, map, {
-        maxZoom: 19,
-        attribution: TILE_ATTRIBUTION,
-      });
-      map.zoomControl.setPosition("bottomright");
+      map.addControl(
+        new maplibregl.AttributionControl({ compact: true, customAttribution: MAP_ATTRIBUTION }),
+        "bottom-right"
+      );
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
       mapRef.current = map;
 
       let locating = false;
-      const handleLocate = (link: HTMLAnchorElement) => {
+      const handleLocate = (link: HTMLButtonElement) => {
         if (locating || !navigator.geolocation) return;
         locating = true;
-        link.classList.add("leaflet-control-locate-loading");
+        link.classList.add("sa-locate-loading");
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             locating = false;
-            link.classList.remove("leaflet-control-locate-loading");
-            const userLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+            link.classList.remove("sa-locate-loading");
+            const userLngLat: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+            const userLngLatObj = new maplibregl.LngLat(userLngLat[0], userLngLat[1]);
 
             const nearest = Object.values(markersRef.current)
-              .filter((entry) => map.hasLayer(entry.marker))
-              .map((entry) => ({ marker: entry.marker, dist: userLatLng.distanceTo(entry.marker.getLatLng()) }))
+              .filter((entry) => entry.addedToMap)
+              .map((entry) => ({ marker: entry.marker, dist: userLngLatObj.distanceTo(entry.marker.getLngLat()) }))
               .sort((a, b) => a.dist - b.dist)
               .slice(0, 2);
 
-            const youAreHereIcon = L.divIcon({
-              className: "",
-              iconSize: [16, 16],
-              iconAnchor: [8, 8],
-              html:
-                '<div style="width:16px;height:16px;border-radius:50%;background:#3b82f6;' +
-                'box-shadow:0 0 0 3px var(--color-bg), 0 0 0 8px rgba(59,130,246,.32);"></div>',
-            });
+            const youAreHereEl = document.createElement("div");
+            youAreHereEl.style.cssText =
+              "width:16px;height:16px;border-radius:50%;background:#3b82f6;" +
+              "box-shadow:0 0 0 3px var(--color-bg), 0 0 0 8px rgba(59,130,246,.32);";
             youAreHereRef.current?.remove();
-            youAreHereRef.current = L.marker(userLatLng, { icon: youAreHereIcon, zIndexOffset: 1000 }).addTo(map);
+            youAreHereRef.current = new maplibregl.Marker({ element: youAreHereEl })
+              .setLngLat(userLngLat)
+              .addTo(map);
 
             if (nearest.length) {
-              map.fitBounds(L.latLngBounds([userLatLng, ...nearest.map((n) => n.marker.getLatLng())]), {
-                padding: [64, 64],
-                maxZoom: 13,
-                animate: true,
+              const bounds = new maplibregl.LngLatBounds(
+                nearest[0].marker.getLngLat(),
+                nearest[0].marker.getLngLat()
+              );
+              bounds.extend(userLngLatObj);
+              nearest.forEach((n) => bounds.extend(n.marker.getLngLat()));
+              map.fitBounds(bounds, { padding: 64, maxZoom: 13, animate: true });
+              nearest.forEach((n) => {
+                const id = Object.entries(markersRef.current).find(([, v]) => v.marker === n.marker)?.[0];
+                if (id) showTooltip(id);
               });
-              nearest.forEach((n) => n.marker.openTooltip());
             } else {
-              map.setView(userLatLng, 12, { animate: true });
+              map.easeTo({ center: userLngLat, zoom: 12 });
             }
           },
           () => {
             locating = false;
-            link.classList.remove("leaflet-control-locate-loading");
-            link.classList.add("leaflet-control-locate-error");
-            setTimeout(() => link.classList.remove("leaflet-control-locate-error"), 2500);
+            link.classList.remove("sa-locate-loading");
+            link.classList.add("sa-locate-error");
+            setTimeout(() => link.classList.remove("sa-locate-error"), 2500);
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
         );
       };
 
-      const LocateControl = L.Control.extend({
-        options: { position: "topright" },
+      class LocateControl implements IControl {
         onAdd() {
-          const container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
-          const link = L.DomUtil.create("a", "", container) as HTMLAnchorElement;
-          link.href = "#";
+          const container = document.createElement("div");
+          container.className = "maplibregl-ctrl maplibregl-ctrl-group";
+          const link = document.createElement("button");
+          link.type = "button";
           link.title = "Zoom to my location";
-          link.setAttribute("role", "button");
           link.setAttribute("aria-label", "Zoom to my location");
           link.style.display = "flex";
           link.style.alignItems = "center";
@@ -149,52 +172,76 @@ export default function MapCanvas({
             '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" ' +
             'stroke-linecap="round"><circle cx="12" cy="12" r="3"></circle>' +
             '<path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>';
-          L.DomEvent.disableClickPropagation(container);
-          L.DomEvent.on(link, "click", (e: Event) => {
-            L.DomEvent.stop(e);
+          container.appendChild(link);
+          ["mousedown", "touchstart", "dblclick"].forEach((t) =>
+            container.addEventListener(t, (e) => e.stopPropagation())
+          );
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             handleLocate(link);
           });
           return container;
-        },
-      });
-      new LocateControl().addTo(map);
+        }
+        onRemove() {}
+      }
+      map.addControl(new LocateControl(), "top-right");
 
-      const icon = (solid: boolean, sel: boolean) => {
-        const size = sel ? 20 : 13;
-        const inner = solid
-          ? "background:var(--color-accent);"
-          : "background:transparent;border:2.5px solid var(--color-accent);";
-        return L.divIcon({
-          className: "",
-          iconSize: [size, size],
-          iconAnchor: [size / 2, size / 2],
-          html:
-            '<div style="width:' +
-            size +
-            "px;height:" +
-            size +
-            "px;" +
-            inner +
-            "box-shadow:0 0 0 2px var(--color-bg)" +
-            (sel ? ", 0 0 0 7px rgba(223,208,184,.28)" : "") +
-            ';transition:all .18s"></div>',
-        });
+      const showTooltip = (id: string) => {
+        const entry = markersRef.current[id];
+        const f = festivals.find((x) => x.id === id);
+        if (!entry || !f) return;
+        if (!popupsRef.current[id]) {
+          const popup = new maplibregl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            anchor: "bottom",
+            offset: 12,
+          })
+            .setLngLat(entry.marker.getLngLat())
+            .setHTML('<span data-tip-name="1">' + f.name + "</span>");
+          popup.on("open", () => {
+            // Clicking the tooltip behaves the same as clicking its marker —
+            // mirrors the marker's own select/navigate click handler so the
+            // whole tooltip (not just the dot) is a consistent click target.
+            popup.getElement()?.addEventListener("click", () => {
+              if (selectedIdRef.current === id) {
+                onTooltipClickRef.current(id);
+              } else {
+                selectedIdRef.current = id;
+                onMarkerClickRef.current(id);
+              }
+            });
+          });
+          popupsRef.current[id] = popup;
+        }
+        popupsRef.current[id].addTo(map);
+      };
+      const hideTooltip = (id: string) => {
+        popupsRef.current[id]?.remove();
       };
 
       festivals.forEach((f) => {
         const solid = f.status === "confirmed" || f.status === "month" || f.status === "rolling";
-        const marker = L.marker([f.lat, f.lng], {
-          icon: icon(solid, f.id === selectedId),
-          riseOnHover: true,
-          title: f.name,
-        }).on("click", () => {
+        const markerEl = document.createElement("div");
+        applyMarkerStyle(markerEl, solid, f.id === selectedId);
+        markerEl.title = f.name;
+        markerEl.setAttribute("aria-label", f.name);
+        markerEl.style.cursor = "pointer";
+        markerEl.addEventListener("mouseenter", () => {
+          markerEl.style.zIndex = "10";
+        });
+        markerEl.addEventListener("mouseleave", () => {
+          markerEl.style.zIndex = "";
+        });
+        markerEl.addEventListener("click", () => {
           // First click/tap: zoom in + select (the "sync" effect below opens
           // the tooltip in response to the selection change). Second
-          // click/tap on an already-selected marker: navigate. We don't use
-          // Leaflet's own bindTooltip hover/click-toggle behaviour at all —
-          // on touch it fires its own click-based toggle independently of
-          // this handler, racing with it. Tooltip visibility is instead
-          // driven purely by our own selectedId state (see the sync effect).
+          // click/tap on an already-selected marker: navigate. We don't rely
+          // on any library-provided hover/click-toggle behaviour — on touch
+          // that kind of built-in toggle fires independently of this
+          // handler and races with it. Tooltip visibility is instead driven
+          // purely by our own selectedId state (see the sync effect).
           if (selectedIdRef.current === f.id) {
             onTooltipClickRef.current(f.id);
           } else {
@@ -203,8 +250,10 @@ export default function MapCanvas({
           }
         });
 
-        if (visibleIds.has(f.id)) marker.addTo(map);
-        markersRef.current[f.id] = { marker, solid };
+        const marker = new maplibregl.Marker({ element: markerEl, anchor: "center" }).setLngLat([f.lng, f.lat]);
+        const addedToMap = visibleIds.has(f.id);
+        if (addedToMap) marker.addTo(map);
+        markersRef.current[f.id] = { marker, solid, addedToMap };
       });
 
       const fit = () => {
@@ -212,12 +261,37 @@ export default function MapCanvas({
           setTimeout(fit, 150);
           return;
         }
-        map.invalidateSize({ animate: false });
+        map.resize();
         map.setMinZoom(0);
-        map.fitBounds(initialBounds ?? UK_IE_BOUNDS, { animate: false });
-        const z = map.getBoundsZoom(UK_IE_BOUNDS, false);
-        map.setMinZoom(Math.min(map.getZoom(), z));
-        map.setZoom(map.getZoom() + 0.5, { animate: false });
+
+        // Default view hugs the actual marker cluster, not a fixed
+        // UK+Ireland box — the fixed box carries a lot of empty sea at the
+        // north/south edges the real festivals never reach. Regional pages
+        // still use their explicit initialBounds crop.
+        let targetBounds: LngLatBoundsLike;
+        if (initialBounds) {
+          targetBounds = [initialBounds[0][1], initialBounds[0][0], initialBounds[1][1], initialBounds[1][0]];
+        } else if (festivals.length) {
+          const pts: [number, number][] = festivals.map((f) => [f.lng, f.lat]);
+          targetBounds = pts.reduce(
+            (b, p) => b.extend(p),
+            new maplibregl.LngLatBounds(pts[0], pts[0])
+          );
+        } else {
+          targetBounds = UK_IE_BOUNDS;
+        }
+        // cameraForBounds, not fitBounds: maxBounds is set to UK_IE_BOUNDS,
+        // and fitBounds's camera move gets clamped by it mid-transition,
+        // landing short of the true fit (reproduced and fixed live before
+        // porting this). cameraForBounds is a pure computation unaffected
+        // by maxBounds, so jumpTo with its result lands correctly. padding
+        // gives breathing room around the fitted bounds — more principled
+        // than the flat zoom bump this replaced, since it scales with the
+        // actual bounds rather than being tuned for one fixed box.
+        const targetCam = map.cameraForBounds(targetBounds, { padding: 56 });
+        const ukCam = map.cameraForBounds(UK_IE_BOUNDS);
+        if (targetCam?.zoom != null) map.jumpTo({ center: targetCam.center, zoom: targetCam.zoom });
+        if (ukCam?.zoom != null) map.setMinZoom(Math.min(map.getZoom(), ukCam.zoom));
         map.panBy([0, 40], { animate: false });
       };
       requestAnimationFrame(() => requestAnimationFrame(fit));
@@ -226,7 +300,7 @@ export default function MapCanvas({
       if (window.ResizeObserver) {
         let done = false;
         resizeObserver = new ResizeObserver(() => {
-          map.invalidateSize({ animate: false });
+          map.resize();
           if (!done && el.clientHeight) {
             done = true;
             fit();
@@ -235,7 +309,10 @@ export default function MapCanvas({
         resizeObserver.observe(el);
       }
 
-      (map as unknown as { _iconFn: typeof icon })._iconFn = icon;
+      // Expose for the sync effect below without re-running this whole
+      // mount effect — a ref, not stashed on the map instance the way the
+      // old Leaflet code did.
+      tooltipFnsRef.current = { show: showTooltip, hide: hideTooltip };
     })();
 
     return () => {
@@ -244,51 +321,43 @@ export default function MapCanvas({
       mapRef.current?.remove();
       mapRef.current = null;
       markersRef.current = {};
+      popupsRef.current = {};
       youAreHereRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sync marker visibility + selected icon whenever filters/selection change.
-  // Tooltip visibility is driven entirely from here (bound only for the
-  // selected marker, as a permanent tooltip) rather than Leaflet's own
-  // hover/click auto-toggle — that toggle fires independently of our click
-  // handler on touch devices and raced with it.
+  // Sync marker visibility + selected style whenever filters/selection
+  // change. Tooltip visibility is driven entirely from here (only the
+  // selected marker gets a popup) rather than any built-in hover/click
+  // auto-toggle, which would race with our own click handler on touch.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const iconFn = (map as unknown as { _iconFn?: (solid: boolean, sel: boolean) => DivIcon })
-      ._iconFn;
+    const tooltipFns = tooltipFnsRef.current;
     Object.entries(markersRef.current).forEach(([id, entry]) => {
       const on = visibleIds.has(id);
-      const has = map.hasLayer(entry.marker);
-      if (on && !has) entry.marker.addTo(map);
-      if (!on && has) map.removeLayer(entry.marker);
-      if (iconFn) entry.marker.setIcon(iconFn(entry.solid, id === selectedId));
+      if (on && !entry.addedToMap) {
+        entry.marker.addTo(map);
+        entry.addedToMap = true;
+      }
+      if (!on && entry.addedToMap) {
+        entry.marker.remove();
+        entry.addedToMap = false;
+      }
+      applyMarkerStyle(entry.marker.getElement(), entry.solid, id === selectedId);
 
       if (id === selectedId) {
-        if (!entry.marker.getTooltip()) {
-          const f = festivals.find((x) => x.id === id);
-          if (f) {
-            entry.marker.bindTooltip('<span data-tip-name="1">' + f.name + "</span>", {
-              direction: "top",
-              offset: [0, -12],
-              opacity: 1,
-              permanent: true,
-              interactive: true,
-            });
-          }
-        }
-        entry.marker.openTooltip();
-      } else if (entry.marker.getTooltip()) {
-        entry.marker.unbindTooltip();
+        tooltipFns?.show(id);
+      } else {
+        tooltipFns?.hide(id);
       }
     });
   });
 
   // Pan/zoom to a focused festival. If already zoomed in past the target
   // level, just re-centre on the new marker rather than zooming back out.
-  // The map blurs for the duration of the fly-to and clears once it settles
+  // The map blurs for the duration of the move and clears once it settles
   // (`moveend`) — reads as the view "loading in" rather than just snapping.
   useEffect(() => {
     if (!focusRequest) return;
@@ -303,7 +372,7 @@ export default function MapCanvas({
       map.off("moveend", clear);
     };
     map.on("moveend", clear);
-    map.setView(entry.marker.getLatLng(), targetZoom, { animate: true });
+    map.easeTo({ center: entry.marker.getLngLat(), zoom: targetZoom });
   }, [focusRequest]);
 
   // "View full map" — zoom back out to the whole UK + Ireland extent, not
@@ -312,7 +381,8 @@ export default function MapCanvas({
     if (resetRequest == null) return;
     const map = mapRef.current;
     if (!map) return;
-    map.flyToBounds(UK_IE_BOUNDS, { duration: 0.2 });
+    const cam = map.cameraForBounds(UK_IE_BOUNDS);
+    if (cam) map.flyTo({ ...cam, duration: 200 });
   }, [resetRequest]);
 
   return (

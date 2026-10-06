@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import ReactDOM from "react-dom";
 import Script from "next/script";
 import { Archivo } from "next/font/google";
-import "leaflet/dist/leaflet.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 import { SITE, siteUrl } from "@/lib/festivals";
 
@@ -56,10 +56,10 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  // Every page mounts a Leaflet map whose tiles come from here — its largest
-  // painted element (LCP) on most screens. Preconnecting shaves the
+  // Every page mounts a MapLibre map whose style/tiles come from here — its
+  // largest painted element (LCP) on most screens. Preconnecting shaves the
   // DNS/TLS/TCP handshake off the moment the client-side map code actually
-  // requests the first tile.
+  // requests the style.json.
   ReactDOM.preconnect("https://api.maptiler.com");
 
   const jsonLd = {

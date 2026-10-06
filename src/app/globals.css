@@ -83,50 +83,77 @@ a.no-underline:hover {
   filter: grayscale(0) contrast(1.08);
 }
 
-/* Leaflet theming to match the atlas's monochrome map */
-.leaflet-container {
+/* Theming to match the atlas's monochrome map */
+.sa-map-transitioning {
+  filter: blur(6px) grayscale(0.3);
+}
+.sa-locate-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.sa-locate-error {
+  color: var(--color-accent) !important;
+}
+.maplibregl-map {
   background: #2b2b2b;
   font-family: var(--font-sans);
   transition: filter 0.35s ease;
 }
-.sa-map-transitioning {
-  filter: blur(6px) grayscale(0.3);
+/* MapLibre's own bundled CSS sets position:relative on .maplibregl-map —
+   unlike Leaflet, which never touched `position` on its container at all.
+   On EventMap's root div (Tailwind's `absolute inset-0`, so the map fills
+   its positioned ancestor), that collides: Tailwind's utilities live in a
+   `@layer`, which the cascade always ranks below any unlayered rule of
+   equal specificity, so MapLibre's plain `position:relative` wins
+   regardless of import order. With position:relative and inset-0 (which
+   only offsets a relatively-positioned box, it doesn't size one), the
+   container's height is just its normal in-flow auto-height — and its only
+   child, the canvas, is itself position:absolute (out of flow), so that
+   auto-height resolves to 0, and the whole map disappears. Restoring
+   position:absolute here, scoped to just this combination of classes,
+   fixes it without touching MapCanvas's plain `.maplibregl-map` (h-full
+   w-full, no `absolute` class, never hit this).
+*/
+.maplibregl-map.absolute {
+  position: absolute !important;
 }
-.leaflet-tile-pane {
-  filter: grayscale(1) contrast(0.8) brightness(0.99);
+.maplibregl-canvas {
+  filter: grayscale(1) contrast(1) brightness(3);
 }
-.leaflet-tile {
-  opacity: 1 !important;
-  max-width: none !important;
-}
-.leaflet-control-attribution {
+.maplibregl-ctrl-attrib {
   background: rgba(10, 10, 10, 0.8) !important;
   color: #7d7979 !important;
   font-size: 9px !important;
 }
-.leaflet-control-attribution a {
+.maplibregl-ctrl-attrib a {
   color: #9b9797 !important;
 }
-.leaflet-bar a {
+.maplibregl-ctrl-group {
   background: var(--color-surface) !important;
-  color: var(--color-text) !important;
-  border-color: #333 !important;
   border-radius: 0 !important;
 }
-.leaflet-bar a:hover {
+.maplibregl-ctrl-group button {
+  background: var(--color-surface) !important;
+  border-radius: 0 !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid #333 !important;
+}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon,
+.maplibregl-ctrl-group button {
+  color: var(--color-text) !important;
+}
+.maplibregl-ctrl-group button:hover {
   background: var(--color-accent) !important;
   color: var(--color-bg) !important;
 }
-.leaflet-control-locate-loading {
-  opacity: 0.5;
-  pointer-events: none;
+/* Leaflet's zoom/locate buttons rendered as <a>, styled with a visible
+   border; MapLibre's are <button>s inside a bordered ctrl-group instead. */
+.maplibregl-ctrl-group {
+  border: 1px solid #333 !important;
 }
-.leaflet-control-locate-error {
-  color: var(--color-accent) !important;
-}
-.leaflet-tooltip {
+.maplibregl-popup-content {
   background: var(--color-bg);
-  border: none;
   border-radius: 0;
   color: var(--color-text);
   font-size: 11px;
@@ -135,30 +162,28 @@ a.no-underline:hover {
   text-transform: uppercase;
   box-shadow: none;
   padding: 7px 11px;
-  pointer-events: auto;
+  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
-.leaflet-tooltip:hover {
+.maplibregl-popup-content:hover {
   background: var(--color-accent);
   color: var(--color-bg);
 }
-.leaflet-tooltip [data-tip-name] {
+.maplibregl-popup-content [data-tip-name] {
   font-weight: 800;
 }
-.leaflet-tooltip-left::before,
-.leaflet-tooltip-right::before,
-.leaflet-tooltip-bottom::before {
+.maplibregl-popup-close-button {
   display: none;
 }
-.leaflet-tooltip-top::before {
-  border-width: 5px;
-  margin-left: -5px;
-  margin-bottom: -10px;
-  border-top-color: var(--color-bg);
+.maplibregl-popup-tip {
+  border-width: 5px !important;
   transition: border-top-color 0.15s ease;
 }
-.leaflet-tooltip-top:hover::before {
-  border-top-color: var(--color-accent);
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: var(--color-bg) !important;
+}
+.maplibregl-popup-anchor-bottom:hover .maplibregl-popup-tip {
+  border-top-color: var(--color-accent) !important;
 }
 
 .sa-scroll {
@@ -262,7 +287,7 @@ a.no-underline:hover {
   .sa-scale-fade {
     animation: none !important;
   }
-  .leaflet-container {
+  .maplibregl-map {
     transition: none !important;
   }
   .sa-map-transitioning {

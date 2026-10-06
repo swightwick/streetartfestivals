@@ -1,56 +1,31 @@
-import type * as Leaflet from "leaflet";
-
-// MapTiler's basic-v2-dark basemap rather than tile.openstreetmap.org
-// directly: the latter is explicitly for light/dev use only (its usage
-// policy disallows production traffic, and it sends `cache-control:
-// no-cache` so every tile is refetched on every load). MapTiler's tiles are
-// cached for a day. The key is restricted (see MapTiler dashboard) to this
-// site's domains, so it's safe to expose via NEXT_PUBLIC_.
-// No {r} retina placeholder: tile.openstreetmap.org never served @2x either
-// (everyone got flat 256px tiles), and requesting @2x here triples the
-// payload per tile on any modern retina screen — which undoes the whole
-// point of this switch.
-export const TILE_URL = `https://api.maptiler.com/maps/basic-v2-dark/256/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
-export const TILE_ATTRIBUTION =
+// MapTiler's hosted style.json rather than tile.openstreetmap.org directly:
+// the latter is explicitly for light/dev use only (its usage policy
+// disallows production traffic, and it sends `cache-control: no-cache` so
+// every tile is refetched on every load). This also isn't raster tiles —
+// it's a MapLibre vector style. MapTiler's raster styles are rendered
+// on-demand server-side from vector data the first time any unique
+// tile/zoom/style combo is requested (cold tiles measured 1.7-6.3s), then
+// cached; the underlying vector tiles are pre-cut once globally instead and
+// measured consistently fast (0.1-0.25s) even on never-requested
+// coordinates, because the style is applied client-side by MapLibre rather
+// than rendered per-style on MapTiler's servers. The key is restricted (see
+// MapTiler dashboard) to this site's domains, so it's safe to expose via
+// NEXT_PUBLIC_.
+export const MAP_STYLE_URL = `https://api.maptiler.com/maps/basic-v2-dark/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
+export const MAP_ATTRIBUTION =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
-// How long after mount tiles are treated as part of the initial paint.
-// Callers here set an initial view and then immediately re-fit it (e.g.
-// MapCanvas's setView placeholder followed by fitBounds), which creates two
-// back-to-back tile batches — the first tile layer's own "load" event fires
-// for the throwaway placeholder batch, before the real, visible tiles are
-// even requested. A fixed window comfortably covers both batches (they're
-// both requested within a couple of animation frames of mount) without
-// depending on a "load" event that fires too early.
-const INITIAL_PAINT_WINDOW_MS = 2000;
-
-/**
- * Leaflet's stock TileLayer never sets `fetchPriority` on the `<img>` tiles
- * it creates, so they compete on equal footing with the JS/font/API requests
- * firing around the same moment the map mounts — even though the tiles are
- * usually this app's largest painted element (its LCP candidate). This
- * marks tiles created during the initial paint window `fetchPriority:
- * "high"` to win that race; later pan/zoom tiles are left at the default
- * priority.
- */
-export function addPriorityTileLayer(
-  L: typeof Leaflet,
-  map: Leaflet.Map,
-  options?: Leaflet.TileLayerOptions
-): Leaflet.TileLayer {
-  const deadline = Date.now() + INITIAL_PAINT_WINDOW_MS;
-
-  const PriorityTileLayer = L.TileLayer.extend({
-    createTile(coords: Leaflet.Coords, done: Leaflet.DoneCallback) {
-      const tile = (L.TileLayer.prototype as unknown as { createTile: (...args: unknown[]) => HTMLImageElement })
-        .createTile.call(this, coords, done);
-      if (Date.now() < deadline) tile.fetchPriority = "high";
-      return tile;
-    },
-  });
-
-  return new (PriorityTileLayer as unknown as new (
-    url: string,
-    opts?: Leaflet.TileLayerOptions
-  ) => Leaflet.TileLayer)(TILE_URL, options).addTo(map);
+// MapLibre computes its own worker script's URL at runtime from the already
+// *bundled* chunk's import.meta.url plus a dynamically-built filename — a
+// pattern Turbopack can't statically analyze, so it doesn't know to serve
+// that file and the Worker fails to load (map tiles never render, only the
+// overlay markers/controls do). `node_modules/maplibre-gl/dist/
+// maplibre-gl-worker.mjs` *and* the `./maplibre-gl-shared.mjs` chunk it
+// imports are copied to `public/` (keep both in sync if the maplibre-gl
+// version bumps) and referenced by their plain served paths, sidestepping
+// bundler asset-resolution entirely. Must run before any `new Map()` call.
+export async function loadMapLibre() {
+  const maplibregl = await import("maplibre-gl");
+  maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
+  return maplibregl;
 }
