@@ -476,7 +476,7 @@ export default function AtlasApp({
                           Get in touch
                         </div>
                         <a
-                          href={`mailto:streetartfestivals@samwightwick.co.uk?subject=${encodeURIComponent("Enquiry from StreetArtFestivalsUK")}`}
+                          href={`mailto:info@streetartfestivals.uk?subject=${encodeURIComponent("Enquiry from StreetArtFestivalsUK")}`}
                           className="inline-flex items-center gap-1.5 border-0 px-5 py-3 font-[800] text-[11px] uppercase leading-none tracking-[.08em] no-underline transition-all duration-150 hover:brightness-110"
                           style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
                         >
@@ -564,7 +564,7 @@ export default function AtlasApp({
                   <button
                     type="button"
                     onClick={closeInfo}
-                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110 focus-visible:outline-none"
+                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
                     style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
                   >
                     Start exploring &#8250;
