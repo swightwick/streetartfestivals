@@ -9,6 +9,7 @@ import type { MapFestival } from "@/lib/types";
 import { sortedFestivals, SITE } from "@/lib/festivals";
 import { regionSlug } from "@/lib/regions";
 import { useFocusTrap } from "@/lib/useFocusTrap";
+import { grantAnalyticsConsent, declineAnalyticsConsent } from "@/instrumentation-client";
 import MapSpinner from "@/components/MapSpinner";
 import Logo from "@/components/Logo";
 import Nav, { STATUS_FILTERS, type StatusFilter } from "./Nav";
@@ -116,6 +117,10 @@ export default function AtlasApp({
   const [listOpen, setListOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
+  // Shows the accept/decline cookie choice inside the "seen it before" info
+  // modal, reached via its "Cookie preferences" link — separate from
+  // `welcomeSeen` so revisiting the choice doesn't reopen the welcome copy.
+  const [cookiePrefsOpen, setCookiePrefsOpen] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "calendar">("list");
   const mounted = useHasMounted();
 
@@ -131,7 +136,20 @@ export default function AtlasApp({
 
   const closeInfo = () => {
     setInfoOpen(false);
+    setCookiePrefsOpen(false);
     markWelcomeSeen();
+  };
+  // Shared by the first-ever welcome modal and by "Cookie preferences" on a
+  // later visit — accepting starts GA (see src/instrumentation-client.ts),
+  // declining leaves it off; either way the choice is remembered so it
+  // isn't asked again until changed through "Cookie preferences".
+  const acceptCookies = () => {
+    grantAnalyticsConsent();
+    closeInfo();
+  };
+  const declineCookies = () => {
+    declineAnalyticsConsent();
+    closeInfo();
   };
 
   const listPanelRef = useRef<HTMLDivElement>(null);
@@ -455,12 +473,14 @@ export default function AtlasApp({
               ref={infoPanelRef}
               role="dialog"
               aria-modal="true"
-              aria-label={welcomeSeen ? "More information" : `Welcome to ${SITE.name}`}
+              aria-label={
+                cookiePrefsOpen ? "Cookie preferences" : welcomeSeen ? "More information" : `Welcome to ${SITE.name}`
+              }
               tabIndex={-1}
-              className="sa-rise relative flex w-full max-w-[420px] flex-col overflow-hidden"
+              className="sa-rise sa-no-focus-outline relative flex w-full max-w-[420px] flex-col overflow-hidden"
               style={{ background: "var(--color-bg)", boxShadow: "var(--shadow-lg)" }}
             >
-              {welcomeSeen ? (
+              {welcomeSeen && !cookiePrefsOpen ? (
                 <>
                   <div className="flex flex-col items-start gap-5 px-7 pb-8 pt-10">
                     <div className="flex w-full justify-center">
@@ -508,6 +528,14 @@ export default function AtlasApp({
                       >
                         samwightwick.co.uk
                       </a>
+                      {" · "}
+                      <button
+                        type="button"
+                        onClick={() => setCookiePrefsOpen(true)}
+                        className="border-0 bg-transparent p-0 text-inherit underline"
+                      >
+                        Cookie preferences
+                      </button>
                     </p>
                   </div>
                   <button
@@ -518,6 +546,40 @@ export default function AtlasApp({
                   >
                     Close
                   </button>
+                </>
+              ) : welcomeSeen && cookiePrefsOpen ? (
+                <>
+                  <div className="flex flex-col items-start gap-5 px-7 pb-8 pt-10">
+                    <div className="flex w-full justify-center">
+                      <Logo iconSize={44} textSize="22px" gapClassName="gap-2.5" />
+                    </div>
+                    <p className="m-0 text-[13.5px] leading-[1.6] text-[color-mix(in_srgb,var(--color-text)_88%,transparent)]">
+                      We use an optional Google Analytics cookie to see which festivals get the most interest —
+                      nothing is sold or shared, and the map works exactly the same either way. See the{" "}
+                      <Link href="/cookies" className="text-inherit underline">
+                        cookie policy
+                      </Link>{" "}
+                      for details.
+                    </p>
+                  </div>
+                  <div className="flex flex-none flex-col">
+                    <button
+                      type="button"
+                      onClick={acceptCookies}
+                      className="flex-1 border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                      style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                    >
+                      Accept analytics
+                    </button>
+                    <button
+                      type="button"
+                      onClick={declineCookies}
+                      className="flex-1 border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                      style={{ background: "var(--color-bg)", color: "var(--color-text)", borderTop: "1px solid var(--color-divider)" }}
+                    >
+                      Decline analytics
+                    </button>
+                  </div>
                 </>
               ) : (
                 <>
@@ -560,15 +622,33 @@ export default function AtlasApp({
                         </li>
                       </ul>
                     </div>
+                    <p className="m-0 text-[11.5px] leading-[1.5] text-[color-mix(in_srgb,var(--color-text)_60%,transparent)]">
+                      We&rsquo;d also like to use a Google Analytics cookie to see which festivals get the most
+                      interest — nothing is sold or shared, and the map works exactly the same either way. See the{" "}
+                      <Link href="/cookies" className="text-inherit underline">
+                        cookie policy
+                      </Link>
+                      . You can change your mind later from the info panel.
+                    </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={closeInfo}
-                    className="flex-none border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
-                    style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
-                  >
-                    Start exploring &#8250;
-                  </button>
+                  <div className="flex flex-none flex-col">
+                    <button
+                      type="button"
+                      onClick={acceptCookies}
+                      className="flex-1 border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                      style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
+                    >
+                      Accept &amp; start exploring &#8250;
+                    </button>
+                    <button
+                      type="button"
+                      onClick={declineCookies}
+                      className="flex-1 border-0 px-5 py-4 font-[800] text-[11px] uppercase leading-none tracking-[.1em] transition-all duration-150 hover:brightness-110"
+                      style={{ background: "var(--color-bg)", color: "var(--color-text)", borderTop: "1px solid var(--color-divider)" }}
+                    >
+                      Decline
+                    </button>
+                  </div>
                 </>
               )}
             </div>
