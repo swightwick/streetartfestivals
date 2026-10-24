@@ -163,13 +163,19 @@ export default function AtlasApp({
     if (!listOpen && !calendarOpen && !effectiveInfoOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (effectiveInfoOpen) closeInfo();
-      else if (calendarOpen) setCalendarOpen(false);
+      // On the very first visit the welcome modal is the only place the
+      // cookie choice is offered — letting Escape dismiss it here would
+      // quietly burn that one chance without ever recording Accept or
+      // Decline, so it's ignored until the visitor picks one of the buttons.
+      if (effectiveInfoOpen) {
+        if (!welcomeSeen) return;
+        closeInfo();
+      } else if (calendarOpen) setCalendarOpen(false);
       else if (listOpen) setListOpen(false);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [listOpen, calendarOpen, effectiveInfoOpen]);
+  }, [listOpen, calendarOpen, effectiveInfoOpen, welcomeSeen]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -466,8 +472,12 @@ export default function AtlasApp({
             <button
               type="button"
               aria-label="Close more information"
-              onClick={closeInfo}
-              className="sa-fade absolute inset-0 bg-black/70 backdrop-blur-sm"
+              // Same as the Escape handler above: the first-ever welcome
+              // modal requires an explicit Accept/Decline, so the backdrop
+              // doesn't dismiss it.
+              onClick={welcomeSeen ? closeInfo : undefined}
+              disabled={!welcomeSeen}
+              className="sa-fade absolute inset-0 bg-black/70 backdrop-blur-sm disabled:cursor-default"
             />
             <div
               ref={infoPanelRef}
