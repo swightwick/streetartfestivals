@@ -22,6 +22,20 @@ function hasAnalyticsConsent(): boolean {
   }
 }
 
+// Distinct from hasAnalyticsConsent: a visitor who hasn't decided yet and one
+// who declined both read as "no consent" there, but AtlasApp needs to tell
+// them apart — a visitor with no decision recorded still needs to see the
+// welcome modal's cookie choice, even if they've already dismissed an older
+// build's welcome copy (see getWelcomeSeenSnapshot in AtlasApp.tsx).
+export function hasAnalyticsDecision(): boolean {
+  if (!isBrowser) return false;
+  try {
+    return window.localStorage.getItem(COOKIE_CONSENT_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 let analyticsStarted = false;
 
 function startAnalytics() {

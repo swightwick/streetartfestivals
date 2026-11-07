@@ -9,7 +9,7 @@ import type { MapFestival } from "@/lib/types";
 import { sortedFestivals, SITE } from "@/lib/festivals";
 import { regionSlug } from "@/lib/regions";
 import { useFocusTrap } from "@/lib/useFocusTrap";
-import { grantAnalyticsConsent, declineAnalyticsConsent } from "@/instrumentation-client";
+import { grantAnalyticsConsent, declineAnalyticsConsent, hasAnalyticsDecision } from "@/instrumentation-client";
 import MapSpinner from "@/components/MapSpinner";
 import Logo from "@/components/Logo";
 import Nav, { STATUS_FILTERS, type StatusFilter } from "./Nav";
@@ -42,7 +42,12 @@ const welcomeSeenListeners = new Set<() => void>();
 
 function getWelcomeSeenSnapshot(): boolean {
   try {
-    return window.localStorage.getItem(WELCOME_SEEN_KEY) === "1";
+    // Also requires a recorded cookie-consent decision, not just the seen
+    // flag: a visitor who dismissed an older build's welcome modal before it
+    // required an explicit Accept/Decline can have welcome-seen set with no
+    // consent choice ever recorded, which would otherwise mean GA never
+    // starts for them and the welcome modal never reoffers the choice.
+    return window.localStorage.getItem(WELCOME_SEEN_KEY) === "1" && hasAnalyticsDecision();
   } catch {
     return true;
   }
